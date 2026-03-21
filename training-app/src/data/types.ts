@@ -38,4 +38,9 @@ export interface Lesson {
   quiz?: Quiz;
   exercise?: CodeExercise;
   promptTemplates?: PromptTemplate[];
+  practiceLink?: {
+    url: string;
+    label: string;
+    description: string;
+  };
 }

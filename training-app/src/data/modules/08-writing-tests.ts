@@ -73,5 +73,68 @@ await expect(results.first()).toContainText('Widget Pro');
     ],
     correctIndex: 2,
     explanation: "data-testid attributes are the team standard because they are immune to CSS refactors, content text changes, and layout restructuring. They exist solely for testing and won't break when designers restyle the UI."
-  }
+  },
+  practiceLink: {
+    url: "http://localhost:5173/products",
+    label: "Write your first product page test",
+    description: "Practice writing assertions against the products listing page.",
+  },
+  exercise: {
+    title: "Complete a Product Page Test",
+    description: "Fill in the assertions for this product page test. The page at /products displays a list of product cards, each with a name, price, and 'Add to Cart' button.",
+    starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Product Page', () => {
+  test('should display product list', async ({ page }) => {
+    await page.goto('/products');
+    // TODO: Assert the page has a heading with "Products"
+    // TODO: Assert at least 3 product cards are visible
+    // TODO: Assert each product card has a price
+  });
+
+  test('should add product to cart', async ({ page }) => {
+    await page.goto('/products');
+    // TODO: Click the first "Add to Cart" button
+    // TODO: Assert a success message appears
+  });
+});`,
+    solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Product Page', () => {
+  test('should display product list', async ({ page }) => {
+    await page.goto('/products');
+    await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
+    const cards = page.locator('[data-testid="product-card"]');
+    await expect(cards).toHaveCount(await cards.count());
+    expect(await cards.count()).toBeGreaterThanOrEqual(3);
+    for (const card of await cards.all()) {
+      await expect(card.locator('[data-testid="product-price"]')).toBeVisible();
+    }
+  });
+
+  test('should add product to cart', async ({ page }) => {
+    await page.goto('/products');
+    await page.locator('[data-testid="add-to-cart"]').first().click();
+    await expect(page.getByText('Added to cart')).toBeVisible();
+  });
+});`,
+    hints: [
+      "Use page.getByRole('heading') to find the page title",
+      "Use page.locator('[data-testid=\"product-card\"]') to find product cards",
+      "Use .toHaveCount() or .count() to verify the number of products",
+      "For prices, check that each card contains a price element with toBeVisible()",
+    ],
+  },
+  promptTemplates: [
+    {
+      label: "Generate Test for Page",
+      context: "Ask Copilot to write a complete test for any page in your application.",
+      prompt: "Write a Playwright test for the products page at /products. The page displays a grid of product cards, each with a name, price, image, and 'Add to Cart' button. Write tests that verify: the page loads with the correct title, all products are visible, prices are formatted correctly, and the add-to-cart button works. Use data-testid selectors where available.",
+    },
+    {
+      label: "Generate Assertion Set",
+      context: "When you have a test structure but need help writing assertions.",
+      prompt: "I have a Playwright test that navigates to /checkout and fills in shipping details. Help me write assertions to verify: the order summary shows correct items, the total price is calculated correctly, form validation works for required fields, and the submit button is disabled until all fields are valid.",
+    },
+  ],
 };

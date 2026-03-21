@@ -1,12 +1,73 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { LessonView } from "./components/LessonView";
 import { lessons } from "./data";
 
+type RoleFilter = "all" | "developer" | "non-coder";
+
+const STORAGE_KEY = "mav-progress-v1";
+
+interface PersistedState {
+  currentLesson: number;
+  completedLessons: number[];
+}
+
+function getLessonFromHash(): number | null {
+  const match = window.location.hash.match(/^#lesson\/(\d+)$/);
+  if (!match) return null;
+  const idx = parseInt(match[1], 10);
+  return idx >= 0 && idx < lessons.length ? idx : null;
+}
+
+function loadProgress(): PersistedState | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveProgress(current: number, completed: Set<number>) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      currentLesson: current,
+      completedLessons: [...completed],
+    })
+  );
+}
+
 export default function App() {
-  const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState<Set<number>>(new Set());
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const saved = loadProgress();
+  const initialLesson = getLessonFromHash() ?? saved?.currentLesson ?? 0;
+  const [currentLesson, setCurrentLesson] = useState(initialLesson);
+  const [completedLessons, setCompletedLessons] = useState<Set<number>>(
+    new Set(saved?.completedLessons ?? [])
+  );
+  const [sidebarOpen, setSidebarOpen] = useState(
+    () => window.innerWidth >= 768
+  );
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+
+  useEffect(() => {
+    saveProgress(currentLesson, completedLessons);
+  }, [currentLesson, completedLessons]);
+
+  // Sync URL hash with current lesson
+  useEffect(() => {
+    window.location.hash = `lesson/${currentLesson}`;
+  }, [currentLesson]);
+
+  // Listen for browser back/forward
+  useEffect(() => {
+    const onHashChange = () => {
+      const idx = getLessonFromHash();
+      if (idx !== null) setCurrentLesson(idx);
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   const markComplete = (id: number) => {
     setCompletedLessons((prev) => new Set([...prev, id]));
@@ -14,7 +75,6 @@ export default function App() {
 
   const goNext = () => {
     if (currentLesson < lessons.length - 1) {
-      markComplete(currentLesson);
       setCurrentLesson((p) => p + 1);
     }
   };
@@ -25,18 +85,47 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
+      if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft") goPrev();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentLesson]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 768) setSidebarOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const handleLessonSelect = (idx: number) => {
+    setCurrentLesson(idx);
+    if (window.innerWidth < 768) setSidebarOpen(false);
+  };
+
   const progress = Math.round((completedLessons.size / lessons.length) * 100);
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-100 overflow-hidden" style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
+    <div className="flex h-screen bg-zinc-950 text-zinc-100 overflow-hidden">
       <Sidebar
         lessons={lessons}
         currentLesson={currentLesson}
         completedLessons={completedLessons}
-        onSelect={setCurrentLesson}
+        onSelect={handleLessonSelect}
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         progress={progress}
+        roleFilter={roleFilter}
+        onRoleChange={setRoleFilter}
       />
       <main className="flex-1 overflow-y-auto">
         <LessonView

@@ -105,5 +105,27 @@ export const lesson: Lesson = {
     ],
     correctIndex: 1,
     explanation: "A passing test that checks the wrong things gives false confidence. The human review step — mapping assertions to acceptance criteria — is the non-negotiable governance gate."
-  }
+  },
+  practiceLink: {
+    url: "http://localhost:5173/login",
+    label: "Record a login test with Codegen",
+    description: "Use Codegen to generate a login flow test without writing code.",
+  },
+  promptTemplates: [
+    {
+      label: "Generate Test from User Story",
+      context: "Convert a plain-English user story into a Playwright test using CARD format.",
+      prompt: "Context: I'm a manual tester. I have this user story: 'As a user, I can log in with my email and password, and see my dashboard with my recent orders.'\n\nAction: Convert this user story into a Playwright test. I don't know code, so use simple, readable patterns.\n\nResult: The test should verify login works and the dashboard shows orders.\n\nDetails: Use getByRole and getByText selectors (they read like English). Add comments explaining each step.",
+    },
+    {
+      label: "Record and Clean Up Test",
+      context: "Use Codegen to record, then ask Copilot to clean up the generated code.",
+      prompt: "I recorded this test with Playwright Codegen but the selectors look messy and fragile. Clean it up: replace auto-generated CSS selectors with getByRole, getByText, or data-testid selectors. Add meaningful test names and assertions. Group related steps with comments.",
+    },
+    {
+      label: "Explain Test Code Simply",
+      context: "When you encounter Playwright code you don't understand, ask for a plain-English explanation.",
+      prompt: "Explain this Playwright test to me like I'm a manual tester who doesn't write code. For each line, tell me: what it does in plain English, why it's there, and what the equivalent manual testing step would be. Don't use jargon.",
+    },
+  ],
 };

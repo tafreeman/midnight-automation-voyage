@@ -16,8 +16,8 @@ export default function DashboardPage() {
   return (
     <div className="page">
       <h1 data-testid="dashboard-heading">Welcome, {user.name}</h1>
-      <p style={{ color: "#666", marginBottom: 32 }}>You're logged in as {user.email}</p>
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+      <p className="dashboard-subtitle">You're logged in as {user.email}</p>
+      <div className="dashboard-links">
         <Link to="/products" className="btn-secondary">Products</Link>
         <Link to="/contact" className="btn-secondary">Contact</Link>
         <Link to="/orders" className="btn-secondary">Orders</Link>

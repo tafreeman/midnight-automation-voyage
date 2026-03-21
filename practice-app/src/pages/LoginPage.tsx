@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { USERS } from "../data";
 
+// NOTE: Module-level mutable state is intentional for this test-target app.
+// It simulates a server-side lockout counter without actual backend persistence.
+// Will not survive HMR in dev — acceptable for Playwright training purposes.
 const failCounts: Record<string, number> = {};
 
 export default function LoginPage() {

@@ -118,5 +118,16 @@ webServer: {
       "The webServer config object tells Playwright how to start your app",
       "You need command (how to start), port (where to find it), and reuseExistingServer"
     ]
-  }
+  },
+  quiz: {
+    question: "Which command installs Playwright browsers after adding Playwright to your project?",
+    options: [
+      "npm install browsers",
+      "npx playwright install",
+      "playwright setup --browsers",
+      "npm run playwright:browsers",
+    ],
+    correctIndex: 1,
+    explanation: "After installing @playwright/test, you must run 'npx playwright install' to download the actual browser binaries (Chromium, Firefox, WebKit). Without this step, tests will fail because the browsers aren't available on your machine.",
+  },
 };

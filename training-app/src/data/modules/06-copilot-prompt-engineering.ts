@@ -63,5 +63,54 @@ test('shows validation on empty submit', async ({ page }) => {
     ],
     correctIndex: 1,
     explanation: "CARD = Context, Actions, Rules, Data. Actions describes the step-by-step user flow the test should walk through — this is the sequence Playwright will automate."
-  }
+  },
+  exercise: {
+    title: "Build a CARD Prompt",
+    description: "Complete the CARD-format prompt template below. Fill in each section (Context, Action, Result, Details) to generate a Playwright test for a login form.",
+    starterCode: `// CARD Prompt Template for Copilot Chat
+// Context: [TODO: Describe the app and page]
+//
+// Action: [TODO: What should the test do?]
+//
+// Result: [TODO: What should be verified?]
+//
+// Details: [TODO: Any constraints or specifics?]`,
+    solutionCode: `// CARD Prompt Template for Copilot Chat
+// Context: I have a React app with a login page at /login.
+// It has email and password fields with data-testid attributes,
+// and a submit button.
+//
+// Action: Write a Playwright test that fills in valid
+// credentials and submits the login form.
+//
+// Result: After login, the user should be redirected to
+// /dashboard and see a welcome message.
+//
+// Details: Use data-testid selectors. Test both success
+// and invalid-credentials scenarios. The valid credentials
+// are user@test.com / password123.`,
+    hints: [
+      "Context should describe your app's tech stack and the specific page",
+      "Action should be a clear, specific instruction — not vague",
+      "Result defines what 'success' looks like — think assertions",
+      "Details add constraints: selectors to use, edge cases, test data",
+    ],
+  },
+  promptTemplates: [
+    {
+      label: "CARD: Login Form Test",
+      context: "Use this CARD-format prompt to generate a complete login test with Copilot Chat.",
+      prompt: "Context: React app with login page at /login. Email and password fields have data-testid attributes. Submit button triggers form validation.\n\nAction: Write a Playwright test that tests both successful login and validation errors.\n\nResult: Successful login redirects to /dashboard. Invalid credentials show an error message.\n\nDetails: Use data-testid selectors. Valid credentials: user@test.com / password123. Test empty field validation too.",
+    },
+    {
+      label: "CARD: Form Validation Test",
+      context: "Generate tests for form validation behavior using the CARD structure.",
+      prompt: "Context: Contact form with name (required), email (required, must be valid format), and message (required, min 10 chars) fields.\n\nAction: Write Playwright tests covering all validation rules.\n\nResult: Each invalid submission should show the specific error message next to the field. Valid submission shows success.\n\nDetails: Use getByRole and getByText for selectors. Test one field at a time. Include boundary values.",
+    },
+    {
+      label: "CARD: Navigation Test",
+      context: "Prompt template for testing navigation flows across multiple pages.",
+      prompt: "Context: E-commerce app with navbar containing links to Home, Products, Cart, and Account pages.\n\nAction: Write Playwright tests that verify all navigation links work correctly.\n\nResult: Each link should navigate to the correct URL and show the expected page heading.\n\nDetails: Use getByRole('link') selectors. Test both desktop and mobile nav. Verify URL changes with expect(page).toHaveURL().",
+    },
+  ],
 };

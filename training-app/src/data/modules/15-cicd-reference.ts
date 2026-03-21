@@ -64,5 +64,16 @@ rules:
         ]
       }
     }
-  ]
+  ],
+  quiz: {
+    question: "When should Playwright tests run in a CI pipeline?",
+    options: [
+      "Only before major releases",
+      "On every pull request and merge to the main branch",
+      "Only when QA manually triggers them",
+      "Once a month during regression testing",
+    ],
+    correctIndex: 1,
+    explanation: "Running tests on every PR and merge-to-main provides fast feedback, catches regressions early, and prevents broken code from reaching production. This is the foundation of shift-left testing — the earlier you catch bugs, the cheaper they are to fix.",
+  },
 };

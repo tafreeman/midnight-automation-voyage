@@ -61,5 +61,22 @@ npx playwright show-trace test-results/[test-folder]/trace.zip
     ],
     correctIndex: 2,
     explanation: "A toBeVisible timeout means Playwright waited for an element to appear and it never did. The most likely cause is a wrong selector — the data-testid doesn't match the actual attribute in the HTML, or the element genuinely isn't rendered."
-  }
+  },
+  promptTemplates: [
+    {
+      label: "Explain Playwright Error",
+      context: "Paste a Playwright error message and ask Copilot to diagnose the root cause.",
+      prompt: "Explain this Playwright error and suggest a fix:\n\nError: locator.click: Error: strict mode violation\n  locator('button') resolved to 3 elements.\n\nWhat does this mean, why did it happen, and what are the best ways to fix it? Show me the corrected code.",
+    },
+    {
+      label: "Debug Flaky Test",
+      context: "When a test passes sometimes and fails other times, ask Copilot for diagnosis.",
+      prompt: "This Playwright test is flaky — it passes locally but fails in CI about 30% of the time. The failure is always a timeout on this line: await expect(page.getByText('Order confirmed')).toBeVisible(). What are the most common causes of this type of flakiness, and how should I fix the test to be reliable?",
+    },
+    {
+      label: "Interpret Test Report",
+      context: "Help understand what a test report is telling you about your test suite health.",
+      prompt: "I have a Playwright HTML report showing 45 passed, 3 failed, and 2 skipped tests. The failures are all in the checkout flow on the 'payment processing' step. What should I investigate first? How do I use the trace viewer to diagnose the failures? What patterns indicate a test problem vs. an app problem?",
+    },
+  ],
 };

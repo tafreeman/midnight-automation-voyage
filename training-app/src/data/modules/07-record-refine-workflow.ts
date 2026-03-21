@@ -107,5 +107,21 @@ await page.waitForURL('**/dashboard');
       "Every click or navigation should have an assertion that verifies the expected outcome",
       "Mention the specific data-testid names so Copilot uses them"
     ]
-  }
+  },
+  practiceLink: {
+    url: "http://localhost:5173/checkout",
+    label: "Record a checkout flow with Codegen",
+    description: "Use Playwright Codegen to record a test on the multi-step checkout page.",
+  },
+  quiz: {
+    question: "What is the primary purpose of the 'refine' step after recording with Codegen?",
+    options: [
+      "To make the test run faster",
+      "To replace brittle auto-generated selectors with resilient ones and add meaningful assertions",
+      "To convert JavaScript to TypeScript",
+      "To add comments for documentation",
+    ],
+    correctIndex: 1,
+    explanation: "Codegen captures user actions but generates fragile selectors and no assertions. The refine step replaces auto-generated selectors with role-based or test-id locators, adds expect() assertions, and structures the test for maintainability.",
+  },
 };

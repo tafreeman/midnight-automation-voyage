@@ -173,3 +173,7 @@ textarea { resize: vertical; }
 }
 .summary-block h3 { font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
 .summary-block p { font-size: 14px; color: #1e293b; line-height: 1.5; }
+
+/* Dashboard */
+.dashboard-subtitle { color: #666; margin-bottom: 32px; }
+.dashboard-links { display: flex; gap: 16px; flex-wrap: wrap; }
