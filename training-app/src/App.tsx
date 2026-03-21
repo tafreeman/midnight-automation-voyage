@@ -177,7 +177,6 @@ export default function App() {
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           category={currentLessonData.category}
           theme={theme}
-          onToggleTheme={toggleTheme}
         />
       </main>
     </div>
