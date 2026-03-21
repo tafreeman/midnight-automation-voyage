@@ -6,7 +6,7 @@
  * The array order here IS the sidebar/navigation order.
  */
 
-export type { Lesson, Quiz, CodeExercise, PromptTemplate } from "./types";
+export type { Lesson, Quiz, CodeExercise, PromptTemplate, ModuleCategory } from "./types";
 
 import { lesson as orientation } from "./modules/01-orientation";
 import { lesson as mindsetShifts } from "./modules/02-mindset-shifts";
@@ -36,34 +36,59 @@ import { lesson as multiBrowserProjects } from "./modules/25-multi-browser-proje
 import { lesson as testTagging } from "./modules/26-test-tagging";
 import { lesson as githubActions } from "./modules/27-github-actions";
 
-import type { Lesson } from "./types";
+import type { Lesson, ModuleCategory } from "./types";
+
+/** Module group metadata for sidebar section headers */
+export interface ModuleGroup {
+  label: string;
+  category: ModuleCategory;
+  range: [number, number]; // inclusive start/end indices into lessons[]
+}
+
+export const moduleGroups: ModuleGroup[] = [
+  { label: "Foundations",   category: "foundations", range: [0, 4] },
+  { label: "Core Skills",  category: "core",        range: [5, 9] },
+  { label: "Workflows",    category: "workflows",   range: [10, 14] },
+  { label: "Advanced",     category: "advanced",    range: [15, 21] },
+  { label: "DevOps & CI",  category: "devops",      range: [22, 26] },
+];
+
+/** Assign categories to lessons based on their position */
+function withCategory(lesson: Lesson, category: ModuleCategory): Lesson {
+  return { ...lesson, category };
+}
 
 export const lessons: Lesson[] = [
-  orientation,
-  mindsetShifts,
-  whatToAutomate,
-  whyPlaywrightCopilot,
-  environmentSetup,
-  copilotPromptEng,
-  recordRefine,
-  writingTests,
-  pageObjectModel,
-  apiTesting,
-  promptTemplates,
-  readingResults,
-  hitlChecklist,
-  nonCoderGuide,
-  cicdReference,
-  authFixtures,
-  visualRegression,
-  accessibilityTesting,
-  flakyTestDiagnosis,
-  testDataStrategies,
-  assessmentCertification,
-  traceViewer,
-  mobileResponsive,
-  parallelSharding,
-  multiBrowserProjects,
-  testTagging,
-  githubActions,
+  // Foundations (01-05)
+  withCategory(orientation, "foundations"),
+  withCategory(mindsetShifts, "foundations"),
+  withCategory(whatToAutomate, "foundations"),
+  withCategory(whyPlaywrightCopilot, "foundations"),
+  withCategory(environmentSetup, "foundations"),
+  // Core Skills (06-10)
+  withCategory(copilotPromptEng, "core"),
+  withCategory(recordRefine, "core"),
+  withCategory(writingTests, "core"),
+  withCategory(pageObjectModel, "core"),
+  withCategory(apiTesting, "core"),
+  // Workflows (11-15)
+  withCategory(promptTemplates, "workflows"),
+  withCategory(readingResults, "workflows"),
+  withCategory(hitlChecklist, "workflows"),
+  withCategory(nonCoderGuide, "workflows"),
+  withCategory(cicdReference, "workflows"),
+  // Advanced (16-22)
+  withCategory(authFixtures, "advanced"),
+  withCategory(visualRegression, "advanced"),
+  withCategory(accessibilityTesting, "advanced"),
+  withCategory(flakyTestDiagnosis, "advanced"),
+  withCategory(testDataStrategies, "advanced"),
+  withCategory(assessmentCertification, "advanced"),
+  withCategory(traceViewer, "advanced"),
+  // DevOps & CI (23-27)
+  withCategory(mobileResponsive, "devops"),
+  withCategory(parallelSharding, "devops"),
+  withCategory(multiBrowserProjects, "devops"),
+  withCategory(testTagging, "devops"),
+  withCategory(githubActions, "devops"),
 ];

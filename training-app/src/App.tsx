@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { LessonView } from "./components/LessonView";
-import { lessons } from "./data";
+import { lessons, moduleGroups } from "./data";
 
 type RoleFilter = "all" | "developer" | "non-coder";
+type Theme = "light" | "dark";
 
 const STORAGE_KEY = "mav-progress-v1";
+const THEME_KEY = "mav-theme";
 
 interface PersistedState {
   currentLesson: number;
@@ -38,6 +40,26 @@ function saveProgress(current: number, completed: Set<number>) {
   );
 }
 
+function loadTheme(): Theme {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // ignore
+  }
+  return "light";
+}
+
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  if (theme === "dark") {
+    root.classList.add("dark");
+  } else {
+    root.classList.remove("dark");
+  }
+  localStorage.setItem(THEME_KEY, theme);
+}
+
 export default function App() {
   const saved = loadProgress();
   const initialLesson = getLessonFromHash() ?? saved?.currentLesson ?? 0;
@@ -49,6 +71,16 @@ export default function App() {
     () => window.innerWidth >= 768
   );
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [theme, setTheme] = useState<Theme>(loadTheme);
+
+  // Apply theme on mount and when it changes
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }, []);
 
   useEffect(() => {
     saveProgress(currentLesson, completedLessons);
@@ -114,8 +146,10 @@ export default function App() {
 
   const progress = Math.round((completedLessons.size / lessons.length) * 100);
 
+  const currentLessonData = lessons[currentLesson];
+
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-100 overflow-hidden">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
       <Sidebar
         lessons={lessons}
         currentLesson={currentLesson}
@@ -126,10 +160,13 @@ export default function App() {
         progress={progress}
         roleFilter={roleFilter}
         onRoleChange={setRoleFilter}
+        moduleGroups={moduleGroups}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
       <main className="flex-1 overflow-y-auto">
         <LessonView
-          lesson={lessons[currentLesson]}
+          lesson={currentLessonData}
           lessonIndex={currentLesson}
           totalLessons={lessons.length}
           onNext={goNext}
@@ -138,6 +175,9 @@ export default function App() {
           isCompleted={completedLessons.has(currentLesson)}
           sidebarOpen={sidebarOpen}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          category={currentLessonData.category}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
       </main>
     </div>

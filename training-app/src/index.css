@@ -1,51 +1,147 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* ── Light mode (default) ── */
   :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 160 84% 39%;
-    --radius: 0.5rem;
+    --background: 40 20% 97%;
+    --foreground: 230 25% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 230 25% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 25% 14%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 15% 93%;
+    --secondary-foreground: 230 25% 14%;
+    --muted: 40 12% 93%;
+    --muted-foreground: 230 10% 46%;
+    --accent: 40 15% 90%;
+    --accent-foreground: 230 25% 14%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 10% 87%;
+    --input: 40 10% 87%;
+    --ring: 239 84% 67%;
+    --radius: 0.625rem;
+
+    /* Module category accent colors */
+    --cat-foundations: 217 91% 60%;
+    --cat-core: 239 84% 67%;
+    --cat-workflows: 172 66% 50%;
+    --cat-advanced: 32 95% 54%;
+    --cat-devops: 346 77% 60%;
+  }
+
+  /* ── Dark mode ── */
+  .dark {
+    --background: 230 25% 7%;
+    --foreground: 40 20% 95%;
+    --card: 230 22% 11%;
+    --card-foreground: 40 20% 95%;
+    --popover: 230 22% 11%;
+    --popover-foreground: 40 20% 95%;
+    --primary: 239 84% 74%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 18% 16%;
+    --secondary-foreground: 40 20% 95%;
+    --muted: 230 15% 18%;
+    --muted-foreground: 230 10% 60%;
+    --accent: 230 18% 20%;
+    --accent-foreground: 40 20% 95%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 230 15% 20%;
+    --input: 230 15% 20%;
+    --ring: 239 84% 74%;
+
+    --cat-foundations: 217 91% 65%;
+    --cat-core: 239 84% 74%;
+    --cat-workflows: 172 66% 55%;
+    --cat-advanced: 32 95% 60%;
+    --cat-devops: 346 77% 65%;
+  }
+
+  * {
+    @apply border-border;
   }
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #09090b;
-  color: #fafafa;
-  font-family: 'Inter', -apple-system, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
-/* Custom scrollbar */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
 
-/* Code block styling */
+/* ── Code block font ── */
 pre code {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Editorial heading font ── */
+.font-display {
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+/* ── Blueprint grid pattern ── */
+.blueprint-grid {
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .blueprint-grid {
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Module category accent utilities ── */
+.cat-foundations { --cat-accent: var(--cat-foundations); }
+.cat-core { --cat-accent: var(--cat-core); }
+.cat-workflows { --cat-accent: var(--cat-workflows); }
+.cat-advanced { --cat-accent: var(--cat-advanced); }
+.cat-devops { --cat-accent: var(--cat-devops); }
+
+/* Animated progress bar */
+@keyframes progress-fill {
+  from { width: 0; }
+}
+
+/* Subtle page entrance */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out;
 }

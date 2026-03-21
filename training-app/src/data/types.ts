@@ -19,12 +19,15 @@ export interface PromptTemplate {
   context: string;
 }
 
+export type ModuleCategory = "foundations" | "core" | "workflows" | "advanced" | "devops";
+
 export interface Lesson {
   id: number;
   title: string;
   subtitle: string;
   icon: string;
   audience?: string;
+  category?: ModuleCategory;
   sections: {
     heading: string;
     content: string;

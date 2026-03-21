@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import type { Lesson } from "../data";
+import { useState } from "react";
+import type { Lesson, ModuleCategory } from "../data";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -13,8 +13,32 @@ interface LessonViewProps {
   isCompleted: boolean;
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  category?: ModuleCategory;
+  theme?: "light" | "dark";
+  onToggleTheme?: () => void;
 }
 
+const categoryLabels: Record<ModuleCategory, string> = {
+  foundations: "Foundations",
+  core: "Core Skills",
+  workflows: "Workflows",
+  advanced: "Advanced",
+  devops: "DevOps & CI",
+};
+
+const categoryColorClass: Record<ModuleCategory, string> = {
+  foundations: "text-cat-foundations",
+  core: "text-cat-core",
+  workflows: "text-cat-workflows",
+  advanced: "text-cat-advanced",
+  devops: "text-cat-devops",
+};
+
+const blueprintCategories: ModuleCategory[] = ["core", "advanced", "devops"];
+
+/* ────────────────────────────────────────────────────
+   CodeBlock
+   ──────────────────────────────────────────────────── */
 function CodeBlock({ code, language }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -23,23 +47,28 @@ function CodeBlock({ code, language }: { code: string; language?: string }) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="relative group my-3 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
-      <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">{language || "code"}</span>
+    <div className="relative group my-4 rounded-lg overflow-hidden border border-border bg-card">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border">
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-2 py-0.5 bg-background rounded">
+          {language || "code"}
+        </span>
         <button
           onClick={copy}
-          className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 rounded"
+          className="text-xs text-muted-foreground hover:text-primary transition-colors px-2 py-0.5 rounded"
         >
-          {copied ? "✓ Copied" : "Copy"}
+          {copied ? "Copied!" : "Copy"}
         </button>
       </div>
-      <pre className="p-3 overflow-x-auto text-[12px] leading-relaxed text-emerald-200/90">
+      <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-foreground/90 font-mono">
         <code>{code}</code>
       </pre>
     </div>
   );
 }
 
+/* ────────────────────────────────────────────────────
+   QuizSection
+   ──────────────────────────────────────────────────── */
 function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; onAttempt?: () => void }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -54,40 +83,41 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
   const isCorrect = selected === quiz.correctIndex;
 
   return (
-    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
-      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
-        <span className="text-amber-400">✦</span>
-        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Knowledge Check</span>
+    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
+      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2">
+        <span className="text-amber-500">✦</span>
+        <span className="text-sm font-semibold text-foreground">Knowledge Check</span>
       </div>
-      <div className="p-5">
-        <p className="text-sm text-zinc-200 mb-4 leading-relaxed">{quiz.question}</p>
-        <div className="space-y-2">
+      <div className="p-6">
+        <p className="text-base text-foreground mb-5 leading-relaxed">{quiz.question}</p>
+        <div className="space-y-2.5">
           {quiz.options.map((opt, i) => {
-            let border = "border-zinc-800 hover:border-zinc-600";
-            let bg = "bg-transparent hover:bg-zinc-900/50";
-            let text = "text-zinc-400";
+            let classes = "border-border hover:border-primary/40 bg-background";
+            let textClass = "text-foreground/80";
+            let indicator = "";
             if (submitted && i === quiz.correctIndex) {
-              border = "border-emerald-500/50";
-              bg = "bg-emerald-500/5";
-              text = "text-emerald-300";
+              classes = "border-green-500 bg-green-50 dark:bg-green-500/10";
+              textClass = "text-green-700 dark:text-green-400";
+              indicator = "✓";
             } else if (submitted && i === selected && !isCorrect) {
-              border = "border-red-500/50";
-              bg = "bg-red-500/5";
-              text = "text-red-300";
+              classes = "border-red-500 bg-red-50 dark:bg-red-500/10";
+              textClass = "text-red-700 dark:text-red-400";
+              indicator = "✗";
             } else if (!submitted && i === selected) {
-              border = "border-emerald-500/30";
-              bg = "bg-emerald-500/5";
-              text = "text-zinc-200";
+              classes = "border-primary bg-primary/5";
+              textClass = "text-foreground";
             }
             return (
               <button
                 key={i}
                 onClick={() => !submitted && setSelected(i)}
                 disabled={submitted && selected === quiz.correctIndex}
-                className={`w-full text-left px-4 py-3 rounded-md border transition-all text-xs leading-relaxed ${border} ${bg} ${text}`}
+                className={`w-full text-left px-5 py-3.5 rounded-lg border transition-all text-sm leading-relaxed flex items-center gap-3 ${classes} ${textClass}`}
               >
-                <span className="mr-2 font-mono text-zinc-600">{String.fromCharCode(65 + i)}.</span>
-                {opt}
+                <span className="font-mono text-muted-foreground text-xs w-5 flex-shrink-0">
+                  {indicator || String.fromCharCode(65 + i) + "."}
+                </span>
+                <span>{opt}</span>
               </button>
             );
           })}
@@ -96,19 +126,21 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
           <button
             onClick={handleSubmit}
             disabled={selected === null}
-            className="mt-4 px-4 py-2 rounded-md text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="mt-5 px-5 py-2.5 rounded-lg text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             Check Answer
           </button>
         )}
         {submitted && (
-          <div className={`mt-4 p-3 rounded-md text-xs leading-relaxed border ${
+          <div className={`mt-5 p-4 rounded-lg text-sm leading-relaxed border ${
             isCorrect
-              ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-200"
-              : "bg-amber-500/5 border-amber-500/20 text-amber-200"
+              ? "bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/20 text-green-800 dark:text-green-300"
+              : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20 text-amber-800 dark:text-amber-300"
           }`}>
-            <p className="font-semibold mb-1">{isCorrect ? "✓ Correct!" : "✗ Not quite."}</p>
-            <p className="text-zinc-400">{quiz.explanation}</p>
+            <p className="font-semibold mb-1 flex items-center gap-1.5">
+              {isCorrect ? "✓ Correct!" : "✗ Not quite."}
+            </p>
+            <p className="text-foreground/70">{quiz.explanation}</p>
           </div>
         )}
         {submitted && selected !== quiz.correctIndex && (
@@ -117,7 +149,7 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
               setSubmitted(false);
               setSelected(null);
             }}
-            className="mt-3 text-xs text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded px-3 py-1.5 transition-colors"
+            className="mt-3 text-sm text-primary hover:text-primary/80 border border-primary/30 rounded-lg px-4 py-2 transition-colors"
           >
             Try Again
           </button>
@@ -127,6 +159,9 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
   );
 }
 
+/* ────────────────────────────────────────────────────
+   Diff helpers
+   ──────────────────────────────────────────────────── */
 function diffLines(starter: string, solution: string) {
   const sLines = starter.split("\n");
   const solLines = solution.split("\n");
@@ -139,6 +174,9 @@ function diffLines(starter: string, solution: string) {
   });
 }
 
+/* ────────────────────────────────────────────────────
+   DiffCodeBlock
+   ──────────────────────────────────────────────────── */
 function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solution: string; revealed: boolean }) {
   const [copiedLeft, setCopiedLeft] = useState(false);
   const [copiedRight, setCopiedRight] = useState(false);
@@ -148,48 +186,48 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   const copySolution = () => { navigator.clipboard.writeText(solution); setCopiedRight(true); setTimeout(() => setCopiedRight(false), 2000); };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 my-3">
-      {/* Starter - left */}
-      <div className="rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
-        <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
-          <span className="text-xs text-zinc-500 uppercase tracking-wider">Your Starting Point</span>
-          <button onClick={copyStarter} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5">
-            {copiedLeft ? "✓ Copied" : "Copy"}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 my-4">
+      {/* Starter */}
+      <div className="rounded-lg overflow-hidden border border-border bg-card">
+        <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Your Starting Point</span>
+          <button onClick={copyStarter} className="text-xs text-muted-foreground hover:text-primary transition-colors px-2 py-0.5">
+            {copiedLeft ? "Copied!" : "Copy"}
           </button>
         </div>
-        <pre className="p-3 overflow-x-auto text-xs leading-relaxed">
+        <pre className="p-4 overflow-x-auto text-sm leading-relaxed font-mono">
           <code>{starter.split("\n").map((line, i) => (
-            <div key={i} className="text-emerald-200/70">{line || "\u00A0"}</div>
+            <div key={i} className="text-foreground/70">{line || "\u00A0"}</div>
           ))}</code>
         </pre>
       </div>
-      {/* Solution - right */}
-      <div className={`rounded-lg overflow-hidden border bg-zinc-900/80 transition-all duration-300 ${revealed ? "border-emerald-500/20" : "border-zinc-800"}`}>
-        <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+      {/* Solution */}
+      <div className={`rounded-lg overflow-hidden border bg-card transition-all duration-300 ${revealed ? "border-green-400 dark:border-green-500/40" : "border-border"}`}>
+        <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500 uppercase tracking-wider">Solution</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Solution</span>
             {revealed && (
               <span className="flex items-center gap-1.5 text-xs">
-                <span className="inline-block w-2 h-2 rounded-sm bg-emerald-400/80" />
-                <span className="text-emerald-400/70">= changed / added</span>
+                <span className="inline-block w-2 h-2 rounded-sm bg-green-500" />
+                <span className="text-green-600 dark:text-green-400">= changed / added</span>
               </span>
             )}
           </div>
           {revealed && (
-            <button onClick={copySolution} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5">
-              {copiedRight ? "✓ Copied" : "Copy"}
+            <button onClick={copySolution} className="text-xs text-muted-foreground hover:text-primary transition-colors px-2 py-0.5">
+              {copiedRight ? "Copied!" : "Copy"}
             </button>
           )}
         </div>
         {revealed ? (
-          <pre className="p-3 overflow-x-auto text-xs leading-relaxed">
+          <pre className="p-4 overflow-x-auto text-sm leading-relaxed font-mono">
             <code>{diffResult.map((d, i) => (
               <div
                 key={i}
                 className={
                   d.status === "changed"
-                    ? "text-emerald-300 bg-emerald-500/10 -mx-3 px-3 border-l-2 border-emerald-400"
-                    : "text-emerald-200/70"
+                    ? "text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-500/10 -mx-4 px-4 border-l-2 border-green-500"
+                    : "text-foreground/70"
                 }
               >
                 {d.line || "\u00A0"}
@@ -198,7 +236,7 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
           </pre>
         ) : (
           <div className="p-8 flex items-center justify-center">
-            <p className="text-xs text-zinc-600 italic">Click "Reveal Solution" below to see the answer with changes highlighted</p>
+            <p className="text-sm text-muted-foreground italic">Click "Reveal Solution" below to see the answer with changes highlighted</p>
           </div>
         )}
       </div>
@@ -206,19 +244,22 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   );
 }
 
+/* ────────────────────────────────────────────────────
+   ExerciseSection
+   ──────────────────────────────────────────────────── */
 function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"]> }) {
   const [showSolution, setShowSolution] = useState(false);
   const [showHints, setShowHints] = useState(false);
 
   return (
-    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
-      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
-        <span className="text-blue-400">⚡</span>
-        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Hands-On Exercise</span>
+    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
+      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2">
+        <span className="text-blue-500">⚡</span>
+        <span className="text-sm font-semibold text-foreground">Hands-On Exercise</span>
       </div>
-      <div className="p-5">
-        <h4 className="text-sm font-semibold text-zinc-200 mb-1">{exercise.title}</h4>
-        <p className="text-xs text-zinc-400 mb-4 leading-relaxed">{exercise.description}</p>
+      <div className="p-6">
+        <h4 className="text-base font-semibold text-foreground mb-1">{exercise.title}</h4>
+        <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{exercise.description}</p>
 
         <DiffCodeBlock
           starter={exercise.starterCode}
@@ -226,11 +267,11 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           revealed={showSolution}
         />
 
-        <div className="flex items-center gap-3 mt-3">
+        <div className="flex items-center gap-3 mt-4">
           {!showSolution && (
             <button
               onClick={() => setShowSolution(true)}
-              className="px-4 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
+              className="px-5 py-2.5 text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
             >
               Reveal Solution
             </button>
@@ -238,7 +279,7 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           {showSolution && (
             <button
               onClick={() => setShowSolution(false)}
-              className="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 border border-zinc-700 rounded-md transition-colors"
+              className="px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-lg transition-colors"
             >
               Hide Solution
             </button>
@@ -246,7 +287,7 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           {exercise.hints.length > 0 && (
             <button
               onClick={() => setShowHints(!showHints)}
-              className="text-xs text-amber-500/80 hover:text-amber-400 transition-colors flex items-center gap-1"
+              className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-500 transition-colors flex items-center gap-1"
             >
               {showHints ? "▾ Hide hints" : "▸ Need a hint?"}
             </button>
@@ -254,10 +295,10 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
         </div>
 
         {showHints && exercise.hints.length > 0 && (
-          <div className="mt-3 space-y-1.5 pl-3 border-l border-amber-500/20">
+          <div className="mt-4 space-y-2 pl-4 border-l-2 border-amber-300 dark:border-amber-500/30">
             {exercise.hints.map((h, i) => (
-              <p key={i} className="text-xs text-zinc-400">
-                <span className="text-amber-500/60 mr-1">→</span> {h}
+              <p key={i} className="text-sm text-foreground/70">
+                <span className="text-amber-500 font-semibold mr-1.5">{i + 1}.</span> {h}
               </p>
             ))}
           </div>
@@ -267,6 +308,9 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
   );
 }
 
+/* ────────────────────────────────────────────────────
+   PromptTemplateSection
+   ──────────────────────────────────────────────────── */
 function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["promptTemplates"]> }) {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
@@ -277,32 +321,34 @@ function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["p
   };
 
   return (
-    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
-      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
-        <span className="text-violet-400">📋</span>
-        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Prompt Template Library</span>
-        <Badge variant="outline" className="ml-auto text-xs border-violet-500/30 text-violet-400">{templates.length} templates</Badge>
+    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
+      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2">
+        <span className="text-violet-500">📋</span>
+        <span className="text-sm font-semibold text-foreground">Prompt Template Library</span>
+        <Badge variant="outline" className="ml-auto text-xs border-violet-300 dark:border-violet-500/30 text-violet-600 dark:text-violet-400">
+          {templates.length} templates
+        </Badge>
       </div>
-      <div className="p-3">
-        <Accordion type="single" collapsible className="space-y-1">
+      <div className="p-4">
+        <Accordion type="single" collapsible className="space-y-1.5">
           {templates.map((t, i) => (
-            <AccordionItem key={i} value={`tpl-${i}`} className="border border-zinc-800 rounded-md overflow-hidden">
-              <AccordionTrigger className="px-3 py-2.5 text-xs text-zinc-300 hover:text-zinc-100 hover:no-underline [&[data-state=open]]:bg-zinc-800/30">
+            <AccordionItem key={i} value={`tpl-${i}`} className="border border-border rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-4 py-3 text-sm text-foreground hover:text-foreground hover:no-underline [&[data-state=open]]:bg-muted/50">
                 {t.label}
               </AccordionTrigger>
-              <AccordionContent className="px-3 pb-3">
-                <p className="text-xs text-zinc-500 mb-2 italic">{t.context}</p>
-                <div className="relative bg-zinc-900/80 border border-zinc-800 rounded-md">
-                  <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-800/50">
-                    <span className="text-xs text-zinc-600 uppercase tracking-wider">Copilot Chat Prompt</span>
+              <AccordionContent className="px-4 pb-4">
+                <p className="text-sm text-muted-foreground mb-3 italic">{t.context}</p>
+                <div className="relative bg-muted rounded-lg">
+                  <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Copilot Chat Prompt</span>
                     <button
                       onClick={() => copyPrompt(t.prompt, i)}
-                      className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5"
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors px-2 py-0.5"
                     >
-                      {copiedIdx === i ? "✓ Copied!" : "Copy Prompt"}
+                      {copiedIdx === i ? "Copied!" : "Copy Prompt"}
                     </button>
                   </div>
-                  <pre className="p-3 text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap overflow-x-auto">{t.prompt}</pre>
+                  <pre className="p-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap overflow-x-auto font-mono">{t.prompt}</pre>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -313,22 +359,25 @@ function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["p
   );
 }
 
+/* ────────────────────────────────────────────────────
+   TableBlock
+   ──────────────────────────────────────────────────── */
 function TableBlock({ table }: { table: { headers: string[]; rows: string[][] } }) {
   return (
-    <div className="my-3 overflow-x-auto border border-zinc-800 rounded-lg">
-      <table className="w-full text-xs">
+    <div className="my-4 overflow-x-auto border border-border rounded-lg bg-card">
+      <table className="w-full text-sm">
         <thead>
-          <tr className="bg-zinc-800/50">
+          <tr className="bg-muted">
             {table.headers.map((h, i) => (
-              <th key={i} className="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap">{h}</th>
+              <th key={i} className="px-4 py-3 text-left text-muted-foreground font-medium border-b border-border whitespace-nowrap">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {table.rows.map((row, ri) => (
-            <tr key={ri} className="border-b border-zinc-800/50 last:border-0 hover:bg-zinc-800/20 transition-colors">
+            <tr key={ri} className="border-b border-border last:border-0 even:bg-muted/30 hover:bg-muted/50 transition-colors">
               {row.map((cell, ci) => (
-                <td key={ci} className="px-3 py-2 text-zinc-300 leading-relaxed">{cell}</td>
+                <td key={ci} className="px-4 py-3 text-foreground/80 leading-relaxed">{cell}</td>
               ))}
             </tr>
           ))}
@@ -338,92 +387,114 @@ function TableBlock({ table }: { table: { headers: string[]; rows: string[][] } 
   );
 }
 
-export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, onComplete, isCompleted, sidebarOpen, onToggleSidebar }: LessonViewProps) {
+/* ────────────────────────────────────────────────────
+   LessonView (main)
+   ──────────────────────────────────────────────────── */
+export function LessonView({
+  lesson,
+  lessonIndex,
+  totalLessons,
+  onNext,
+  onPrev,
+  onComplete,
+  isCompleted,
+  sidebarOpen,
+  onToggleSidebar,
+  category,
+}: LessonViewProps) {
+  // Reset quiz state when lesson changes by keying on lesson.id
+  const [quizKey, setQuizKey] = useState(lesson.id);
   const [quizAttempted, setQuizAttempted] = useState(false);
 
-  useEffect(() => {
+  if (quizKey !== lesson.id) {
+    setQuizKey(lesson.id);
     setQuizAttempted(false);
-  }, [lesson.id]);
+  }
 
   const canComplete = !lesson.quiz || quizAttempted;
+  const catClass = category ? `cat-${category}` : "";
+  const showBlueprint = category && blueprintCategories.includes(category);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-8">
+    <div className={`max-w-3xl mx-auto px-6 py-10 animate-fade-up ${catClass}`}>
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           {!sidebarOpen && (
-            <button onClick={onToggleSidebar} className="text-zinc-600 hover:text-zinc-400 transition-colors mr-1">
+            <button onClick={onToggleSidebar} className="text-muted-foreground hover:text-foreground transition-colors mr-1">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </button>
           )}
-          <span className="text-xs text-zinc-600 font-mono">
+          <span className="text-xs text-muted-foreground font-mono">
             {String(lessonIndex + 1).padStart(2, "0")} / {String(totalLessons).padStart(2, "0")}
           </span>
+          {category && (
+            <span className={`text-xs font-semibold uppercase tracking-wider ${categoryColorClass[category]}`}>
+              {categoryLabels[category]}
+            </span>
+          )}
           {lesson.audience && (
             <Badge
               variant="outline"
-              className={`text-xs ${
-                lesson.audience.includes("Non-Coder")
-                  ? "border-amber-500/30 text-amber-400"
-                  : lesson.audience.includes("Developer")
-                  ? "border-blue-500/30 text-blue-400"
-                  : "border-zinc-700 text-zinc-500"
-              }`}
+              className="text-xs border-border text-muted-foreground"
             >
               {lesson.audience}
             </Badge>
           )}
         </div>
         {isCompleted && (
-          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
+          <Badge className="bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/20 text-xs">
             ✓ Completed
           </Badge>
         )}
       </div>
 
       {/* Progress indicator */}
-      <div className="h-0.5 bg-zinc-800 rounded-full mb-6">
+      <div className="h-1 bg-muted rounded-full mb-8">
         <div
-          className="h-full bg-emerald-500/60 rounded-full transition-all duration-300"
+          className="h-full bg-primary rounded-full transition-all duration-500"
           style={{ width: `${((lessonIndex + 1) / totalLessons) * 100}%` }}
         />
       </div>
 
-      {/* Title */}
-      <div className="mb-8">
-        <span className="text-3xl mb-2 block" role="img" aria-label={lesson.title}>{lesson.icon}</span>
-        <h2 className="text-2xl font-bold text-zinc-100 tracking-tight" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+      {/* Title zone — with optional blueprint grid */}
+      <div className={`mb-10 ${showBlueprint ? "blueprint-grid -mx-6 px-6 py-8 rounded-lg" : ""}`}>
+        <span className="text-4xl mb-3 block" role="img" aria-label={lesson.title}>{lesson.icon}</span>
+        <h2 className="text-3xl font-display font-bold text-foreground tracking-tight leading-tight">
           {lesson.title}
         </h2>
-        <p className="text-sm text-zinc-500 mt-1">{lesson.subtitle}</p>
+        <p className="text-lg text-muted-foreground mt-2">{lesson.subtitle}</p>
       </div>
 
       {/* Sections */}
-      <div className="space-y-8">
+      <div className="space-y-10">
         {lesson.sections.map((section, i) => (
           <section key={i}>
-            <h3 className="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
-              <span className="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0" />
+            <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2.5">
+              <span
+                className="w-1.5 h-5 rounded-full inline-block flex-shrink-0"
+                style={{ backgroundColor: "hsl(var(--cat-accent, var(--primary)))" }}
+              />
               {section.heading}
             </h3>
-            <p className="text-[13px] text-zinc-400 leading-relaxed">{section.content}</p>
+            <p className="text-[15px] text-foreground/75 leading-relaxed">{section.content}</p>
+
             {section.callout && (
-              <div className="mt-3 px-4 py-3 border-l-2 border-emerald-500 bg-emerald-500/5 rounded-r-md">
-                <p className="text-[12px] text-emerald-200/80 leading-relaxed">{section.callout}</p>
+              <div className="mt-4 px-5 py-4 border-l-4 border-primary bg-primary/5 rounded-r-lg">
+                <p className="text-sm text-foreground/80 leading-relaxed">{section.callout}</p>
               </div>
             )}
             {section.tip && (
-              <div className="mt-3 px-4 py-2.5 bg-blue-500/5 border border-blue-500/10 rounded-md">
-                <p className="text-xs text-blue-300/80 leading-relaxed">
-                  <span className="font-semibold text-blue-400">Tip:</span> {section.tip}
+              <div className="mt-4 px-5 py-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-lg">
+                <p className="text-sm leading-relaxed text-blue-800 dark:text-blue-300">
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">Tip: </span>{section.tip}
                 </p>
               </div>
             )}
             {section.warning && (
-              <div className="mt-3 px-4 py-2.5 bg-red-500/5 border border-red-500/10 rounded-md">
-                <p className="text-xs text-red-300/80 leading-relaxed whitespace-pre-line">
-                  <span className="font-semibold text-red-400">⚠ Warning:</span> {section.warning}
+              <div className="mt-4 px-5 py-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg">
+                <p className="text-sm leading-relaxed text-amber-800 dark:text-amber-300 whitespace-pre-line">
+                  <span className="font-semibold text-amber-600 dark:text-amber-400">⚠ Warning: </span>{section.warning}
                 </p>
               </div>
             )}
@@ -450,24 +521,24 @@ export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, 
           href={lesson.practiceLink.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block mt-8 p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors"
+          className="block mt-10 p-5 rounded-xl border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
         >
-          <div className="text-emerald-400 font-semibold text-sm mb-1">
-            Try It Now
+          <div className="text-primary font-semibold text-base mb-1">
+            Try It Now →
           </div>
-          <div className="text-xs text-zinc-300">{lesson.practiceLink.label}</div>
+          <div className="text-sm text-foreground/70">{lesson.practiceLink.label}</div>
           {lesson.practiceLink.description && (
-            <div className="text-xs text-zinc-500 mt-1">{lesson.practiceLink.description}</div>
+            <div className="text-sm text-muted-foreground mt-1">{lesson.practiceLink.description}</div>
           )}
         </a>
       )}
 
       {/* Navigation */}
-      <div className="mt-12 pt-6 border-t border-zinc-800 flex items-center justify-between">
+      <div className="mt-16 pt-8 border-t border-border flex items-center justify-between">
         <button
           onClick={onPrev}
           disabled={lessonIndex === 0}
-          className="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
         >
           ← Previous
         </button>
@@ -476,10 +547,10 @@ export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, 
             <button
               onClick={onComplete}
               disabled={!canComplete}
-              className={`px-4 py-2 text-xs border rounded-md transition-all ${
+              className={`px-5 py-2.5 text-sm border rounded-lg transition-all ${
                 canComplete
-                  ? "text-zinc-400 hover:text-emerald-400 border-zinc-800 hover:border-emerald-500/30"
-                  : "text-zinc-600 border-zinc-800/50 cursor-not-allowed opacity-50"
+                  ? "text-muted-foreground hover:text-primary border-border hover:border-primary"
+                  : "text-muted-foreground/50 border-border/50 cursor-not-allowed opacity-50"
               }`}
             >
               {canComplete ? "Mark Complete" : "Complete Quiz First"}
@@ -488,7 +559,7 @@ export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, 
           <button
             onClick={onNext}
             disabled={lessonIndex === totalLessons - 1}
-            className="px-5 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2.5 text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
           >
             Next Lesson →
           </button>
