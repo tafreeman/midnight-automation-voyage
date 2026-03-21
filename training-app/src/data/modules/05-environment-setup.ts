@@ -119,6 +119,18 @@ webServer: {
       "You need command (how to start), port (where to find it), and reuseExistingServer"
     ]
   },
+  promptTemplates: [
+    {
+      label: "Troubleshoot Playwright Setup",
+      context: "Use when Playwright installation or browser download fails and you need to diagnose the error.",
+      prompt: "Context: I am setting up Playwright for test automation and ran into an error during installation. My environment is [OPERATING_SYSTEM] with Node.js [VERSION]. I installed Playwright using npm init playwright@latest.\n\nAction: Diagnose the following error message and provide step-by-step instructions to resolve it. Also list the 5 most common Playwright setup failures and their fixes so I can check for related issues.\n\nRules:\n- Cover these common failure categories: browser binary download failures, missing OS-level dependencies (especially on Linux), permission errors on Windows/macOS, proxy/firewall blocking downloads, and Node.js version incompatibility\n- For each diagnosis, provide the exact terminal command to fix the issue\n- If the error suggests a dependency is missing, show how to install it for the user's OS\n- Include a verification command to confirm the fix worked (e.g., npx playwright install --dry-run, npx playwright doctor)\n\nData — Error message:\n[PASTE YOUR ERROR OUTPUT HERE]",
+    },
+    {
+      label: "Generate playwright.config.ts",
+      context: "Use when starting a new project and you need a complete, well-commented Playwright configuration file.",
+      prompt: "Context: I am setting up Playwright for a [FRAMEWORK — e.g., React/Next.js/Vue] project. The dev server runs on [PORT] using the command [DEV_COMMAND — e.g., npm run dev]. Tests will live in the [TEST_DIR — e.g., e2e/] directory.\n\nAction: Generate a complete playwright.config.ts file with detailed comments explaining every option.\n\nRules:\n- Include projects for Chromium, Firefox, and WebKit using Playwright's built-in device descriptors\n- Configure baseURL to read from an environment variable with a localhost fallback\n- Set up the HTML reporter plus a JUnit reporter for CI integration\n- Configure trace capture on first retry so failures are debuggable\n- Add screenshot capture on failure only\n- Include a webServer block that starts the dev server automatically and reuses an existing server outside CI\n- Set fullyParallel to true and configure 2 retries in CI, 0 locally\n- Use forbidOnly in CI to prevent accidental .only commits\n- Add a comment block at the top explaining how to run tests (npx playwright test, --headed, --ui flags)\n\nData:\n- Framework: [YOUR_FRAMEWORK]\n- Dev server command: [YOUR_DEV_COMMAND]\n- Dev server port: [YOUR_PORT]\n- Test directory: [YOUR_TEST_DIR]",
+    },
+  ],
   quiz: {
     question: "Which command installs Playwright browsers after adding Playwright to your project?",
     options: [
@@ -130,4 +142,9 @@ webServer: {
     correctIndex: 1,
     explanation: "After installing @playwright/test, you must run 'npx playwright install' to download the actual browser binaries (Chromium, Firefox, WebKit). Without this step, tests will fail because the browsers aren't available on your machine.",
   },
+  practiceLink: {
+    url: "http://localhost:5173/login",
+    label: "Use the Practice App login page to verify your Playwright setup is working",
+    description: "Once your environment is set up, the login page is perfect for testing your first automated interactions",
+  }
 };

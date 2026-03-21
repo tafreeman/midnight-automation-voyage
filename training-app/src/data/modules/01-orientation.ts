@@ -43,5 +43,10 @@ export const lesson: Lesson = {
     ],
     correctIndex: 2,
     explanation: "Human-in-the-loop governance means a human always reviews AI-generated test code against the acceptance criteria before merge. Passing tests can still be testing the wrong thing."
+  },
+  practiceLink: {
+    url: "http://localhost:5173/login",
+    label: "Start by exploring the Practice App's login page — the first feature you'll automate",
+    description: "The login page is your entry point into Playwright automation",
   }
 };

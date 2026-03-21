@@ -108,6 +108,18 @@ await page.waitForURL('**/dashboard');
       "Mention the specific data-testid names so Copilot uses them"
     ]
   },
+  promptTemplates: [
+    {
+      label: "Refine Codegen Recording",
+      context: "Paste raw Playwright Codegen output and ask Copilot to refine it into a production-ready test.",
+      prompt: "Refine this Playwright Codegen recording into a production-quality test:\n\n[PASTE RECORDED CODE HERE]\n\nRefinements needed:\n1. Replace all auto-generated CSS/nth-child selectors with data-testid locators\n2. Add a descriptive test name that explains the user scenario\n3. Add expect() assertions after each meaningful action\n4. Remove any page.waitForTimeout() calls — rely on Playwright auto-wait\n5. Add Arrange/Act/Assert comments to structure the test\n6. Use baseURL from config instead of hardcoded URLs",
+    },
+    {
+      label: "Convert Manual Step to Assertion",
+      context: "For non-coders translating manual verification steps into Playwright assertions.",
+      prompt: "I'm a manual tester. Convert this manual verification step into a Playwright assertion:\n\nManual step: \"[DESCRIBE WHAT YOU MANUALLY CHECK — e.g., 'I verify the success message says Thank you for your order']\"\n\nPage route: [URL_PATH]\nElement: [DESCRIBE THE ELEMENT — e.g., 'green banner at the top of the page']\n\nWrite the Playwright expect() assertion using data-testid or getByText selectors. Explain what the assertion does in plain English.",
+    },
+  ],
   practiceLink: {
     url: "http://localhost:5173/checkout",
     label: "Record a checkout flow with Codegen",

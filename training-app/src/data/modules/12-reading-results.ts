@@ -62,6 +62,47 @@ npx playwright show-trace test-results/[test-folder]/trace.zip
     correctIndex: 2,
     explanation: "A toBeVisible timeout means Playwright waited for an element to appear and it never did. The most likely cause is a wrong selector — the data-testid doesn't match the actual attribute in the HTML, or the element genuinely isn't rendered."
   },
+  practiceLink: {
+    url: "http://localhost:5173/orders",
+    label: "Run reference tests and read the report",
+    description: "Run the orders table tests, then use 'npx playwright show-report' to practice reading HTML report output.",
+  },
+  exercise: {
+    title: "Diagnose a Failing Test from Its Error",
+    description: "Read the Playwright error message below, identify the root cause, and write the corrected test code.",
+    starterCode: `// FAILING TEST:
+test('order status filter shows pending orders', async ({ page }) => {
+  await page.goto('/orders');
+  await page.locator('.filter-dropdown').selectOption('Pending');
+  await expect(page.locator('.order-row')).toHaveCount(3);
+});
+
+// ERROR MESSAGE:
+// Error: locator.selectOption: Error: strict mode violation
+//   locator('.filter-dropdown') resolved to 2 elements
+//
+// ROOT CAUSE: [TODO - explain why this failed]
+// FIX: [TODO - rewrite the test]`,
+    solutionCode: `// FAILING TEST (FIXED):
+test('order status filter shows pending orders', async ({ page }) => {
+  await page.goto('/orders');
+  // Use data-testid instead of CSS class to avoid strict mode violation
+  await page.locator('[data-testid="status-filter"]').selectOption('Pending');
+  await expect(page.locator('[data-testid="order-row"]')).toHaveCount(3);
+});
+
+// ROOT CAUSE: The CSS selector '.filter-dropdown' matched 2 elements
+// on the page. Playwright's strict mode requires locators to resolve
+// to exactly one element. This is a selector problem, not an app bug.
+//
+// FIX: Replace CSS class selectors with data-testid attributes that
+// uniquely identify the intended element.`,
+    hints: [
+      "'strict mode violation' means the selector matched more than one element",
+      "The fix is about making the selector more specific — not changing the app",
+      "data-testid attributes are unique by convention, solving the ambiguity",
+    ],
+  },
   promptTemplates: [
     {
       label: "Explain Playwright Error",

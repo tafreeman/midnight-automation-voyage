@@ -30,36 +30,36 @@ export default function ShippingPage() {
   };
 
   return (
-    <div className="page">
-      <div className="card" style={{ maxWidth: 480, margin: "40px auto" }}>
-        <div data-testid="step-indicator" className="step-indicator">Step 1 of 3: Shipping</div>
-        <h1>Shipping Address</h1>
-        <div className="form-group">
-          <label>Address *</label>
-          <input data-testid="address-input" value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="123 Main St" />
-          {errors.address && <p className="field-error" data-testid="address-error">{errors.address}</p>}
+    <div className="max-w-4xl mx-auto py-8 px-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-8 max-w-[480px] mx-auto mt-10">
+        <div data-testid="step-indicator" className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2 px-3 py-1.5 bg-blue-50 rounded-md inline-block">Step 1 of 3: Shipping</div>
+        <h1 className="text-[22px] font-bold mb-5 text-slate-900">Shipping Address</h1>
+        <div className="mb-4">
+          <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">Address *</label>
+          <input data-testid="address-input" value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="123 Main St" className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans bg-white text-slate-900 transition-colors focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10" />
+          {errors.address && <p className="text-xs text-red-600 mt-1 font-medium" data-testid="address-error">{errors.address}</p>}
         </div>
-        <div className="form-group">
-          <label>City *</label>
-          <input data-testid="city-input" value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="Springfield" />
-          {errors.city && <p className="field-error" data-testid="city-error">{errors.city}</p>}
+        <div className="mb-4">
+          <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">City *</label>
+          <input data-testid="city-input" value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="Springfield" className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans bg-white text-slate-900 transition-colors focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10" />
+          {errors.city && <p className="text-xs text-red-600 mt-1 font-medium" data-testid="city-error">{errors.city}</p>}
         </div>
-        <div className="form-row">
-          <div className="form-group" style={{ flex: 1 }}>
-            <label>State *</label>
-            <select data-testid="state-select" value={form.state} onChange={(e) => update("state", e.target.value)}>
+        <div className="flex gap-3">
+          <div className="flex-1 mb-4">
+            <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">State *</label>
+            <select data-testid="state-select" value={form.state} onChange={(e) => update("state", e.target.value)} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans bg-white text-slate-900 transition-colors focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10">
               <option value="">Select...</option>
               {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
-            {errors.state && <p className="field-error" data-testid="state-error">{errors.state}</p>}
+            {errors.state && <p className="text-xs text-red-600 mt-1 font-medium" data-testid="state-error">{errors.state}</p>}
           </div>
-          <div className="form-group" style={{ flex: 1 }}>
-            <label>ZIP *</label>
-            <input data-testid="zip-input" value={form.zip} onChange={(e) => update("zip", e.target.value)} placeholder="62701" />
-            {errors.zip && <p className="field-error" data-testid="zip-error">{errors.zip}</p>}
+          <div className="flex-1 mb-4">
+            <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">ZIP *</label>
+            <input data-testid="zip-input" value={form.zip} onChange={(e) => update("zip", e.target.value)} placeholder="62701" className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans bg-white text-slate-900 transition-colors focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10" />
+            {errors.zip && <p className="text-xs text-red-600 mt-1 font-medium" data-testid="zip-error">{errors.zip}</p>}
           </div>
         </div>
-        <button data-testid="next-button" onClick={handleNext} className="btn-primary">Continue to Payment</button>
+        <button data-testid="next-button" onClick={handleNext} className="block w-full py-2.5 px-5 bg-blue-600 text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-colors font-sans hover:bg-blue-700">Continue to Payment</button>
       </div>
     </div>
   );

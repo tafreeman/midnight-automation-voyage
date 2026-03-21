@@ -64,6 +64,11 @@ test('shows validation on empty submit', async ({ page }) => {
     correctIndex: 1,
     explanation: "CARD = Context, Actions, Rules, Data. Actions describes the step-by-step user flow the test should walk through — this is the sequence Playwright will automate."
   },
+  practiceLink: {
+    url: "http://localhost:5173/products",
+    label: "Write CARD prompts against the Products page",
+    description: "Practice writing CARD-formatted prompts for the search, filter, and product display features.",
+  },
   exercise: {
     title: "Build a CARD Prompt",
     description: "Complete the CARD-format prompt template below. Fill in each section (Context, Action, Result, Details) to generate a Playwright test for a login form.",

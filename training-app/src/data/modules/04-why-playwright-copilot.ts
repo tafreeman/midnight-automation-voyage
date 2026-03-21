@@ -46,6 +46,74 @@ export const lesson: Lesson = {
       warning: "Never merge Copilot-generated tests without validating: correct assertions, realistic test data, no hardcoded waits, and alignment with the acceptance criteria on the ticket."
     }
   ],
+  practiceLink: {
+    url: "http://localhost:5173/login",
+    label: "Explore the practice app",
+    description: "See the login page, products, and checkout flow — the test targets you'll automate with Playwright + Copilot.",
+  },
+  exercise: {
+    title: "Compare Locator Strategies",
+    description: "Given this HTML snippet from the practice app, write three different Playwright locator approaches and identify which is most resilient to UI refactoring.",
+    starterCode: `// HTML element to locate:
+// <button class="btn btn-primary mt-4" data-testid="login-button" type="submit">
+//   Sign In
+// </button>
+
+// Write three locator strategies:
+
+// 1. CSS selector approach:
+const cssLocator = page.locator(''); // TODO
+
+// 2. data-testid approach:
+const testIdLocator = page.locator(''); // TODO
+
+// 3. getByRole approach:
+const roleLocator = page.locator(''); // TODO
+
+// Which is most resilient? Why?
+// ANSWER: `,
+    solutionCode: `// HTML element to locate:
+// <button class="btn btn-primary mt-4" data-testid="login-button" type="submit">
+//   Sign In
+// </button>
+
+// Write three locator strategies:
+
+// 1. CSS selector approach:
+const cssLocator = page.locator('button.btn.btn-primary.mt-4');
+// Fragile: breaks if any CSS class changes
+
+// 2. data-testid approach:
+const testIdLocator = page.locator('[data-testid="login-button"]');
+// Resilient: only breaks if testid is removed
+
+// 3. getByRole approach:
+const roleLocator = page.getByRole('button', { name: 'Sign In' });
+// Resilient: semantic, accessible, reads like English
+
+// Which is most resilient? Why?
+// ANSWER: data-testid is the team convention — it survives
+// CSS refactors, text changes (if localized), and restructuring.
+// getByRole is also excellent and preferred by Playwright docs.
+// CSS selectors are the most fragile and should be avoided.`,
+    hints: [
+      "CSS selectors use class names — think about what happens when a designer changes styling",
+      "data-testid attributes exist specifically for testing and are unlikely to change during refactoring",
+      "getByRole uses semantic HTML roles — it's the most 'user-like' way to find elements",
+    ],
+  },
+  promptTemplates: [
+    {
+      label: "Compare Testing Approaches",
+      context: "Use when evaluating Playwright against Selenium and Cypress to justify framework selection.",
+      prompt: "Context: I am evaluating test automation frameworks for a web application. I need to compare Selenium, Cypress, and Playwright side by side with concrete code examples.\n\nAction: Write a sample test for the following scenario in all three frameworks — navigate to a login page, fill in email and password fields, click the submit button, and assert the user is redirected to a dashboard page.\n\nRules:\n- Highlight how each framework handles waiting for elements (auto-wait vs explicit waits vs manual sleeps)\n- Show the selector strategy each framework encourages (CSS selectors, data attributes, role-based locators)\n- Note the verbosity difference — count the lines of code for each\n- Call out any required boilerplate (driver setup, browser launch, config files)\n\nData:\n- Login URL: /login\n- Email field: data-testid=\"email-input\"\n- Password field: data-testid=\"password-input\"\n- Submit button: text \"Sign In\"\n- Success URL after login: /dashboard",
+    },
+    {
+      label: "Estimate Automation Time Savings",
+      context: "Use when building a business case for adopting Playwright + Copilot automation over manual testing.",
+      prompt: "Context: I currently run a manual testing workflow and want to understand the return on investment from automating it with Playwright and GitHub Copilot.\n\nAction: Given the manual workflow described below, estimate the time savings from automation. Break down your analysis into: (1) one-time setup cost in hours, (2) per-execution time comparison (manual vs automated), (3) break-even point in number of test runs, and (4) projected monthly savings after break-even.\n\nRules:\n- Be realistic about setup costs — include learning curve, writing tests, CI integration, and maintenance overhead\n- Factor in Copilot's productivity boost for writing and maintaining tests (estimate 40-60% faster test authoring)\n- Account for parallel execution reducing total suite run time\n- Include the value of catching regressions earlier in the pipeline\n\nData — Manual workflow:\n- 12 test cases covering login, product search, add-to-cart, checkout, and order confirmation\n- Each manual run takes approximately 45 minutes per tester\n- Tests are executed 3 times per week across 2 browsers\n- 1 tester is dedicated to this regression cycle\n- Average bug escape rate with manual testing: 2 per month",
+    },
+  ],
   quiz: {
     question: "What is Playwright's primary advantage over Selenium for test reliability?",
     options: [

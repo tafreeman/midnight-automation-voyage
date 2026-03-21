@@ -23,6 +23,18 @@ import { lesson as readingResults } from "./modules/12-reading-results";
 import { lesson as hitlChecklist } from "./modules/13-hitl-checklist";
 import { lesson as nonCoderGuide } from "./modules/14-non-coder-guide";
 import { lesson as cicdReference } from "./modules/15-cicd-reference";
+import { lesson as authFixtures } from "./modules/16-auth-fixtures";
+import { lesson as visualRegression } from "./modules/17-visual-regression";
+import { lesson as accessibilityTesting } from "./modules/18-accessibility-testing";
+import { lesson as flakyTestDiagnosis } from "./modules/19-flaky-test-diagnosis";
+import { lesson as testDataStrategies } from "./modules/20-test-data-strategies";
+import { lesson as assessmentCertification } from "./modules/21-assessment-certification";
+import { lesson as traceViewer } from "./modules/22-trace-viewer";
+import { lesson as mobileResponsive } from "./modules/23-mobile-responsive";
+import { lesson as parallelSharding } from "./modules/24-parallel-sharding";
+import { lesson as multiBrowserProjects } from "./modules/25-multi-browser-projects";
+import { lesson as testTagging } from "./modules/26-test-tagging";
+import { lesson as githubActions } from "./modules/27-github-actions";
 
 import type { Lesson } from "./types";
 
@@ -42,4 +54,16 @@ export const lessons: Lesson[] = [
   hitlChecklist,
   nonCoderGuide,
   cicdReference,
+  authFixtures,
+  visualRegression,
+  accessibilityTesting,
+  flakyTestDiagnosis,
+  testDataStrategies,
+  assessmentCertification,
+  traceViewer,
+  mobileResponsive,
+  parallelSharding,
+  multiBrowserProjects,
+  testTagging,
+  githubActions,
 ];

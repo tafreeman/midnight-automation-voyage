@@ -180,6 +180,55 @@ QUESTIONS TO ANSWER:
       context: "Non-coders: Use this when a test fails and you're not sure why. The structured questions help Copilot give you an actionable diagnosis."
     }
   ],
+  exercise: {
+    title: "Write a CARD Prompt from a Manual Test Case",
+    description: "You have a manual test case description below. Convert it into a structured CARD prompt that Copilot can use to generate a Playwright test.",
+    starterCode: `// MANUAL TEST CASE:
+// "Verify that searching for 'laptop' on the Products page
+//  returns only products containing 'laptop' in the name,
+//  and that clearing the search restores all products."
+
+// Write your CARD prompt below:
+// CONTEXT: [TODO]
+//
+// ACTIONS: [TODO]
+//
+// RULES: [TODO]
+//
+// DATA: [TODO]`,
+    solutionCode: `// MANUAL TEST CASE:
+// "Verify that searching for 'laptop' on the Products page
+//  returns only products containing 'laptop' in the name,
+//  and that clearing the search restores all products."
+
+// CARD Prompt:
+// CONTEXT: React e-commerce app with a Products page at /products.
+// The page has a search input (data-testid="search-input") and
+// a product grid (data-testid="product-card") showing all items.
+//
+// ACTIONS:
+// 1. Navigate to /products
+// 2. Type "laptop" into the search input
+// 3. Verify filtered results only show laptop products
+// 4. Clear the search input
+// 5. Verify all products are restored
+//
+// RULES:
+// - Search is case-insensitive
+// - Filtering happens on keypress (no submit button needed)
+// - Empty search shows all products
+// - Each product card shows name and price
+//
+// DATA:
+// - Search term: "laptop"
+// - Expected: only products with "laptop" in name
+// - After clear: full product count restored`,
+    hints: [
+      "Context should name the app, page, route, and key selectors",
+      "Actions are the step-by-step user flow — number them",
+      "Rules define business logic: is search case-sensitive? When does filtering trigger?",
+    ],
+  },
   quiz: {
     question: "When using a prompt template, what do [BRACKETED] items represent?",
     options: [
@@ -190,5 +239,10 @@ QUESTIONS TO ANSWER:
     ],
     correctIndex: 1,
     explanation: "Bracketed items are placeholders. Replace them with your actual page names, URLs, test data, and expected behaviors. The quality of the generated test depends on the specificity of your replacements."
+  },
+  practiceLink: {
+    url: "http://localhost:5173/contact",
+    label: "Try using the prompt templates against the Contact form — it has validation, required fields, and success states",
+    description: "The Contact form is perfect for practicing with form submission and validation templates",
   }
 };

@@ -106,6 +106,45 @@ export const lesson: Lesson = {
     correctIndex: 1,
     explanation: "A passing test that checks the wrong things gives false confidence. The human review step — mapping assertions to acceptance criteria — is the non-negotiable governance gate."
   },
+  exercise: {
+    title: "Refine a Codegen Recording with CARD",
+    description: "Below is raw output from Playwright Codegen. Apply the CARD refinement approach to clean it into a production-quality test with proper selectors and assertions.",
+    starterCode: `// Raw codegen output — needs refinement:
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/contact');
+  await page.locator('#root > div > form > input:nth-child(1)').fill('Jane');
+  await page.locator('#root > div > form > input:nth-child(2)').fill('jane@test.com');
+  await page.locator('#root > div > form > textarea').fill('Hello');
+  await page.locator('#root > div > form > button').click();
+});
+
+// YOUR TASK: Refine this using what you learned:
+// 1. Replace CSS selectors with data-testid locators
+// 2. Add a descriptive test name
+// 3. Add assertions that verify the form submission worked
+// REFINED TEST: [TODO]`,
+    solutionCode: `// Refined test with proper selectors and assertions:
+test('contact form submits successfully with valid data', async ({ page }) => {
+  await page.goto('/contact');
+
+  // Fill required fields using stable selectors
+  await page.locator('[data-testid="contact-name"]').fill('Jane');
+  await page.locator('[data-testid="contact-email"]').fill('jane@test.com');
+  await page.locator('[data-testid="contact-message"]').fill('Hello, this is a test message.');
+
+  // Submit the form
+  await page.locator('[data-testid="contact-submit"]').click();
+
+  // Verify success feedback
+  await expect(page.locator('[data-testid="contact-success"]')).toBeVisible();
+  await expect(page.locator('[data-testid="contact-success"]')).toContainText('Thank you');
+});`,
+    hints: [
+      "Replace nth-child selectors with data-testid — check the practice app HTML for the actual testid names",
+      "The test name should describe the user scenario: 'contact form submits successfully with valid data'",
+      "Always add at least one assertion that verifies the expected outcome after submission",
+    ],
+  },
   practiceLink: {
     url: "http://localhost:5173/login",
     label: "Record a login test with Codegen",

@@ -1,7 +1,17 @@
 export const USERS = [
-  { email: "user@test.com", password: "Password123!", name: "Test User" },
-  { email: "locktest@test.com", password: "LockPass123!", name: "Lock Test User" },
-  { email: "admin@test.com", password: "AdminPass1!", name: "Admin User" },
+  { email: "user@test.com", password: "Password123!", name: "Test User", role: "editor" as const },
+  { email: "locktest@test.com", password: "LockPass123!", name: "Lock Test User", role: "viewer" as const },
+  { email: "admin@test.com", password: "AdminPass1!", name: "Admin User", role: "admin" as const },
+];
+
+export const ADMIN_USERS = [
+  { id: "u1", name: "Alice Johnson", email: "alice@company.com", role: "admin" as const, status: "active" as const },
+  { id: "u2", name: "Bob Smith", email: "bob@company.com", role: "editor" as const, status: "active" as const },
+  { id: "u3", name: "Carol White", email: "carol@company.com", role: "viewer" as const, status: "active" as const },
+  { id: "u4", name: "David Brown", email: "david@company.com", role: "editor" as const, status: "inactive" as const },
+  // Intentional Issue #2: Duplicate email in seed data triggers validation error on invite
+  { id: "u5", name: "Eve Davis", email: "alice@company.com", role: "viewer" as const, status: "active" as const },
+  { id: "u6", name: "Frank Miller", email: "frank@company.com", role: "viewer" as const, status: "active" as const },
 ];
 
 export const PRODUCTS = [

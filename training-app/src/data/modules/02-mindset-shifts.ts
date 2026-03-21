@@ -60,6 +60,18 @@ export const lesson: Lesson = {
       callout: "Automation handles the boring, repetitive checking. You handle the interesting, creative testing. That's the division of labor that makes a great QA team."
     }
   ],
+  promptTemplates: [
+    {
+      label: "Convert Manual Test Case to Automation Candidate",
+      context: "Use when you have a manual test case and want to evaluate whether it's worth automating.",
+      prompt: "Context: I am a manual tester transitioning to automation with Playwright. I have a manual test case that I need to evaluate for automation.\n\nActions:\n1. Analyze the manual test case below and determine whether it is a good automation candidate.\n2. Score it on three factors (1–5 each): execution frequency, repeatability, and deterministic verifiability.\n3. If it IS a good candidate, suggest the automation approach (e.g., UI test, API test, hybrid) and list the specific assertions that should be included.\n4. If it is NOT a good candidate, explain why and recommend keeping it manual.\n\nRules:\n- A good automation candidate runs frequently, has deterministic expected results, and doesn't require human judgment.\n- Prefer data-testid selectors and getByRole locators over CSS selectors.\n- Each meaningful user action should have at least one assertion.\n- Flag any steps that require human judgment (visual checks, UX evaluation) as manual-only.\n\nData — Manual Test Case:\n[PASTE YOUR MANUAL TEST CASE STEPS, EXPECTED RESULTS, AND PRECONDITIONS HERE]",
+    },
+    {
+      label: "Identify Automation ROI for Test Suite",
+      context: "Use when you have a list of manual test cases and need to decide which ones to automate first.",
+      prompt: "Context: I am prioritizing which manual test cases to automate first using Playwright. I need a data-driven ranking to maximize the return on automation investment.\n\nActions:\n1. For each test case in the list below, score it on three factors (1–5 scale each):\n   - Frequency: How often is this test executed? (5 = every build, 1 = once a quarter)\n   - Manual Effort: How long does it take to run manually? (5 = 30+ minutes, 1 = under 2 minutes)\n   - Risk: How critical is the feature it covers? (5 = revenue-impacting, 1 = cosmetic)\n2. Calculate an ROI score for each: Frequency × Effort × Risk.\n3. Rank the test cases from highest to lowest ROI score.\n4. Recommend the top 5 to automate first, with a one-sentence justification for each.\n5. Identify any test cases that should remain manual, with reasoning.\n\nRules:\n- Tests requiring human judgment (UX, visual design) should be flagged as manual-only regardless of score.\n- Tests for unstable features still under active development should be deferred.\n- Prefer tests that cover critical business paths (login, checkout, data integrity).\n\nData — Manual Test Cases:\n[PASTE YOUR LIST OF MANUAL TEST CASES HERE, ONE PER LINE, WITH A BRIEF DESCRIPTION OF EACH]",
+    },
+  ],
   quiz: {
     question: "A manual tester records a Playwright test that walks through the entire checkout flow (login → search → add to cart → pay → confirm). What's the problem?",
     options: [
@@ -70,5 +82,10 @@ export const lesson: Lesson = {
     ],
     correctIndex: 1,
     explanation: "Long end-to-end tests are fragile because an early failure masks all later checks. If login breaks, you learn nothing about search, cart, or checkout. Break it into focused, independent tests — each targeting one capability with one clear set of assertions."
+  },
+  practiceLink: {
+    url: "http://localhost:5173/products",
+    label: "Browse the Products page and think about what manual test cases you'd write, then how you'd automate them",
+    description: "The Products page demonstrates search and filtering — key concepts in the mindset shift",
   }
 };
