@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip -l \"automated test package.zip\")",
+      "Bash(unzip -l \"playwright-copilot-training.zip\")",
+      "Bash(grep -E \"\\\\.html$|\\\\.md$\")"
+    ]
+  }
+}
