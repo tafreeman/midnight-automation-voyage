@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Lesson, ModuleCategory } from "../data";
+import type { Lesson, CodeExercise } from "../data";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -13,139 +13,7 @@ interface LessonViewProps {
   isCompleted: boolean;
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
-  category?: ModuleCategory;
-  theme?: "light" | "dark";
 }
-
-/* ------------------------------------------------------------------ */
-/*  Constants                                                          */
-/* ------------------------------------------------------------------ */
-
-const categoryLabels: Record<ModuleCategory, string> = {
-  foundations: "Foundations",
-  core: "Core",
-  workflows: "Workflows",
-  advanced: "Advanced",
-  devops: "DevOps",
-};
-
-const categoryBadgeColors: Record<ModuleCategory, string> = {
-  foundations: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400",
-  core: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400",
-  workflows: "bg-teal-100 text-teal-700 dark:bg-teal-500/15 dark:text-teal-400",
-  advanced: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
-  devops: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400",
-};
-
-const blueprintCategories: ModuleCategory[] = ["core", "advanced", "devops"];
-
-/* ------------------------------------------------------------------ */
-/*  Icons (inline SVGs)                                                */
-/* ------------------------------------------------------------------ */
-
-function IconCopy({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  );
-}
-
-function IconCheck({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-
-function IconX({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function IconStar({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
-
-function IconBolt({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-    </svg>
-  );
-}
-
-function IconClipboard({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-    </svg>
-  );
-}
-
-function IconInfo({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
-    </svg>
-  );
-}
-
-function IconWarning({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
-}
-
-function IconExternalLink({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  );
-}
-
-function IconChevronLeft({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="15 18 9 12 15 6" />
-    </svg>
-  );
-}
-
-function IconChevronRight({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
-
-function IconMenu({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-      <path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  CodeBlock                                                          */
-/* ------------------------------------------------------------------ */
 
 function CodeBlock({ code, language }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
@@ -155,32 +23,22 @@ function CodeBlock({ code, language }: { code: string; language?: string }) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="relative group my-4 bg-card border border-border rounded-lg overflow-hidden">
-      <div className="flex items-center justify-between bg-muted border-b border-border px-4 py-2">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider bg-background px-2.5 py-0.5 rounded-full border border-border">
-          {language || "code"}
-        </span>
+    <div className="relative group my-3 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{language || "code"}</span>
         <button
           onClick={copy}
-          className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-0.5 rounded"
+          className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 rounded"
         >
-          {copied ? (
-            <><IconCheck size={13} /> Copied</>
-          ) : (
-            <><IconCopy size={13} /> Copy</>
-          )}
+          {copied ? "✓ Copied" : "Copy"}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-foreground/90 font-mono">
+      <pre className="p-3 overflow-x-auto text-[12px] leading-relaxed text-emerald-200/90">
         <code>{code}</code>
       </pre>
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  QuizSection                                                        */
-/* ------------------------------------------------------------------ */
 
 function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; onAttempt?: () => void }) {
   const [selected, setSelected] = useState<number | null>(null);
@@ -196,44 +54,40 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
   const isCorrect = selected === quiz.correctIndex;
 
   return (
-    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
-      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2.5">
-        <span className="text-amber-500 dark:text-amber-400"><IconStar /></span>
-        <span className="font-semibold text-foreground">Knowledge Check</span>
+    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
+      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
+        <span className="text-amber-400">✦</span>
+        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Knowledge Check</span>
       </div>
-      <div className="p-6">
-        <p className="text-base text-foreground mb-5 leading-relaxed">{quiz.question}</p>
-        <div className="space-y-3">
+      <div className="p-5">
+        <p className="text-sm text-zinc-200 mb-4 leading-relaxed">{quiz.question}</p>
+        <div className="space-y-2">
           {quiz.options.map((opt, i) => {
-            let containerClass = "border-border hover:border-primary/40 bg-background";
-            let radioClass = "border-border";
-            let radioFilled = false;
-
+            let border = "border-zinc-800 hover:border-zinc-600";
+            let bg = "bg-transparent hover:bg-zinc-900/50";
+            let text = "text-zinc-400";
             if (submitted && i === quiz.correctIndex) {
-              containerClass = "border-green-500 bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400";
-              radioClass = "border-green-500";
-              radioFilled = true;
+              border = "border-emerald-500/50";
+              bg = "bg-emerald-500/5";
+              text = "text-emerald-300";
             } else if (submitted && i === selected && !isCorrect) {
-              containerClass = "border-red-500 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400";
-              radioClass = "border-red-500";
-              radioFilled = true;
+              border = "border-red-500/50";
+              bg = "bg-red-500/5";
+              text = "text-red-300";
             } else if (!submitted && i === selected) {
-              containerClass = "border-primary bg-primary/5";
-              radioClass = "border-primary";
-              radioFilled = true;
+              border = "border-emerald-500/30";
+              bg = "bg-emerald-500/5";
+              text = "text-zinc-200";
             }
-
             return (
               <button
                 key={i}
                 onClick={() => !submitted && setSelected(i)}
                 disabled={submitted && selected === quiz.correctIndex}
-                className={`w-full text-left px-4 py-3.5 rounded-lg border transition-all text-[15px] leading-relaxed flex items-start gap-3 ${containerClass}`}
+                className={`w-full text-left px-4 py-3 rounded-md border transition-all text-xs leading-relaxed ${border} ${bg} ${text}`}
               >
-                <span className={`mt-0.5 flex-shrink-0 w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center ${radioClass}`}>
-                  {radioFilled && <span className="w-2.5 h-2.5 rounded-full bg-current" />}
-                </span>
-                <span>{opt}</span>
+                <span className="mr-2 font-mono text-zinc-600">{String.fromCharCode(65 + i)}.</span>
+                {opt}
               </button>
             );
           })}
@@ -242,24 +96,19 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
           <button
             onClick={handleSubmit}
             disabled={selected === null}
-            className="mt-5 px-5 py-2.5 rounded-lg text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="mt-4 px-4 py-2 rounded-md text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             Check Answer
           </button>
         )}
         {submitted && (
-          <div className={`mt-5 p-4 rounded-lg text-sm leading-relaxed border flex items-start gap-3 ${
+          <div className={`mt-4 p-3 rounded-md text-xs leading-relaxed border ${
             isCorrect
-              ? "bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/20 text-green-700 dark:text-green-400"
-              : "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400"
+              ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-200"
+              : "bg-amber-500/5 border-amber-500/20 text-amber-200"
           }`}>
-            <span className="flex-shrink-0 mt-0.5">
-              {isCorrect ? <IconCheck size={20} /> : <IconX size={20} />}
-            </span>
-            <div>
-              <p className="font-semibold mb-1">{isCorrect ? "Correct!" : "Not quite."}</p>
-              <p className="text-muted-foreground">{quiz.explanation}</p>
-            </div>
+            <p className="font-semibold mb-1">{isCorrect ? "✓ Correct!" : "✗ Not quite."}</p>
+            <p className="text-zinc-400">{quiz.explanation}</p>
           </div>
         )}
         {submitted && selected !== quiz.correctIndex && (
@@ -268,7 +117,7 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
               setSubmitted(false);
               setSelected(null);
             }}
-            className="mt-4 text-sm text-primary hover:text-primary/80 border border-border hover:border-primary rounded-lg px-4 py-2 transition-colors"
+            className="mt-3 text-xs text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded px-3 py-1.5 transition-colors"
           >
             Try Again
           </button>
@@ -277,10 +126,6 @@ function QuizSection({ quiz, onAttempt }: { quiz: NonNullable<Lesson["quiz"]>; o
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  diffLines helper                                                   */
-/* ------------------------------------------------------------------ */
 
 function diffLines(starter: string, solution: string) {
   const sLines = starter.split("\n");
@@ -294,10 +139,6 @@ function diffLines(starter: string, solution: string) {
   });
 }
 
-/* ------------------------------------------------------------------ */
-/*  DiffCodeBlock                                                      */
-/* ------------------------------------------------------------------ */
-
 function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solution: string; revealed: boolean }) {
   const [copiedLeft, setCopiedLeft] = useState(false);
   const [copiedRight, setCopiedRight] = useState(false);
@@ -307,50 +148,48 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   const copySolution = () => { navigator.clipboard.writeText(solution); setCopiedRight(true); setTimeout(() => setCopiedRight(false), 2000); };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 my-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 my-3">
       {/* Starter - left */}
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <div className="flex items-center justify-between bg-muted border-b border-border px-4 py-2">
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Your Starting Point</span>
-          <button onClick={copyStarter} className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-0.5">
-            <IconCopy size={13} />
-            {copiedLeft ? "Copied" : "Copy"}
+      <div className="rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+        <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">Your Starting Point</span>
+          <button onClick={copyStarter} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5">
+            {copiedLeft ? "✓ Copied" : "Copy"}
           </button>
         </div>
-        <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed">
+        <pre className="p-3 overflow-x-auto text-xs leading-relaxed">
           <code>{starter.split("\n").map((line, i) => (
-            <div key={i} className="text-foreground/70">{line || "\u00A0"}</div>
+            <div key={i} className="text-emerald-200/70">{line || "\u00A0"}</div>
           ))}</code>
         </pre>
       </div>
       {/* Solution - right */}
-      <div className={`bg-card border rounded-lg overflow-hidden transition-all duration-300 ${revealed ? "border-green-500/30" : "border-border"}`}>
-        <div className="flex items-center justify-between bg-muted border-b border-border px-4 py-2">
+      <div className={`rounded-lg overflow-hidden border bg-zinc-900/80 transition-all duration-300 ${revealed ? "border-emerald-500/20" : "border-zinc-800"}`}>
+        <div className="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Solution</span>
+            <span className="text-xs text-zinc-500 uppercase tracking-wider">Solution</span>
             {revealed && (
-              <span className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400">
-                <span className="inline-block w-2 h-2 rounded-sm bg-green-500" />
-                = changed / added
+              <span className="flex items-center gap-1.5 text-xs">
+                <span className="inline-block w-2 h-2 rounded-sm bg-emerald-400/80" />
+                <span className="text-emerald-400/70">= changed / added</span>
               </span>
             )}
           </div>
           {revealed && (
-            <button onClick={copySolution} className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-0.5">
-              <IconCopy size={13} />
-              {copiedRight ? "Copied" : "Copy"}
+            <button onClick={copySolution} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5">
+              {copiedRight ? "✓ Copied" : "Copy"}
             </button>
           )}
         </div>
         {revealed ? (
-          <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed">
+          <pre className="p-3 overflow-x-auto text-xs leading-relaxed">
             <code>{diffResult.map((d, i) => (
               <div
                 key={i}
                 className={
                   d.status === "changed"
-                    ? "text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-500/10 -mx-4 px-4 border-l-2 border-green-500"
-                    : "text-foreground/70"
+                    ? "text-emerald-300 bg-emerald-500/10 -mx-3 px-3 border-l-2 border-emerald-400"
+                    : "text-emerald-200/70"
                 }
               >
                 {d.line || "\u00A0"}
@@ -358,8 +197,8 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
             ))}</code>
           </pre>
         ) : (
-          <div className="p-10 flex items-center justify-center">
-            <p className="text-sm text-muted-foreground italic">Click &quot;Reveal Solution&quot; below to see the answer with changes highlighted</p>
+          <div className="p-8 flex items-center justify-center">
+            <p className="text-xs text-zinc-600 italic">Click "Reveal Solution" below to see the answer with changes highlighted</p>
           </div>
         )}
       </div>
@@ -367,23 +206,19 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  ExerciseSection                                                    */
-/* ------------------------------------------------------------------ */
-
 function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"]> }) {
   const [showSolution, setShowSolution] = useState(false);
   const [showHints, setShowHints] = useState(false);
 
   return (
-    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
-      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2.5">
-        <span className="text-blue-500 dark:text-blue-400"><IconBolt /></span>
-        <span className="font-semibold text-foreground">Hands-On Exercise</span>
+    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
+      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
+        <span className="text-blue-400">⚡</span>
+        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Hands-On Exercise</span>
       </div>
-      <div className="p-6">
-        <h4 className="text-base font-semibold text-foreground mb-1.5">{exercise.title}</h4>
-        <p className="text-[15px] text-muted-foreground mb-5 leading-relaxed">{exercise.description}</p>
+      <div className="p-5">
+        <h4 className="text-sm font-semibold text-zinc-200 mb-1">{exercise.title}</h4>
+        <p className="text-xs text-zinc-400 mb-4 leading-relaxed">{exercise.description}</p>
 
         <DiffCodeBlock
           starter={exercise.starterCode}
@@ -391,11 +226,11 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           revealed={showSolution}
         />
 
-        <div className="flex items-center gap-3 mt-4">
+        <div className="flex items-center gap-3 mt-3">
           {!showSolution && (
             <button
               onClick={() => setShowSolution(true)}
-              className="px-5 py-2.5 text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
+              className="px-4 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors"
             >
               Reveal Solution
             </button>
@@ -403,7 +238,7 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           {showSolution && (
             <button
               onClick={() => setShowSolution(false)}
-              className="px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground border border-border hover:border-primary/40 rounded-lg transition-colors"
+              className="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 border border-zinc-700 rounded-md transition-colors"
             >
               Hide Solution
             </button>
@@ -411,20 +246,18 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
           {exercise.hints.length > 0 && (
             <button
               onClick={() => setShowHints(!showHints)}
-              className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors flex items-center gap-1.5"
+              className="text-xs text-amber-500/80 hover:text-amber-400 transition-colors flex items-center gap-1"
             >
-              <IconInfo size={15} />
-              {showHints ? "Hide hints" : "Need a hint?"}
+              {showHints ? "▾ Hide hints" : "▸ Need a hint?"}
             </button>
           )}
         </div>
 
         {showHints && exercise.hints.length > 0 && (
-          <div className="mt-4 space-y-2 pl-4 border-l-2 border-amber-300 dark:border-amber-500/40">
+          <div className="mt-3 space-y-1.5 pl-3 border-l border-amber-500/20">
             {exercise.hints.map((h, i) => (
-              <p key={i} className="text-[15px] text-muted-foreground leading-relaxed flex items-start gap-2">
-                <span className="text-amber-500 dark:text-amber-400 font-semibold flex-shrink-0">{i + 1}.</span>
-                {h}
+              <p key={i} className="text-xs text-zinc-400">
+                <span className="text-amber-500/60 mr-1">→</span> {h}
               </p>
             ))}
           </div>
@@ -434,9 +267,76 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  PromptTemplateSection                                              */
-/* ------------------------------------------------------------------ */
+const DIFFICULTY_CONFIG = {
+  beginner: { label: "Beginner", color: "text-green-400", border: "border-green-500/30", bg: "bg-green-500/10" },
+  intermediate: { label: "Intermediate", color: "text-amber-400", border: "border-amber-500/30", bg: "bg-amber-500/10" },
+  advanced: { label: "Advanced", color: "text-red-400", border: "border-red-500/30", bg: "bg-red-500/10" },
+} as const;
+
+type DifficultyFilter = "all" | "beginner" | "intermediate" | "advanced";
+
+function DifficultyBadge({ difficulty }: { difficulty?: CodeExercise["difficulty"] }) {
+  if (!difficulty) return null;
+  const cfg = DIFFICULTY_CONFIG[difficulty];
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${cfg.color} ${cfg.border} ${cfg.bg}`}>
+      {cfg.label}
+    </span>
+  );
+}
+
+function ExercisesSection({ exercises }: { exercises: CodeExercise[] }) {
+  const [filter, setFilter] = useState<DifficultyFilter>("all");
+
+  const filters: DifficultyFilter[] = ["all", "beginner", "intermediate", "advanced"];
+
+  const filtered = filter === "all"
+    ? exercises
+    : exercises.filter((e) => e.difficulty === filter);
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        {filters.map((f) => {
+          const isActive = filter === f;
+          const base = "px-3 py-1.5 rounded-md text-xs font-medium border transition-colors";
+          let style: string;
+          if (f === "all") {
+            style = isActive
+              ? "border-zinc-600 bg-zinc-800 text-zinc-200"
+              : "border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700";
+          } else {
+            const cfg = DIFFICULTY_CONFIG[f];
+            style = isActive
+              ? `${cfg.border} ${cfg.bg} ${cfg.color}`
+              : "border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700";
+          }
+          return (
+            <button key={f} onClick={() => setFilter(f)} className={`${base} ${style}`}>
+              {f === "all" ? "All" : DIFFICULTY_CONFIG[f].label}
+            </button>
+          );
+        })}
+      </div>
+      {filtered.length === 0 ? (
+        <p className="text-xs text-zinc-600 italic py-4">No exercises match this difficulty level.</p>
+      ) : (
+        <div className="space-y-6">
+          {filtered.map((exercise, i) => (
+            <div key={i} className="relative">
+              {exercise.difficulty && (
+                <div className="mb-2">
+                  <DifficultyBadge difficulty={exercise.difficulty} />
+                </div>
+              )}
+              <ExerciseSection exercise={exercise} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["promptTemplates"]> }) {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -448,35 +348,32 @@ function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["p
   };
 
   return (
-    <div className="mt-10 bg-card border border-border rounded-xl overflow-hidden">
-      <div className="px-6 py-4 bg-muted border-b border-border flex items-center gap-2.5">
-        <span className="text-violet-500 dark:text-violet-400"><IconClipboard /></span>
-        <span className="font-semibold text-foreground">Prompt Template Library</span>
-        <Badge variant="outline" className="ml-auto text-xs border-violet-300 dark:border-violet-500/30 text-violet-600 dark:text-violet-400">
-          {templates.length} templates
-        </Badge>
+    <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
+      <div className="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
+        <span className="text-violet-400">📋</span>
+        <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Prompt Template Library</span>
+        <Badge variant="outline" className="ml-auto text-xs border-violet-500/30 text-violet-400">{templates.length} templates</Badge>
       </div>
-      <div className="p-4">
-        <Accordion type="single" collapsible className="space-y-2">
+      <div className="p-3">
+        <Accordion type="single" collapsible className="space-y-1">
           {templates.map((t, i) => (
-            <AccordionItem key={i} value={`tpl-${i}`} className="border border-border rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-4 py-3 text-sm text-foreground hover:text-primary hover:no-underline [&[data-state=open]]:bg-muted/50">
+            <AccordionItem key={i} value={`tpl-${i}`} className="border border-zinc-800 rounded-md overflow-hidden">
+              <AccordionTrigger className="px-3 py-2.5 text-xs text-zinc-300 hover:text-zinc-100 hover:no-underline [&[data-state=open]]:bg-zinc-800/30">
                 {t.label}
               </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <p className="text-sm text-muted-foreground mb-3 italic">{t.context}</p>
-                <div className="relative bg-muted rounded-md border border-border">
-                  <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-                    <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Copilot Chat Prompt</span>
+              <AccordionContent className="px-3 pb-3">
+                <p className="text-xs text-zinc-500 mb-2 italic">{t.context}</p>
+                <div className="relative bg-zinc-900/80 border border-zinc-800 rounded-md">
+                  <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-800/50">
+                    <span className="text-xs text-zinc-600 uppercase tracking-wider">Copilot Chat Prompt</span>
                     <button
                       onClick={() => copyPrompt(t.prompt, i)}
-                      className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-0.5"
+                      className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5"
                     >
-                      <IconCopy size={13} />
-                      {copiedIdx === i ? "Copied!" : "Copy Prompt"}
+                      {copiedIdx === i ? "✓ Copied!" : "Copy Prompt"}
                     </button>
                   </div>
-                  <pre className="p-4 text-sm font-mono leading-relaxed text-foreground/80 whitespace-pre-wrap overflow-x-auto">{t.prompt}</pre>
+                  <pre className="p-3 text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap overflow-x-auto">{t.prompt}</pre>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -487,28 +384,22 @@ function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["p
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  TableBlock                                                         */
-/* ------------------------------------------------------------------ */
-
 function TableBlock({ table }: { table: { headers: string[]; rows: string[][] } }) {
   return (
-    <div className="my-4 overflow-x-auto bg-card border border-border rounded-lg overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="my-3 overflow-x-auto border border-zinc-800 rounded-lg">
+      <table className="w-full text-xs">
         <thead>
-          <tr className="bg-muted">
+          <tr className="bg-zinc-800/50">
             {table.headers.map((h, i) => (
-              <th key={i} className="px-4 py-3 text-left text-muted-foreground font-medium border-b border-border whitespace-nowrap">
-                {h}
-              </th>
+              <th key={i} className="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {table.rows.map((row, ri) => (
-            <tr key={ri} className="border-b border-border last:border-0 even:bg-muted/50 transition-colors">
+            <tr key={ri} className="border-b border-zinc-800/50 last:border-0 hover:bg-zinc-800/20 transition-colors">
               {row.map((cell, ci) => (
-                <td key={ci} className="px-4 py-3 text-foreground/80 leading-relaxed">{cell}</td>
+                <td key={ci} className="px-3 py-2 text-zinc-300 leading-relaxed">{cell}</td>
               ))}
             </tr>
           ))}
@@ -518,23 +409,7 @@ function TableBlock({ table }: { table: { headers: string[]; rows: string[][] } 
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  LessonView (main export)                                           */
-/* ------------------------------------------------------------------ */
-
-export function LessonView({
-  lesson,
-  lessonIndex,
-  totalLessons,
-  onNext,
-  onPrev,
-  onComplete,
-  isCompleted,
-  sidebarOpen,
-  onToggleSidebar,
-  category,
-  theme,
-}: LessonViewProps) {
+export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, onComplete, isCompleted, sidebarOpen, onToggleSidebar }: LessonViewProps) {
   const [quizAttempted, setQuizAttempted] = useState(false);
 
   useEffect(() => {
@@ -542,173 +417,160 @@ export function LessonView({
   }, [lesson.id]);
 
   const canComplete = !lesson.quiz || quizAttempted;
-  const resolvedCategory = category || lesson.category || "foundations";
-  const showBlueprint = blueprintCategories.includes(resolvedCategory);
 
   return (
-    <div className={`cat-${resolvedCategory} ${theme === "dark" ? "dark" : ""}`}>
-      <div className="max-w-3xl mx-auto px-6 py-10">
-
-        {/* ---- Page header zone ---- */}
-        <div className={`relative mb-10 ${showBlueprint ? "-mx-6 px-6 pt-10 pb-8 blueprint-grid rounded-lg" : ""}`}>
-
-          {/* Top meta row */}
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-3">
-              {!sidebarOpen && (
-                <button
-                  onClick={onToggleSidebar}
-                  className="text-muted-foreground hover:text-foreground transition-colors mr-1"
-                >
-                  <IconMenu />
-                </button>
-              )}
-              <span className="text-sm text-muted-foreground font-mono">
-                {String(lessonIndex + 1).padStart(2, "0")} / {String(totalLessons).padStart(2, "0")}
-              </span>
-              <span className={`text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${categoryBadgeColors[resolvedCategory]}`}>
-                {categoryLabels[resolvedCategory]}
-              </span>
-              {lesson.audience && (
-                <Badge variant="outline" className="text-xs border-border text-muted-foreground">
-                  {lesson.audience}
-                </Badge>
-              )}
-            </div>
-            {isCompleted && (
-              <Badge className="bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/20 text-xs flex items-center gap-1">
-                <IconCheck size={12} />
-                Completed
-              </Badge>
-            )}
-          </div>
-
-          {/* Progress bar */}
-          <div className="h-1 bg-muted rounded-full mb-6">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-300"
-              style={{ width: `${((lessonIndex + 1) / totalLessons) * 100}%` }}
-            />
-          </div>
-
-          {/* Icon + Title */}
-          <span className="text-3xl mb-3 block" role="img" aria-label={lesson.title}>{lesson.icon}</span>
-          <h2 className="text-3xl font-display font-bold text-foreground tracking-tight">
-            {lesson.title}
-          </h2>
-          <p className="text-lg text-muted-foreground mt-2">{lesson.subtitle}</p>
-        </div>
-
-        {/* ---- Sections ---- */}
-        <div className="space-y-10">
-          {lesson.sections.map((section, i) => (
-            <section key={i}>
-              <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2.5">
-                <span
-                  className="w-1.5 h-5 rounded-full inline-block flex-shrink-0"
-                  style={{ background: "hsl(var(--cat-accent))" }}
-                />
-                {section.heading}
-              </h3>
-              <p className="text-[15px] text-foreground/80 leading-relaxed">{section.content}</p>
-
-              {section.callout && (
-                <div className="mt-4 bg-primary/5 border-l-4 border-primary rounded-r-lg px-5 py-4">
-                  <p className="text-[15px] text-foreground/80 leading-relaxed">{section.callout}</p>
-                </div>
-              )}
-
-              {section.tip && (
-                <div className="mt-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-lg px-5 py-4 flex items-start gap-3">
-                  <span className="text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5"><IconInfo /></span>
-                  <p className="text-[15px] text-foreground/80 leading-relaxed">
-                    <span className="font-semibold text-blue-700 dark:text-blue-400">Tip: </span>{section.tip}
-                  </p>
-                </div>
-              )}
-
-              {section.warning && (
-                <div className="mt-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg px-5 py-4 flex items-start gap-3">
-                  <span className="text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5"><IconWarning /></span>
-                  <p className="text-[15px] text-foreground/80 leading-relaxed whitespace-pre-line">
-                    <span className="font-semibold text-amber-700 dark:text-amber-400">Warning: </span>{section.warning}
-                  </p>
-                </div>
-              )}
-
-              {section.table && <TableBlock table={section.table} />}
-              {section.code && <CodeBlock code={section.code} language={section.codeLanguage} />}
-            </section>
-          ))}
-        </div>
-
-        {/* ---- Prompt Templates ---- */}
-        {lesson.promptTemplates && lesson.promptTemplates.length > 0 && (
-          <PromptTemplateSection templates={lesson.promptTemplates} />
-        )}
-
-        {/* ---- Quiz ---- */}
-        {lesson.quiz && <QuizSection quiz={lesson.quiz} onAttempt={() => setQuizAttempted(true)} />}
-
-        {/* ---- Exercise ---- */}
-        {lesson.exercise && <ExerciseSection exercise={lesson.exercise} />}
-
-        {/* ---- Practice Link ---- */}
-        {lesson.practiceLink && (
-          <a
-            href={lesson.practiceLink.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block mt-10 p-5 rounded-xl border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors group"
-          >
-            <div className="flex items-center gap-2 text-primary font-semibold text-sm mb-1.5">
-              <span className="group-hover:translate-x-0.5 transition-transform"><IconExternalLink /></span>
-              Try It Now
-            </div>
-            <div className="text-sm text-foreground">{lesson.practiceLink.label}</div>
-            {lesson.practiceLink.description && (
-              <div className="text-sm text-muted-foreground mt-1">{lesson.practiceLink.description}</div>
-            )}
-          </a>
-        )}
-
-        {/* ---- Navigation footer ---- */}
-        <div className="border-t border-border mt-16 pt-8 flex items-center justify-between">
-          <button
-            onClick={onPrev}
-            disabled={lessonIndex === 0}
-            className="px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground disabled:opacity-20 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
-          >
-            <IconChevronLeft />
-            Previous
-          </button>
-          <div className="flex items-center gap-3">
-            {!isCompleted && (
-              <button
-                onClick={onComplete}
-                disabled={!canComplete}
-                className={`px-5 py-2.5 text-sm border rounded-lg transition-all ${
-                  canComplete
-                    ? "text-muted-foreground hover:text-primary border-border hover:border-primary"
-                    : "text-muted-foreground/50 border-border/50 cursor-not-allowed opacity-50"
-                }`}
-              >
-                {canComplete ? "Mark Complete" : "Complete Quiz First"}
-              </button>
-            )}
-            <button
-              onClick={onNext}
-              disabled={lessonIndex === totalLessons - 1}
-              className="px-5 py-2.5 text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
-            >
-              Next Lesson
-              <IconChevronRight />
+    <div className="max-w-3xl mx-auto px-6 py-8">
+      {/* Top bar */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          {!sidebarOpen && (
+            <button onClick={onToggleSidebar} className="text-zinc-600 hover:text-zinc-400 transition-colors mr-1">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </button>
-          </div>
+          )}
+          <span className="text-xs text-zinc-600 font-mono">
+            {String(lessonIndex + 1).padStart(2, "0")} / {String(totalLessons).padStart(2, "0")}
+          </span>
+          {lesson.audience && (
+            <Badge
+              variant="outline"
+              className={`text-xs ${
+                lesson.audience.includes("Non-Coder")
+                  ? "border-amber-500/30 text-amber-400"
+                  : lesson.audience.includes("Developer")
+                  ? "border-blue-500/30 text-blue-400"
+                  : "border-zinc-700 text-zinc-500"
+              }`}
+            >
+              {lesson.audience}
+            </Badge>
+          )}
         </div>
-
-        <div className="h-12" />
+        {isCompleted && (
+          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
+            ✓ Completed
+          </Badge>
+        )}
       </div>
+
+      {/* Progress indicator */}
+      <div className="h-0.5 bg-zinc-800 rounded-full mb-6">
+        <div
+          className="h-full bg-emerald-500/60 rounded-full transition-all duration-300"
+          style={{ width: `${((lessonIndex + 1) / totalLessons) * 100}%` }}
+        />
+      </div>
+
+      {/* Title */}
+      <div className="mb-8">
+        <span className="text-3xl mb-2 block" role="img" aria-label={lesson.title}>{lesson.icon}</span>
+        <h2 className="text-2xl font-bold text-zinc-100 tracking-tight" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          {lesson.title}
+        </h2>
+        <p className="text-sm text-zinc-500 mt-1">{lesson.subtitle}</p>
+      </div>
+
+      {/* Sections */}
+      <div className="space-y-8">
+        {lesson.sections.map((section, i) => (
+          <section key={i}>
+            <h3 className="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+              <span className="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0" />
+              {section.heading}
+            </h3>
+            <p className="text-[13px] text-zinc-400 leading-relaxed">{section.content}</p>
+            {section.callout && (
+              <div className="mt-3 px-4 py-3 border-l-2 border-emerald-500 bg-emerald-500/5 rounded-r-md">
+                <p className="text-[12px] text-emerald-200/80 leading-relaxed">{section.callout}</p>
+              </div>
+            )}
+            {section.tip && (
+              <div className="mt-3 px-4 py-2.5 bg-blue-500/5 border border-blue-500/10 rounded-md">
+                <p className="text-xs text-blue-300/80 leading-relaxed">
+                  <span className="font-semibold text-blue-400">Tip:</span> {section.tip}
+                </p>
+              </div>
+            )}
+            {section.warning && (
+              <div className="mt-3 px-4 py-2.5 bg-red-500/5 border border-red-500/10 rounded-md">
+                <p className="text-xs text-red-300/80 leading-relaxed whitespace-pre-line">
+                  <span className="font-semibold text-red-400">⚠ Warning:</span> {section.warning}
+                </p>
+              </div>
+            )}
+            {section.table && <TableBlock table={section.table} />}
+            {section.code && <CodeBlock code={section.code} language={section.codeLanguage} />}
+          </section>
+        ))}
+      </div>
+
+      {/* Prompt Templates */}
+      {lesson.promptTemplates && lesson.promptTemplates.length > 0 && (
+        <PromptTemplateSection templates={lesson.promptTemplates} />
+      )}
+
+      {/* Quiz */}
+      {lesson.quiz && <QuizSection quiz={lesson.quiz} onAttempt={() => setQuizAttempted(true)} />}
+
+      {/* Exercises */}
+      {lesson.exercises && lesson.exercises.length > 0 ? (
+        <ExercisesSection exercises={lesson.exercises} />
+      ) : (
+        lesson.exercise && <ExerciseSection exercise={lesson.exercise} />
+      )}
+
+      {/* Practice Link */}
+      {lesson.practiceLink && (
+        <a
+          href={lesson.practiceLink.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mt-8 p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors"
+        >
+          <div className="text-emerald-400 font-semibold text-sm mb-1">
+            Try It Now
+          </div>
+          <div className="text-xs text-zinc-300">{lesson.practiceLink.label}</div>
+          {lesson.practiceLink.description && (
+            <div className="text-xs text-zinc-500 mt-1">{lesson.practiceLink.description}</div>
+          )}
+        </a>
+      )}
+
+      {/* Navigation */}
+      <div className="mt-12 pt-6 border-t border-zinc-800 flex items-center justify-between">
+        <button
+          onClick={onPrev}
+          disabled={lessonIndex === 0}
+          className="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+        >
+          ← Previous
+        </button>
+        <div className="flex items-center gap-3">
+          {!isCompleted && (
+            <button
+              onClick={onComplete}
+              disabled={!canComplete}
+              className={`px-4 py-2 text-xs border rounded-md transition-all ${
+                canComplete
+                  ? "text-zinc-400 hover:text-emerald-400 border-zinc-800 hover:border-emerald-500/30"
+                  : "text-zinc-600 border-zinc-800/50 cursor-not-allowed opacity-50"
+              }`}
+            >
+              {canComplete ? "Mark Complete" : "Complete Quiz First"}
+            </button>
+          )}
+          <button
+            onClick={onNext}
+            disabled={lessonIndex === totalLessons - 1}
+            className="px-5 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+          >
+            Next Lesson →
+          </button>
+        </div>
+      </div>
+
+      <div className="h-12" />
     </div>
   );
 }

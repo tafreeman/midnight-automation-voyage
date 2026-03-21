@@ -1,184 +1,259 @@
-import { useState, useEffect, useCallback } from "react";
-import { Sidebar } from "./components/Sidebar";
-import { LessonView } from "./components/LessonView";
-import { lessons, moduleGroups } from "./data";
+import { useEffect, useMemo, useState } from "react";
 
-type RoleFilter = "all" | "developer" | "non-coder";
-type Theme = "light" | "dark";
+import {
+  curriculum,
+  findLesson,
+  findModule,
+  flattenLessons,
+} from "./data/curriculum";
+import { ProgressProvider, useProgress } from "./contexts/ProgressContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { AppShell } from "./layouts/AppShell";
+import {
+  BottomBar,
+  ModuleNav,
+  TopBar,
+} from "./components/navigation";
+import { SupportRail } from "./components/layout";
+import { LessonDetailPage } from "./pages/LessonDetailPage";
+import { ModuleOverviewPage } from "./pages/ModuleOverviewPage";
+import { ProgressDashboardPage } from "./pages/ProgressDashboardPage";
 
-const STORAGE_KEY = "mav-progress-v1";
-const THEME_KEY = "mav-theme";
+type ViewState =
+  | { kind: "dashboard" }
+  | { kind: "module"; moduleId: string }
+  | { kind: "lesson"; moduleId: string; lessonId: string };
 
-interface PersistedState {
-  currentLesson: number;
-  completedLessons: number[];
-}
+function parseHash(hash: string): ViewState | null {
+  const value = hash.replace(/^#/, "");
+  if (!value) return null;
+  if (value === "dashboard") return { kind: "dashboard" };
 
-function getLessonFromHash(): number | null {
-  const match = window.location.hash.match(/^#lesson\/(\d+)$/);
-  if (!match) return null;
-  const idx = parseInt(match[1], 10);
-  return idx >= 0 && idx < lessons.length ? idx : null;
-}
-
-function loadProgress(): PersistedState | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress(current: number, completed: Set<number>) {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      currentLesson: current,
-      completedLessons: [...completed],
-    })
-  );
-}
-
-function loadTheme(): Theme {
-  try {
-    const stored = localStorage.getItem(THEME_KEY);
-    if (stored === "light" || stored === "dark") return stored;
-  } catch {
-    // ignore
-  }
-  return "light";
-}
-
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  if (theme === "dark") {
-    root.classList.add("dark");
-  } else {
-    root.classList.remove("dark");
-  }
-  localStorage.setItem(THEME_KEY, theme);
-}
-
-export default function App() {
-  const saved = loadProgress();
-  const initialLesson = getLessonFromHash() ?? saved?.currentLesson ?? 0;
-  const [currentLesson, setCurrentLesson] = useState(initialLesson);
-  const [completedLessons, setCompletedLessons] = useState<Set<number>>(
-    new Set(saved?.completedLessons ?? [])
-  );
-  const [sidebarOpen, setSidebarOpen] = useState(
-    () => window.innerWidth >= 768
-  );
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
-  const [theme, setTheme] = useState<Theme>(loadTheme);
-
-  // Apply theme on mount and when it changes
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  }, []);
-
-  useEffect(() => {
-    saveProgress(currentLesson, completedLessons);
-  }, [currentLesson, completedLessons]);
-
-  // Sync URL hash with current lesson
-  useEffect(() => {
-    window.location.hash = `lesson/${currentLesson}`;
-  }, [currentLesson]);
-
-  // Listen for browser back/forward
-  useEffect(() => {
-    const onHashChange = () => {
-      const idx = getLessonFromHash();
-      if (idx !== null) setCurrentLesson(idx);
+  const lessonMatch = value.match(/^lesson\/([^/]+)\/([^/]+)$/);
+  if (lessonMatch) {
+    return {
+      kind: "lesson",
+      moduleId: lessonMatch[1],
+      lessonId: lessonMatch[2],
     };
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+  }
 
-  const markComplete = (id: number) => {
-    setCompletedLessons((prev) => new Set([...prev, id]));
-  };
+  const moduleMatch = value.match(/^module\/([^/]+)$/);
+  if (moduleMatch) {
+    return { kind: "module", moduleId: moduleMatch[1] };
+  }
 
-  const goNext = () => {
-    if (currentLesson < lessons.length - 1) {
-      setCurrentLesson((p) => p + 1);
-    }
-  };
+  return null;
+}
 
-  const goPrev = () => {
-    if (currentLesson > 0) {
-      setCurrentLesson((p) => p - 1);
-    }
-  };
+function hashForView(view: ViewState) {
+  if (view.kind === "dashboard") return "#dashboard";
+  if (view.kind === "module") return `#module/${view.moduleId}`;
+  return `#lesson/${view.moduleId}/${view.lessonId}`;
+}
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-        return;
-      if (e.key === "ArrowRight") goNext();
-      if (e.key === "ArrowLeft") goPrev();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentLesson]);
+function AppContent() {
+  const modules = curriculum;
+  const flatLessons = useMemo(() => flattenLessons(modules), [modules]);
+  const {
+    progress,
+    currentModuleId,
+    currentLessonId,
+    navigateTo,
+    markLessonComplete,
+    saveQuizScore,
+    getCourseCompletion,
+  } = useProgress();
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 1024
+  );
+  const [leftOpen, setLeftOpen] = useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024
+  );
+  const [rightOpen, setRightOpen] = useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 1280
+  );
+  const [view, setView] = useState<ViewState>(() => {
+    const fromHash =
+      typeof window !== "undefined" ? parseHash(window.location.hash) : null;
+    return (
+      fromHash ?? {
+        kind: "lesson",
+        moduleId: currentModuleId,
+        lessonId: currentLessonId,
+      }
+    );
+  });
 
   useEffect(() => {
     const onResize = () => {
-      if (window.innerWidth < 768) setSidebarOpen(false);
+      const width = window.innerWidth;
+      setIsMobile(width < 1024);
+      setLeftOpen(width >= 1024);
+      setRightOpen(width >= 1280);
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const handleLessonSelect = (idx: number) => {
-    setCurrentLesson(idx);
-    if (window.innerWidth < 768) setSidebarOpen(false);
+  useEffect(() => {
+    const nextHash = hashForView(view);
+    if (window.location.hash !== nextHash) {
+      window.location.hash = nextHash;
+    }
+  }, [view]);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const next = parseHash(window.location.hash);
+      if (next) {
+        setView(next);
+        if (next.kind === "lesson") {
+          navigateTo(next.moduleId, next.lessonId);
+        }
+      }
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [navigateTo]);
+
+  const activeModuleId =
+    view.kind === "dashboard" ? currentModuleId : view.moduleId;
+  const activeModule = findModule(activeModuleId);
+  const activeLesson =
+    view.kind === "lesson"
+      ? findLesson(view.moduleId, view.lessonId)
+      : findLesson(currentModuleId, currentLessonId);
+
+  const currentLessonEntryIndex = flatLessons.findIndex(
+    (entry) =>
+      entry.module.id === activeModule.id && entry.lesson.id === activeLesson.id
+  );
+  const prevEntry =
+    currentLessonEntryIndex > 0 ? flatLessons[currentLessonEntryIndex - 1] : null;
+  const nextEntry =
+    currentLessonEntryIndex >= 0 &&
+    currentLessonEntryIndex < flatLessons.length - 1
+      ? flatLessons[currentLessonEntryIndex + 1]
+      : null;
+  const coursePercent = getCourseCompletion(flatLessons.length);
+  const completed = Boolean(
+    progress.modules[activeModule.id]?.completedLessons.includes(activeLesson.id)
+  );
+
+  const openDashboard = () => setView({ kind: "dashboard" });
+  const openModuleOverview = (moduleId: string) =>
+    setView({ kind: "module", moduleId });
+  const openLesson = (moduleId: string, lessonId: string) => {
+    navigateTo(moduleId, lessonId);
+    setView({ kind: "lesson", moduleId, lessonId });
+    if (isMobile) setLeftOpen(false);
   };
 
-  const progress = Math.round((completedLessons.size / lessons.length) * 100);
+  const titleBar = (
+    <TopBar
+      module={activeModule}
+      lesson={view.kind === "lesson" ? activeLesson : undefined}
+      leftOpen={leftOpen}
+      rightOpen={rightOpen}
+      onToggleLeft={() => setLeftOpen((current) => !current)}
+      onToggleRight={() => setRightOpen((current) => !current)}
+      onOpenDashboard={openDashboard}
+      onOpenModuleOverview={openModuleOverview}
+    />
+  );
 
-  const currentLessonData = lessons[currentLesson];
+  const footerBar =
+    view.kind === "lesson" ? (
+      <BottomBar
+        currentModule={activeModule}
+        currentLesson={activeLesson}
+        lessonIndex={activeModule.lessons.findIndex(
+          (lesson) => lesson.id === activeLesson.id
+        )}
+        totalLessons={activeModule.lessons.length}
+        progressPercent={coursePercent}
+        onPrev={
+          prevEntry
+            ? () => openLesson(prevEntry.module.id, prevEntry.lesson.id)
+            : undefined
+        }
+        onNext={
+          nextEntry
+            ? () => openLesson(nextEntry.module.id, nextEntry.lesson.id)
+            : undefined
+        }
+        onComplete={() => markLessonComplete(activeModule.id, activeLesson.id)}
+        canGoPrev={Boolean(prevEntry)}
+        canGoNext={Boolean(nextEntry)}
+        isCompleted={completed}
+      />
+    ) : (
+      <div className="text-xs" style={{ color: "var(--text-secondary)" }}>
+        {view.kind === "dashboard"
+          ? `${coursePercent}% of the course is complete.`
+          : `Module ${String(activeModule.number).padStart(2, "0")} overview`}
+      </div>
+    );
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      <Sidebar
-        lessons={lessons}
-        currentLesson={currentLesson}
-        completedLessons={completedLessons}
-        onSelect={handleLessonSelect}
-        open={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        progress={progress}
-        roleFilter={roleFilter}
-        onRoleChange={setRoleFilter}
-        moduleGroups={moduleGroups}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-      <main className="flex-1 overflow-y-auto">
-        <LessonView
-          lesson={currentLessonData}
-          lessonIndex={currentLesson}
-          totalLessons={lessons.length}
-          onNext={goNext}
-          onPrev={goPrev}
-          onComplete={() => markComplete(currentLesson)}
-          isCompleted={completedLessons.has(currentLesson)}
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-          category={currentLessonData.category}
-          theme={theme}
+    <AppShell
+      titleBar={titleBar}
+      footerBar={footerBar}
+      leftRail={
+        <ModuleNav
+          modules={modules}
+          currentModuleId={activeModule.id}
+          currentLessonId={activeLesson.id}
+          onOpenDashboard={openDashboard}
+          onOpenModuleOverview={openModuleOverview}
+          onOpenLesson={openLesson}
         />
-      </main>
-    </div>
+      }
+      rightRail={<SupportRail module={activeModule} lesson={activeLesson} />}
+      isMobile={isMobile}
+      leftOpen={leftOpen}
+      rightOpen={rightOpen}
+      onToggleLeft={() => setLeftOpen((current) => !current)}
+      onToggleRight={() => setRightOpen((current) => !current)}
+    >
+      {view.kind === "dashboard" ? (
+        <ProgressDashboardPage
+          modules={modules}
+          onSelectModule={openModuleOverview}
+          onSelectLesson={openLesson}
+        />
+      ) : view.kind === "module" ? (
+        <ModuleOverviewPage
+          module={activeModule}
+          onSelectLesson={(lessonId) => openLesson(activeModule.id, lessonId)}
+        />
+      ) : (
+        <LessonDetailPage
+          module={activeModule}
+          lesson={activeLesson}
+          lessonIndex={activeModule.lessons.findIndex(
+            (lesson) => lesson.id === activeLesson.id
+          )}
+          onQuizAttempt={() => saveQuizScore(activeModule.id, activeLesson.id, 1)}
+        />
+      )}
+    </AppShell>
+  );
+}
+
+export default function App() {
+  const firstModule = curriculum[0];
+  const firstLesson = firstModule.lessons[0];
+
+  return (
+    <ThemeProvider>
+      <ProgressProvider
+        initialModuleId={firstModule.id}
+        initialLessonId={firstLesson.id}
+      >
+        <AppContent />
+      </ProgressProvider>
+    </ThemeProvider>
   );
 }

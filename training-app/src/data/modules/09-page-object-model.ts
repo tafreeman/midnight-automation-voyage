@@ -79,26 +79,50 @@ getSubtotal, proceedToCheckout"`,
     correctIndex: 1,
     explanation: "POM encapsulates page selectors and actions in a single class. When the UI changes (e.g., a button's data-testid is renamed), you update the page object once rather than hunting through dozens of test files.",
   },
-  exercise: {
-    title: "Extract a Page Object",
-    description: "Refactor this inline test to use the Page Object Model. Move the repeated selectors and actions into a ContactPage class.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Use a Page Object in a Test',
+      description: 'A ContactPage class has been provided for you. Write a test that uses the page object methods instead of raw selectors.',
+      starterCode: `import { test, expect, Page } from '@playwright/test';
 
-// TODO: Create a ContactPage class that encapsulates:
-// - Selectors for name, email, message fields and submit button
-// - A fillForm() method
-// - A submit() method
-// - A getSuccessMessage() method
+// This Page Object is provided — study its methods
+class ContactPage {
+  constructor(private page: Page) {}
 
-test('should submit contact form', async ({ page }) => {
-  await page.goto('/contact');
-  await page.locator('[data-testid="contact-name"]').fill('Jane');
-  await page.locator('[data-testid="contact-email"]').fill('jane@test.com');
-  await page.locator('[data-testid="contact-message"]').fill('Hello!');
-  await page.locator('[data-testid="contact-submit"]').click();
-  await expect(page.locator('[data-testid="success-msg"]')).toBeVisible();
+  async goto() {
+    await this.page.goto('/contact');
+  }
+
+  async fillForm(name: string, email: string, message: string) {
+    await this.page.getByTestId('name-input').fill(name);
+    await this.page.getByTestId('contact-email-input').fill(email);
+    await this.page.getByTestId('message-input').fill(message);
+  }
+
+  async selectSubject(subject: string) {
+    await this.page.getByTestId('subject-select').selectOption(subject);
+  }
+
+  async submit() {
+    await this.page.getByTestId('submit-button').click();
+  }
+
+  get successMessage() {
+    return this.page.getByTestId('success-message');
+  }
+}
+
+// TODO: Write a test using the ContactPage class above
+// 1. Create a ContactPage instance
+// 2. Navigate to the contact page
+// 3. Fill the form with valid data (name, email, message of 20+ chars)
+// 4. Select a subject
+// 5. Submit and assert the success message is visible
+test('should submit contact form successfully', async ({ page }) => {
+
 });`,
-    solutionCode: `import { test, expect, Page } from '@playwright/test';
+      solutionCode: `import { test, expect, Page } from '@playwright/test';
 
 class ContactPage {
   constructor(private page: Page) {}
@@ -108,34 +132,196 @@ class ContactPage {
   }
 
   async fillForm(name: string, email: string, message: string) {
-    await this.page.locator('[data-testid="contact-name"]').fill(name);
-    await this.page.locator('[data-testid="contact-email"]').fill(email);
-    await this.page.locator('[data-testid="contact-message"]').fill(message);
+    await this.page.getByTestId('name-input').fill(name);
+    await this.page.getByTestId('contact-email-input').fill(email);
+    await this.page.getByTestId('message-input').fill(message);
+  }
+
+  async selectSubject(subject: string) {
+    await this.page.getByTestId('subject-select').selectOption(subject);
   }
 
   async submit() {
-    await this.page.locator('[data-testid="contact-submit"]').click();
+    await this.page.getByTestId('submit-button').click();
   }
 
-  async getSuccessMessage() {
-    return this.page.locator('[data-testid="success-msg"]');
+  get successMessage() {
+    return this.page.getByTestId('success-message');
+  }
+}
+
+test('should submit contact form successfully', async ({ page }) => {
+  const contactPage = new ContactPage(page);
+  await contactPage.goto();
+  await contactPage.fillForm('Jane Doe', 'jane@test.com', 'This is a test message that is long enough.');
+  await contactPage.selectSubject('General');
+  await contactPage.submit();
+  await expect(contactPage.successMessage).toBeVisible();
+});`,
+      hints: [
+        'Create the page object with: const contactPage = new ContactPage(page)',
+        'Call contactPage.goto() to navigate',
+        'The message must be at least 20 characters to pass validation',
+        'Use contactPage.successMessage (a getter, not a method) for the assertion',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Extract a Contact Page Object',
+      description: 'Refactor this inline test into the Page Object Model pattern. Move all selectors and actions into a ContactPage class.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+// TODO: Create a ContactPage class that encapsulates:
+// - Selectors for name, email, subject, message fields and submit button
+// - A goto() method
+// - A fillForm() method
+// - A selectSubject() method
+// - A submit() method
+// - A successMessage getter
+
+test('should submit contact form', async ({ page }) => {
+  await page.goto('/contact');
+  await page.getByTestId('name-input').fill('Jane Doe');
+  await page.getByTestId('contact-email-input').fill('jane@test.com');
+  await page.getByTestId('subject-select').selectOption('Support');
+  await page.getByTestId('message-input').fill('I need help with my order please.');
+  await page.getByTestId('submit-button').click();
+  await expect(page.getByTestId('success-message')).toBeVisible();
+});`,
+      solutionCode: `import { test, expect, Page } from '@playwright/test';
+
+class ContactPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    await this.page.goto('/contact');
+  }
+
+  async fillForm(name: string, email: string, message: string) {
+    await this.page.getByTestId('name-input').fill(name);
+    await this.page.getByTestId('contact-email-input').fill(email);
+    await this.page.getByTestId('message-input').fill(message);
+  }
+
+  async selectSubject(subject: string) {
+    await this.page.getByTestId('subject-select').selectOption(subject);
+  }
+
+  async submit() {
+    await this.page.getByTestId('submit-button').click();
+  }
+
+  get successMessage() {
+    return this.page.getByTestId('success-message');
   }
 }
 
 test('should submit contact form', async ({ page }) => {
-  const contactPage = new ContactPage(page);
-  await contactPage.goto();
-  await contactPage.fillForm('Jane', 'jane@test.com', 'Hello!');
-  await contactPage.submit();
-  await expect(await contactPage.getSuccessMessage()).toBeVisible();
+  const contact = new ContactPage(page);
+  await contact.goto();
+  await contact.fillForm('Jane Doe', 'jane@test.com', 'I need help with my order please.');
+  await contact.selectSubject('Support');
+  await contact.submit();
+  await expect(contact.successMessage).toBeVisible();
 });`,
-    hints: [
-      "Create a class that takes the Page object in its constructor",
-      "Each repeated selector should become a method on the class",
-      "Group related actions (like filling a form) into a single method",
-      "The test should read like plain English after refactoring",
-    ],
-  },
+      hints: [
+        'Create a class that accepts Page in its constructor',
+        'Each getByTestId() call should become a method on the class',
+        'Group related actions (form fill) into a single method with parameters',
+        'Use a getter (get successMessage()) for elements you only read, not interact with',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Build an Orders Page Object with Sort and Filter',
+      description: 'Create a full-featured OrdersPage class for the data table. Include methods for sorting, filtering, pagination, and row data extraction.',
+      starterCode: `import { test, expect, Page, Locator } from '@playwright/test';
+
+// TODO: Create an OrdersPage class with:
+// - goto() method
+// - sortBy(column: 'id' | 'customer' | 'amount' | 'date' | 'status') method
+// - filterByStatus(status: string) method
+// - getRowCount() method that returns the displayed row count number
+// - getRowData(index: number) method returning { id, customer, amount, date, status }
+// - goToPage(pageNum: number) method for pagination
+
+test.describe('Orders Page', () => {
+  test('sort by amount descending', async ({ page }) => {
+    // TODO: Use OrdersPage to navigate, sort by amount, and verify order
+  });
+
+  test('filter by shipped status', async ({ page }) => {
+    // TODO: Use OrdersPage to filter by "Shipped" and assert row count changes
+  });
+});`,
+      solutionCode: `import { test, expect, Page, Locator } from '@playwright/test';
+
+class OrdersPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    await this.page.goto('/orders');
+  }
+
+  async sortBy(column: 'id' | 'customer' | 'amount' | 'date' | 'status') {
+    await this.page.getByTestId(\`col-\${column}\`).click();
+  }
+
+  async filterByStatus(status: string) {
+    await this.page.getByTestId('status-filter').selectOption(status);
+  }
+
+  async getRowCount(): Promise<number> {
+    return await this.page.getByTestId('table-row').count();
+  }
+
+  async getRowData(index: number) {
+    const row = this.page.getByTestId('table-row').nth(index);
+    return {
+      id: await row.getByTestId('cell-id').textContent(),
+      customer: await row.getByTestId('cell-customer').textContent(),
+      amount: await row.getByTestId('cell-amount').textContent(),
+      date: await row.getByTestId('cell-date').textContent(),
+      status: await row.getByTestId('cell-status').textContent(),
+    };
+  }
+
+  async goToPage(pageNum: number) {
+    await this.page.getByTestId(\`page-\${pageNum}\`).click();
+  }
+}
+
+test.describe('Orders Page', () => {
+  test('sort by amount descending', async ({ page }) => {
+    const orders = new OrdersPage(page);
+    await orders.goto();
+    await orders.sortBy('amount');
+    await orders.sortBy('amount'); // Click twice for descending
+    const first = await orders.getRowData(0);
+    const second = await orders.getRowData(1);
+    const firstAmount = parseFloat(first.amount!.replace('$', ''));
+    const secondAmount = parseFloat(second.amount!.replace('$', ''));
+    expect(firstAmount).toBeGreaterThanOrEqual(secondAmount);
+  });
+
+  test('filter by shipped status', async ({ page }) => {
+    const orders = new OrdersPage(page);
+    await orders.goto();
+    const totalRows = await orders.getRowCount();
+    await orders.filterByStatus('Shipped');
+    const filteredRows = await orders.getRowCount();
+    expect(filteredRows).toBeLessThan(totalRows);
+  });
+});`,
+      hints: [
+        'Column header testids follow the pattern: col-{columnName}',
+        'Cell testids follow the pattern: cell-{columnName}',
+        'Use .nth(index) to get a specific row from the table',
+        'Click a column header twice to toggle to descending sort',
+        'Parse amount strings by removing the $ prefix and using parseFloat()',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Extract Page Object from Test",

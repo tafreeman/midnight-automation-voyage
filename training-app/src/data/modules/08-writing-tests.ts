@@ -79,52 +79,161 @@ await expect(results.first()).toContainText('Widget Pro');
     label: "Write your first product page test",
     description: "Practice writing assertions against the products listing page.",
   },
-  exercise: {
-    title: "Complete a Product Page Test",
-    description: "Fill in the assertions for this product page test. The page at /products displays a list of product cards, each with a name, price, and 'Add to Cart' button.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Assert the Products Page Loads',
+      description: 'Write your first Playwright test. Navigate to the Products page and verify key elements are visible.',
+      starterCode: `import { test, expect } from '@playwright/test';
 
-test.describe('Product Page', () => {
-  test('should display product list', async ({ page }) => {
+test('products page displays correctly', async ({ page }) => {
+  // TODO: Navigate to /products
+  // TODO: Assert the page has a heading with "Products"
+  // TODO: Assert the search input is visible
+  // TODO: Assert at least 1 product card is visible
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('products page displays correctly', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
+  await expect(page.getByTestId('search-input')).toBeVisible();
+  await expect(page.getByTestId('result-card').first()).toBeVisible();
+});`,
+      hints: [
+        'Use page.goto(\'/products\') to navigate',
+        'Use page.getByRole(\'heading\', { name: \'Products\' }) for the page title',
+        'Use page.getByTestId(\'search-input\') for the search field',
+        'Use .first() on a multi-element locator to check at least one exists',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Search and Filter Products',
+      description: 'Test the search and category filter functionality. Verify that results update correctly when searching and filtering.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Product Search & Filter', () => {
+  test('search filters products by name', async ({ page }) => {
     await page.goto('/products');
-    // TODO: Assert the page has a heading with "Products"
-    // TODO: Assert at least 3 product cards are visible
-    // TODO: Assert each product card has a price
+    // TODO: Type a search term into the search input
+    // TODO: Click the search button
+    // TODO: Assert the result count changed
+    // TODO: Assert each visible product card contains the search term
   });
 
-  test('should add product to cart', async ({ page }) => {
+  test('category filter narrows results', async ({ page }) => {
     await page.goto('/products');
-    // TODO: Click the first "Add to Cart" button
-    // TODO: Assert a success message appears
+    // TODO: Select "Electronics" from the category filter
+    // TODO: Assert the result count shows fewer items
+    // TODO: Clear the filter back to "All"
+    // TODO: Assert the full product list returns
   });
 });`,
-    solutionCode: `import { test, expect } from '@playwright/test';
+      solutionCode: `import { test, expect } from '@playwright/test';
 
-test.describe('Product Page', () => {
-  test('should display product list', async ({ page }) => {
+test.describe('Product Search & Filter', () => {
+  test('search filters products by name', async ({ page }) => {
     await page.goto('/products');
-    await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
-    const cards = page.locator('[data-testid="product-card"]');
-    await expect(cards).toHaveCount(await cards.count());
-    expect(await cards.count()).toBeGreaterThanOrEqual(3);
+    await page.getByTestId('search-input').fill('Laptop');
+    await page.getByTestId('search-button').click();
+    await expect(page.getByTestId('result-count')).toContainText('1');
+    const cards = page.getByTestId('result-card');
     for (const card of await cards.all()) {
-      await expect(card.locator('[data-testid="product-price"]')).toBeVisible();
+      await expect(card.getByTestId('product-name')).toContainText(/laptop/i);
     }
   });
 
-  test('should add product to cart', async ({ page }) => {
+  test('category filter narrows results', async ({ page }) => {
     await page.goto('/products');
-    await page.locator('[data-testid="add-to-cart"]').first().click();
-    await expect(page.getByText('Added to cart')).toBeVisible();
+    const allCount = await page.getByTestId('result-card').count();
+    await page.getByTestId('category-filter').selectOption('Electronics');
+    const filteredCount = await page.getByTestId('result-card').count();
+    expect(filteredCount).toBeLessThan(allCount);
+    await page.getByTestId('category-filter').selectOption('');
+    await expect(page.getByTestId('result-card')).toHaveCount(allCount);
   });
 });`,
-    hints: [
-      "Use page.getByRole('heading') to find the page title",
-      "Use page.locator('[data-testid=\"product-card\"]') to find product cards",
-      "Use .toHaveCount() or .count() to verify the number of products",
-      "For prices, check that each card contains a price element with toBeVisible()",
-    ],
-  },
+      hints: [
+        'Use .fill() to type into the search input and .click() on the search button',
+        'Use .count() to get the number of matching elements for comparison',
+        'Use .selectOption() to change the category dropdown',
+        'Use toContainText() with a regex for case-insensitive matching',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Negative Testing and Edge Cases',
+      description: 'Write tests for scenarios where things go wrong or hit boundaries. Test empty results, combined filters, and verify the UI handles edge cases gracefully.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Product Page Edge Cases', () => {
+  test('search with no results shows empty state', async ({ page }) => {
+    await page.goto('/products');
+    // TODO: Search for a product that doesn't exist (e.g., "xyznonexistent")
+    // TODO: Assert the "No products found" message appears
+    // TODO: Assert zero product cards are visible
+  });
+
+  test('search combined with category filter', async ({ page }) => {
+    await page.goto('/products');
+    // TODO: Select "Electronics" category first
+    // TODO: Then search for a specific product
+    // TODO: Assert the results reflect BOTH filters
+    // TODO: Clear the search, assert category filter still applies
+  });
+
+  test('search is case-insensitive', async ({ page }) => {
+    await page.goto('/products');
+    // TODO: Search in lowercase, count results
+    // TODO: Search same term in UPPERCASE, count results
+    // TODO: Assert both searches return the same count
+  });
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Product Page Edge Cases', () => {
+  test('search with no results shows empty state', async ({ page }) => {
+    await page.goto('/products');
+    await page.getByTestId('search-input').fill('xyznonexistent');
+    await page.getByTestId('search-button').click();
+    await expect(page.getByTestId('no-results')).toBeVisible();
+    await expect(page.getByTestId('result-card')).toHaveCount(0);
+  });
+
+  test('search combined with category filter', async ({ page }) => {
+    await page.goto('/products');
+    await page.getByTestId('category-filter').selectOption('Electronics');
+    const categoryCount = await page.getByTestId('result-card').count();
+    await page.getByTestId('search-input').fill('Laptop');
+    await page.getByTestId('search-button').click();
+    const combinedCount = await page.getByTestId('result-card').count();
+    expect(combinedCount).toBeLessThanOrEqual(categoryCount);
+    await page.getByTestId('search-input').fill('');
+    await page.getByTestId('search-button').click();
+    await expect(page.getByTestId('result-card')).toHaveCount(categoryCount);
+  });
+
+  test('search is case-insensitive', async ({ page }) => {
+    await page.goto('/products');
+    await page.getByTestId('search-input').fill('laptop');
+    await page.getByTestId('search-button').click();
+    const lowerCount = await page.getByTestId('result-card').count();
+    await page.getByTestId('search-input').fill('LAPTOP');
+    await page.getByTestId('search-button').click();
+    const upperCount = await page.getByTestId('result-card').count();
+    expect(lowerCount).toBe(upperCount);
+    expect(lowerCount).toBeGreaterThan(0);
+  });
+});`,
+      hints: [
+        'Use getByTestId(\'no-results\') for the empty state message',
+        'Use toHaveCount(0) to assert no product cards exist',
+        'Test filter combinations by applying one filter, counting, then adding another',
+        'For case-insensitivity, compare counts from lowercase and uppercase searches',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Generate Test for Page",

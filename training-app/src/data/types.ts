@@ -11,6 +11,7 @@ export interface CodeExercise {
   starterCode: string;
   solutionCode: string;
   hints: string[];
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
 }
 
 export interface PromptTemplate {
@@ -40,6 +41,7 @@ export interface Lesson {
   }[];
   quiz?: Quiz;
   exercise?: CodeExercise;
+  exercises?: CodeExercise[];
   promptTemplates?: PromptTemplate[];
   practiceLink?: {
     url: string;
