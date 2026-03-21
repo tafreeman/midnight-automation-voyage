@@ -156,11 +156,13 @@ npx playwright show-trace test-results/login-test/trace.zip
     explanation:
       "The 'on-first-retry' strategy captures traces only when a test fails and Playwright retries it. This balances diagnostic value (you get traces for failing tests) with performance and storage cost (passing tests don't generate traces). It's the recommended default for CI pipelines.",
   },
-  exercise: {
-    title: "Trace-Based Root Cause Analysis",
-    description:
-      "Given a failing test and trace analysis notes, identify the root cause and write the fix. The test clicks a save button and asserts a toast message, but fails intermittently.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: "Trace-Based Root Cause Analysis",
+      description:
+        "Given a failing test and trace analysis notes, identify the root cause and write the fix. The test clicks a save button and asserts a toast message, but fails intermittently.",
+      starterCode: `import { test, expect } from '@playwright/test';
 
 // This test fails ~30% of the time in CI
 test('settings save shows confirmation', async ({ page }) => {
@@ -185,7 +187,7 @@ test('settings save shows confirmation', async ({ page }) => {
 //
 // TODO: What is the root cause? What category from Module 19?
 // TODO: Write the fix below`,
-    solutionCode: `import { test, expect } from '@playwright/test';
+      solutionCode: `import { test, expect } from '@playwright/test';
 
 // ROOT CAUSE: Timing → Race condition
 // The toast element appears immediately but content populates after
@@ -208,12 +210,191 @@ test('settings save shows confirmation', async ({ page }) => {
   // toHaveText auto-retries, handling the 200ms content delay
   await expect(msg).toHaveText('Profile saved successfully.');
 });`,
-    hints: [
-      "Look at the Timeline: the assertion ran at T+1300ms but text populated at T+1450ms",
-      "The root cause is a Timing → Race condition (Module 19 taxonomy)",
-      "The fix is to wait for visibility first, then use auto-retrying toHaveText()",
-    ],
-  },
+      hints: [
+        "Look at the Timeline: the assertion ran at T+1300ms but text populated at T+1450ms",
+        "The root cause is a Timing → Race condition (Module 19 taxonomy)",
+        "The fix is to wait for visibility first, then use auto-retrying toHaveText()",
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Test Async Loading States on Activity Page',
+      description: 'The Activity page has mock controls that simulate different loading states. Write tests that verify the loading spinner, error state, and empty state render correctly.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Activity Page Loading States', () => {
+  test.beforeEach(async ({ page }) => {
+    // Login first
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+  });
+
+  test('shows loading state during data fetch', async ({ page }) => {
+    await page.goto('/activity');
+    // TODO: Click the "slow" mode button to simulate slow loading
+    // TODO: Click refresh
+    // TODO: Assert the loading indicator appears
+    // TODO: Wait for loading to complete, assert activity list appears
+  });
+
+  test('shows error state on failure', async ({ page }) => {
+    await page.goto('/activity');
+    // TODO: Click the "error" mode button
+    // TODO: Click refresh
+    // TODO: Assert the error message appears
+    // TODO: Assert the activity list is NOT visible
+  });
+
+  test('shows empty state when no activities', async ({ page }) => {
+    await page.goto('/activity');
+    // TODO: Click the "empty" mode button
+    // TODO: Click refresh
+    // TODO: Assert the empty state message appears
+  });
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Activity Page Loading States', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+  });
+
+  test('shows loading state during data fetch', async ({ page }) => {
+    await page.goto('/activity');
+    await page.getByTestId('activity-mode-slow').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-loading')).toBeVisible();
+    await expect(page.getByTestId('activity-list')).toBeVisible({ timeout: 10000 });
+  });
+
+  test('shows error state on failure', async ({ page }) => {
+    await page.goto('/activity');
+    await page.getByTestId('activity-mode-error').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-error')).toBeVisible();
+    await expect(page.getByTestId('activity-list')).not.toBeVisible();
+  });
+
+  test('shows empty state when no activities', async ({ page }) => {
+    await page.goto('/activity');
+    await page.getByTestId('activity-mode-empty').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-empty')).toBeVisible();
+  });
+});`,
+      hints: [
+        'Mock controls use testid pattern: activity-mode-{mode} (success, error, slow, empty)',
+        'After changing mode, click activity-refresh to trigger the new state',
+        'For slow loading, increase the timeout: toBeVisible({ timeout: 10000 })',
+        'Use not.toBeVisible() to assert an element should NOT be present',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Test Activity Filters and Detail Panel',
+      description: 'Write tests for the Activity page\'s filter buttons and detail panel. Verify that clicking a filter narrows results and clicking an activity row opens its detail view.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Activity Filters and Detail', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+    await page.goto('/activity');
+    // Ensure we're in success mode with data
+    await page.getByTestId('activity-mode-success').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-list')).toBeVisible();
+  });
+
+  test('filter buttons narrow activity list', async ({ page }) => {
+    // TODO: Count total activities
+    // TODO: Click a filter button
+    // TODO: Assert the count changed (or stayed the same if all match)
+    // TODO: Click the same filter again to deselect
+    // TODO: Assert original count returns
+  });
+
+  test('clicking activity opens detail panel', async ({ page }) => {
+    // TODO: Click the first activity row
+    // TODO: Assert the detail panel appears
+    // TODO: Click the close button on the detail panel
+    // TODO: Assert the detail panel disappears
+  });
+
+  test('switching from error to success mode recovers', async ({ page }) => {
+    // TODO: Switch to error mode, refresh, assert error state
+    // TODO: Switch back to success mode, refresh
+    // TODO: Assert activity list reappears with data
+  });
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Activity Filters and Detail', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+    await page.goto('/activity');
+    await page.getByTestId('activity-mode-success').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-list')).toBeVisible();
+  });
+
+  test('filter buttons narrow activity list', async ({ page }) => {
+    const allRows = page.locator('[data-testid^="activity-row-"]');
+    const totalCount = await allRows.count();
+
+    // Click first filter
+    const firstFilter = page.getByTestId('activity-filters').locator('button').first();
+    await firstFilter.click();
+    const filteredCount = await allRows.count();
+    expect(filteredCount).toBeLessThanOrEqual(totalCount);
+
+    // Deselect filter
+    await firstFilter.click();
+    await expect(allRows).toHaveCount(totalCount);
+  });
+
+  test('clicking activity opens detail panel', async ({ page }) => {
+    const firstRow = page.locator('[data-testid^="activity-row-"]').first();
+    await firstRow.click();
+    await expect(page.getByTestId('activity-detail')).toBeVisible();
+    await page.getByTestId('activity-detail-close').click();
+    await expect(page.getByTestId('activity-detail')).not.toBeVisible();
+  });
+
+  test('switching from error to success mode recovers', async ({ page }) => {
+    await page.getByTestId('activity-mode-error').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-error')).toBeVisible();
+
+    await page.getByTestId('activity-mode-success').click();
+    await page.getByTestId('activity-refresh').click();
+    await expect(page.getByTestId('activity-list')).toBeVisible();
+    const rows = page.locator('[data-testid^="activity-row-"]');
+    expect(await rows.count()).toBeGreaterThan(0);
+  });
+});`,
+      hints: [
+        'Activity rows have testids like activity-row-1, activity-row-2 — use [data-testid^="activity-row-"] to match all',
+        'The detail panel has a close button: activity-detail-close',
+        'Filters are inside the activity-filters container as button elements',
+        'Test error recovery: switch modes and verify the UI updates accordingly',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Analyze Trace Error",

@@ -118,11 +118,60 @@ export default defineConfig({
     explanation:
       "Retries are appropriate only for tests that depend on genuinely variable external factors — network latency, container startup time, third-party service availability. For selector issues, fix the selector. For timing issues like toast auto-dismiss, fix the assertion pattern. Retries should never be a substitute for proper diagnosis.",
   },
-  exercise: {
-    title: "Diagnose a Flaky Toast Test",
-    description:
-      "The starter code has a test that sometimes fails because it asserts toast content after the auto-dismiss timer fires. Fix it to be deterministic by properly waiting for the toast to appear before asserting.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Spot the Flaky Line',
+      description:
+        'This test passes most of the time but fails randomly in CI. Read the test carefully and add a comment on the line that causes flakiness. Then explain WHY it flakes in the comment.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('save shows success toast', async ({ page }) => {
+  await page.goto('/settings');                                    // Line 1
+  await page.getByTestId('settings-name-input').fill('New Name');  // Line 2
+  await page.getByTestId('settings-save-button').click();          // Line 3
+  const toast = page.getByTestId('toast-message-0');               // Line 4
+  expect(await toast.textContent()).toBe('Profile saved successfully.'); // Line 5
+  await expect(toast).not.toBeVisible();                           // Line 6
+});
+
+// YOUR TASK: Which line(s) cause flakiness? Add comments explaining:
+// FLAKY LINE: ___
+// REASON: ___
+// FIX: ___`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('save shows success toast', async ({ page }) => {
+  await page.goto('/settings');
+  await page.getByTestId('settings-name-input').fill('New Name');
+  await page.getByTestId('settings-save-button').click();
+  const toast = page.getByTestId('toast-message-0');
+
+  // FLAKY LINE: Line 5
+  // REASON: expect(await toast.textContent()) is a NON-retrying assertion.
+  // It reads textContent once. If the toast hasn't rendered yet (200ms delay),
+  // textContent() returns null and the test fails.
+  // FIX: Use await expect(toast).toHaveText('Profile saved successfully.')
+  // which auto-retries until the text matches or timeout.
+  expect(await toast.textContent()).toBe('Profile saved successfully.');
+
+  // ALSO FLAKY: Line 6 — asserting toast disappears might race
+  // if the auto-dismiss timer hasn't started yet.
+  await expect(toast).not.toBeVisible();
+});`,
+      hints: [
+        'Look for assertions that do NOT use await expect(locator) — those don\'t auto-retry',
+        'The pattern expect(await locator.textContent()) only checks ONCE, right now',
+        'If an element appears with a delay, a non-retrying assertion may check before it exists',
+        'Playwright\'s auto-retrying assertions (toHaveText, toBeVisible) wait and retry automatically',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Fix the Flaky Toast Test',
+      description:
+        'The starter code has a test that sometimes fails because it asserts toast content after the auto-dismiss timer fires. Fix it to be deterministic by properly waiting for the toast to appear before asserting.',
+      starterCode: `import { test, expect } from '@playwright/test';
 
 test('save shows success toast', async ({ page }) => {
   await page.goto('/settings');
@@ -138,7 +187,7 @@ test('save shows success toast', async ({ page }) => {
   const toast = page.getByTestId('toast-message-0');
   expect(await toast.textContent()).toBe('Profile saved successfully.');
 });`,
-    solutionCode: `import { test, expect } from '@playwright/test';
+      solutionCode: `import { test, expect } from '@playwright/test';
 
 test('save shows success toast', async ({ page }) => {
   await page.goto('/settings');
@@ -148,7 +197,6 @@ test('save shows success toast', async ({ page }) => {
   await page.getByTestId('settings-save-button').click();
 
   // Fix: Use auto-retrying assertions that wait for the element
-  // to appear and match, avoiding the race condition
   const toast = page.getByTestId('toast-message-0');
 
   // Wait for toast to be visible first (handles the 200ms content delay)
@@ -157,12 +205,77 @@ test('save shows success toast', async ({ page }) => {
   // Then assert content with auto-retry (handles async content update)
   await expect(toast).toHaveText('Profile saved successfully.');
 });`,
-    hints: [
-      "The root cause is using non-retrying expect() instead of auto-retrying await expect()",
-      "await expect(locator).toBeVisible() waits until the element appears in the DOM",
-      "await expect(locator).toHaveText() auto-retries until the text matches or times out",
-    ],
-  },
+      hints: [
+        'The root cause is using non-retrying expect() instead of auto-retrying await expect()',
+        'await expect(locator).toBeVisible() waits until the element appears in the DOM',
+        'await expect(locator).toHaveText() auto-retries until the text matches or times out',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Fix a Race Condition in Product Search',
+      description:
+        'This product search test has a subtle race condition. The test clicks search but asserts results before the DOM has updated. Fix ALL the flaky patterns.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('search and verify results', async ({ page }) => {
+  await page.goto('/products');
+
+  // Get initial count
+  const initialCount = await page.getByTestId('result-card').count();
+
+  // Search for a specific product
+  await page.getByTestId('search-input').fill('Laptop');
+  await page.getByTestId('search-button').click();
+
+  // BUG 1: This might still see the old count — DOM hasn't updated yet
+  const newCount = await page.getByTestId('result-card').count();
+  expect(newCount).toBeLessThan(initialCount);
+
+  // BUG 2: Checking text content without waiting for re-render
+  const firstName = await page.getByTestId('result-card').first()
+    .getByTestId('product-name').textContent();
+  expect(firstName).toContain('Laptop');
+
+  // BUG 3: Hardcoded wait as a "fix" — brittle and slow
+  await page.waitForTimeout(1000);
+  await expect(page.getByTestId('result-count')).toBeVisible();
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('search and verify results', async ({ page }) => {
+  await page.goto('/products');
+
+  // Get initial count
+  const initialCount = await page.getByTestId('result-card').count();
+
+  // Search for a specific product
+  await page.getByTestId('search-input').fill('Laptop');
+  await page.getByTestId('search-button').click();
+
+  // FIX 1: Wait for the result count to update (proves DOM re-rendered)
+  await expect(page.getByTestId('result-count')).not.toContainText(
+    \`\${initialCount} product\`
+  );
+
+  // FIX 2: Use auto-retrying assertion for text content
+  await expect(
+    page.getByTestId('result-card').first().getByTestId('product-name')
+  ).toContainText('Laptop');
+
+  // FIX 3: Remove waitForTimeout — use meaningful assertions instead
+  const filteredCount = await page.getByTestId('result-card').count();
+  expect(filteredCount).toBeLessThan(initialCount);
+  expect(filteredCount).toBeGreaterThan(0);
+});`,
+      hints: [
+        'After clicking search, wait for a visible change before asserting counts',
+        'Use await expect(locator).toContainText() instead of reading textContent() directly',
+        'Never use waitForTimeout() — replace with a meaningful await expect() assertion',
+        'Wait for the result-count element to change as a signal that filtering completed',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Analyze Flaky Test Root Cause",

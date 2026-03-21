@@ -119,11 +119,13 @@ export const lesson: Lesson = {
     explanation:
       "Bronze proves knowledge (completing modules, passing quizzes). Silver proves competency (completing advanced modules on auth, a11y, flaky tests, and data management, PLUS passing a hands-on capstone exercise). Gold proves production-readiness (contributing real tests to a project). The key differentiator is the capstone — it requires applying multiple skills together.",
   },
-  exercise: {
-    title: "Write a Capstone Test Plan",
-    description:
-      "Given the Settings page as a feature, outline a capstone test suite plan that covers auth setup, functional tests, accessibility scanning, and a HITL review checklist.",
-    starterCode: `// Capstone Test Plan: Settings Page
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: "Write a Capstone Test Plan",
+      description:
+        "Given the Settings page as a feature, outline a capstone test suite plan that covers auth setup, functional tests, accessibility scanning, and a HITL review checklist.",
+      starterCode: `// Capstone Test Plan: Settings Page
 // Feature URL: http://localhost:5173/settings
 
 // 1. Auth Setup
@@ -139,7 +141,7 @@ export const lesson: Lesson = {
 
 // 4. HITL Review Checklist
 // TODO: List 5 review items`,
-    solutionCode: `// Capstone Test Plan: Settings Page
+      solutionCode: `// Capstone Test Plan: Settings Page
 // Feature URL: http://localhost:5173/settings
 
 // 1. Auth Setup
@@ -168,13 +170,176 @@ export const lesson: Lesson = {
 // [x] Tests are order-independent (no shared state between tests)
 // [x] Assertion messages are descriptive (toHaveText over toContainText where possible)
 // [x] Known a11y violations documented with fix recommendations`,
-    hints: [
-      "Auth setup should use storageState, not UI login — reference Module 16",
-      "Functional tests should cover at least one happy path and one validation error per tab",
-      "The a11y scan should document the 3 known intentional violations with fixes",
-      "The HITL checklist should reference the criteria from Module 13",
-    ],
-  },
+      hints: [
+        "Auth setup should use storageState, not UI login — reference Module 16",
+        "Functional tests should cover at least one happy path and one validation error per tab",
+        "The a11y scan should document the 3 known intentional violations with fixes",
+        "The HITL checklist should reference the criteria from Module 13",
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'E2E Checkout Happy Path',
+      description: 'Write an end-to-end test that completes the full checkout flow: login → shipping → payment → review → confirmation. Assert the order number appears on the confirmation page.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('complete checkout flow', async ({ page }) => {
+  // Step 1: Log in
+  await page.goto('/login');
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+  await page.waitForURL('/dashboard');
+
+  // Step 2: Navigate to checkout
+  await page.goto('/checkout/shipping');
+
+  // TODO: Fill shipping form (address, city, state, zip) and click Next
+  // TODO: Assert payment page loads (step indicator or card input visible)
+
+  // TODO: Fill payment form (card, expiry, cvv) and click Next
+  // TODO: Assert review page loads (order summary visible)
+
+  // TODO: Click "Place Order"
+  // TODO: Assert confirmation page shows order number
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('complete checkout flow', async ({ page }) => {
+  // Step 1: Log in
+  await page.goto('/login');
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+  await page.waitForURL('/dashboard');
+
+  // Step 2: Shipping
+  await page.goto('/checkout/shipping');
+  await page.getByTestId('address-input').fill('123 Test Street');
+  await page.getByTestId('city-input').fill('Testville');
+  await page.getByTestId('state-select').selectOption('IL');
+  await page.getByTestId('zip-input').fill('62701');
+  await page.getByTestId('next-button').click();
+
+  // Step 3: Payment
+  await expect(page.getByTestId('card-input')).toBeVisible();
+  await page.getByTestId('card-input').fill('4000000000000000');
+  await page.getByTestId('expiry-input').fill('12/28');
+  await page.getByTestId('cvv-input').fill('123');
+  await page.getByTestId('next-button').click();
+
+  // Step 4: Review and place order
+  await expect(page.getByTestId('order-summary')).toBeVisible();
+  await page.getByTestId('place-order-button').click();
+
+  // Step 5: Confirmation
+  await expect(page.getByTestId('confirmation-message')).toBeVisible();
+  await expect(page.getByTestId('confirmation-number')).toBeVisible();
+});`,
+      hints: [
+        'Fill shipping fields: address-input, city-input, state-select (use selectOption), zip-input',
+        'After each Next click, assert the next step loaded before filling more fields',
+        'Use getByTestId(\'place-order-button\') on the review page to submit',
+        'The confirmation page shows confirmation-message and confirmation-number',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Checkout Validation and Edge Cases',
+      description: 'Write tests that verify form validation across the checkout flow. Test empty fields, invalid formats, and navigation between steps.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Checkout Validation', () => {
+  test.beforeEach(async ({ page }) => {
+    // Log in first
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+  });
+
+  test('shipping form rejects empty fields', async ({ page }) => {
+    await page.goto('/checkout/shipping');
+    // TODO: Click Next without filling any fields
+    // TODO: Assert error messages appear for address, city, state, zip
+  });
+
+  test('payment form validates card format', async ({ page }) => {
+    // TODO: Navigate through shipping with valid data
+    // TODO: On payment, enter an invalid card number (too short)
+    // TODO: Click Next
+    // TODO: Assert card error message appears
+  });
+
+  test('can navigate back from review to payment', async ({ page }) => {
+    // TODO: Complete shipping and payment with valid data
+    // TODO: On review page, click Back
+    // TODO: Assert payment form still has the previously entered data
+    // TODO: Or assert you're back on the payment step
+  });
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Checkout Validation', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
+    await page.getByTestId('email-input').fill('user@test.com');
+    await page.getByTestId('password-input').fill('Password123!');
+    await page.getByTestId('login-button').click();
+    await page.waitForURL('/dashboard');
+  });
+
+  test('shipping form rejects empty fields', async ({ page }) => {
+    await page.goto('/checkout/shipping');
+    await page.getByTestId('next-button').click();
+    await expect(page.getByTestId('address-error')).toBeVisible();
+    await expect(page.getByTestId('city-error')).toBeVisible();
+    await expect(page.getByTestId('zip-error')).toBeVisible();
+  });
+
+  test('payment form validates card format', async ({ page }) => {
+    await page.goto('/checkout/shipping');
+    await page.getByTestId('address-input').fill('123 Test St');
+    await page.getByTestId('city-input').fill('Testville');
+    await page.getByTestId('state-select').selectOption('IL');
+    await page.getByTestId('zip-input').fill('62701');
+    await page.getByTestId('next-button').click();
+
+    await expect(page.getByTestId('card-input')).toBeVisible();
+    await page.getByTestId('card-input').fill('123');
+    await page.getByTestId('expiry-input').fill('12/28');
+    await page.getByTestId('cvv-input').fill('123');
+    await page.getByTestId('next-button').click();
+    await expect(page.getByTestId('card-error')).toBeVisible();
+  });
+
+  test('can navigate back from review to payment', async ({ page }) => {
+    await page.goto('/checkout/shipping');
+    await page.getByTestId('address-input').fill('123 Test St');
+    await page.getByTestId('city-input').fill('Testville');
+    await page.getByTestId('state-select').selectOption('IL');
+    await page.getByTestId('zip-input').fill('62701');
+    await page.getByTestId('next-button').click();
+
+    await page.getByTestId('card-input').fill('4000000000000000');
+    await page.getByTestId('expiry-input').fill('12/28');
+    await page.getByTestId('cvv-input').fill('123');
+    await page.getByTestId('next-button').click();
+
+    await expect(page.getByTestId('order-summary')).toBeVisible();
+    await page.getByTestId('back-button').click();
+    await expect(page.getByTestId('card-input')).toBeVisible();
+  });
+});`,
+      hints: [
+        'Use test.beforeEach to handle login so each test starts authenticated',
+        'Click Next without filling fields to trigger validation errors',
+        'Error testids follow the pattern: {field}-error (e.g., address-error, card-error)',
+        'The review page has a back-button that navigates to payment',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Generate Capstone Test Plan",

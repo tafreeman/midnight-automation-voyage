@@ -143,11 +143,59 @@ export default defineConfig({
     explanation:
       "The login flow is the one place where you WANT to exercise the UI login. If you skip it with storageState, you're not testing it at all. Dedicate a separate test project (without storageState) specifically for login flow tests.",
   },
-  exercise: {
-    title: "Convert Inline Login to Auth Fixture",
-    description:
-      "The starter code logs in via the UI before every test. Refactor it to use a storageState fixture so tests start already authenticated.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Test Different User Permissions',
+      description:
+        'Write two tests that verify role-based access. One test logs in as admin and checks admin features are enabled. The other logs in as a viewer and checks they are disabled.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('admin can access invite form', async ({ page }) => {
+  // TODO: Log in as admin (admin@test.com / AdminPass1!)
+  // TODO: Navigate to /admin
+  // TODO: Assert the invite submit button is enabled
+});
+
+test('viewer cannot use invite form', async ({ page }) => {
+  // TODO: Log in as viewer (locktest@test.com / LockPass123!)
+  // TODO: Navigate to /admin
+  // TODO: Assert the invite submit button is disabled
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('admin can access invite form', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByTestId('email-input').fill('admin@test.com');
+  await page.getByTestId('password-input').fill('AdminPass1!');
+  await page.getByTestId('login-button').click();
+  await page.waitForURL('/dashboard');
+  await page.goto('/admin');
+  await expect(page.getByTestId('admin-invite-submit')).toBeEnabled();
+});
+
+test('viewer cannot use invite form', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByTestId('email-input').fill('locktest@test.com');
+  await page.getByTestId('password-input').fill('LockPass123!');
+  await page.getByTestId('login-button').click();
+  await page.waitForURL('/dashboard');
+  await page.goto('/admin');
+  await expect(page.getByTestId('admin-invite-submit')).toBeDisabled();
+});`,
+      hints: [
+        'Each test must log in separately — tests are isolated',
+        'Use toBeEnabled() and toBeDisabled() for button state assertions',
+        'Navigate to /admin after logging in to check permissions',
+        'Admin credentials: admin@test.com / AdminPass1!',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Convert Inline Login to Auth Fixture',
+      description:
+        'The starter code logs in via the UI before every test. Refactor it to use a storageState fixture so tests start already authenticated.',
+      starterCode: `import { test, expect } from '@playwright/test';
 
 test('admin can see user table', async ({ page }) => {
   // Inline login — runs every test, slow and fragile
@@ -161,7 +209,7 @@ test('admin can see user table', async ({ page }) => {
   await page.goto('/admin');
   await expect(page.getByTestId('admin-user-table')).toBeVisible();
 });`,
-    solutionCode: `// fixtures.ts
+      solutionCode: `// fixtures.ts
 import { test as base } from '@playwright/test';
 
 export const test = base.extend({
@@ -183,12 +231,80 @@ test('admin can see user table', async ({ page }) => {
   await page.goto('/admin');
   await expect(page.getByTestId('admin-user-table')).toBeVisible();
 });`,
-    hints: [
-      "Create a fixtures.ts file that extends the base test with a pre-authenticated context",
-      "Use browser.newContext({ storageState: './auth/admin.json' }) to load the saved session",
-      "Import your custom `test` instead of from @playwright/test in spec files",
-    ],
+      hints: [
+        'Create a fixtures.ts file that extends the base test with a pre-authenticated context',
+        "Use browser.newContext({ storageState: './auth/admin.json' }) to load the saved session",
+        'Import your custom test instead of from @playwright/test in spec files',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Multi-Role Fixtures with Parameterized Tests',
+      description:
+        'Create three role-based page fixtures (adminPage, editorPage, viewerPage) and write a parameterized test that verifies the admin invite form is enabled/disabled based on role.',
+      starterCode: `import { test as base, expect } from '@playwright/test';
+
+// TODO: Create a custom test fixture that provides three pre-authenticated pages:
+// - adminPage: logged in as admin@test.com (admin role)
+// - editorPage: logged in as user@test.com (editor role)
+// - viewerPage: logged in as locktest@test.com (viewer role)
+// Each should use a different storageState file.
+
+// TODO: Write tests that use these fixtures:
+// 1. adminPage can see and use the invite form
+// 2. editorPage can see the admin page but invite form is disabled
+// 3. viewerPage can see the admin page but invite form is disabled`,
+      solutionCode: `import { test as base, expect, Page } from '@playwright/test';
+
+type RoleFixtures = {
+  adminPage: Page;
+  editorPage: Page;
+  viewerPage: Page;
+};
+
+const test = base.extend<RoleFixtures>({
+  adminPage: async ({ browser }, use) => {
+    const ctx = await browser.newContext({ storageState: './auth/admin.json' });
+    const page = await ctx.newPage();
+    await use(page);
+    await ctx.close();
   },
+  editorPage: async ({ browser }, use) => {
+    const ctx = await browser.newContext({ storageState: './auth/editor.json' });
+    const page = await ctx.newPage();
+    await use(page);
+    await ctx.close();
+  },
+  viewerPage: async ({ browser }, use) => {
+    const ctx = await browser.newContext({ storageState: './auth/viewer.json' });
+    const page = await ctx.newPage();
+    await use(page);
+    await ctx.close();
+  },
+});
+
+test('admin can submit invite form', async ({ adminPage }) => {
+  await adminPage.goto('/admin');
+  await expect(adminPage.getByTestId('admin-invite-submit')).toBeEnabled();
+});
+
+test('editor cannot submit invite form', async ({ editorPage }) => {
+  await editorPage.goto('/admin');
+  await expect(editorPage.getByTestId('admin-invite-submit')).toBeDisabled();
+});
+
+test('viewer cannot submit invite form', async ({ viewerPage }) => {
+  await viewerPage.goto('/admin');
+  await expect(viewerPage.getByTestId('admin-invite-submit')).toBeDisabled();
+});`,
+      hints: [
+        'Use base.extend<RoleFixtures>() to define custom fixtures with typed pages',
+        'Each fixture creates its own browser context with a role-specific storageState',
+        'Remember to close the context after use with await ctx.close()',
+        'Tests destructure the specific fixture they need: ({ adminPage }) =>',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Generate Global Setup",

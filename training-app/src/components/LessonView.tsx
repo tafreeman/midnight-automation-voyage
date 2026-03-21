@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Lesson } from "../data";
+import type { Lesson, CodeExercise } from "../data";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -267,6 +267,77 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
   );
 }
 
+const DIFFICULTY_CONFIG = {
+  beginner: { label: "Beginner", color: "text-green-400", border: "border-green-500/30", bg: "bg-green-500/10" },
+  intermediate: { label: "Intermediate", color: "text-amber-400", border: "border-amber-500/30", bg: "bg-amber-500/10" },
+  advanced: { label: "Advanced", color: "text-red-400", border: "border-red-500/30", bg: "bg-red-500/10" },
+} as const;
+
+type DifficultyFilter = "all" | "beginner" | "intermediate" | "advanced";
+
+function DifficultyBadge({ difficulty }: { difficulty?: CodeExercise["difficulty"] }) {
+  if (!difficulty) return null;
+  const cfg = DIFFICULTY_CONFIG[difficulty];
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${cfg.color} ${cfg.border} ${cfg.bg}`}>
+      {cfg.label}
+    </span>
+  );
+}
+
+function ExercisesSection({ exercises }: { exercises: CodeExercise[] }) {
+  const [filter, setFilter] = useState<DifficultyFilter>("all");
+
+  const filters: DifficultyFilter[] = ["all", "beginner", "intermediate", "advanced"];
+
+  const filtered = filter === "all"
+    ? exercises
+    : exercises.filter((e) => e.difficulty === filter);
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        {filters.map((f) => {
+          const isActive = filter === f;
+          const base = "px-3 py-1.5 rounded-md text-xs font-medium border transition-colors";
+          let style: string;
+          if (f === "all") {
+            style = isActive
+              ? "border-zinc-600 bg-zinc-800 text-zinc-200"
+              : "border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700";
+          } else {
+            const cfg = DIFFICULTY_CONFIG[f];
+            style = isActive
+              ? `${cfg.border} ${cfg.bg} ${cfg.color}`
+              : "border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700";
+          }
+          return (
+            <button key={f} onClick={() => setFilter(f)} className={`${base} ${style}`}>
+              {f === "all" ? "All" : DIFFICULTY_CONFIG[f].label}
+            </button>
+          );
+        })}
+      </div>
+      {filtered.length === 0 ? (
+        <p className="text-xs text-zinc-600 italic py-4">No exercises match this difficulty level.</p>
+      ) : (
+        <div className="space-y-6">
+          {filtered.map((exercise, i) => (
+            <div key={i} className="relative">
+              {exercise.difficulty && (
+                <div className="mb-2">
+                  <DifficultyBadge difficulty={exercise.difficulty} />
+                </div>
+              )}
+              <ExerciseSection exercise={exercise} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PromptTemplateSection({ templates }: { templates: NonNullable<Lesson["promptTemplates"]> }) {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
@@ -441,8 +512,12 @@ export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, 
       {/* Quiz */}
       {lesson.quiz && <QuizSection quiz={lesson.quiz} onAttempt={() => setQuizAttempted(true)} />}
 
-      {/* Exercise */}
-      {lesson.exercise && <ExerciseSection exercise={lesson.exercise} />}
+      {/* Exercises */}
+      {lesson.exercises && lesson.exercises.length > 0 ? (
+        <ExercisesSection exercises={lesson.exercises} />
+      ) : (
+        lesson.exercise && <ExerciseSection exercise={lesson.exercise} />
+      )}
 
       {/* Practice Link */}
       {lesson.practiceLink && (

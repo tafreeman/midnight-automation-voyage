@@ -133,41 +133,157 @@ docker run --rm -v $(pwd):/work -w /work \\
     explanation:
       "Dynamic content like timestamps, animations, and user-specific data (avatars, names) changes every run and creates false failures. Masking these areas lets you focus on the stable visual elements that matter for regression detection.",
   },
-  exercise: {
-    title: "Visual Regression Test for Orders Table",
-    description:
-      "Write a visual regression test for the Orders table that masks the date column and sets a 1% pixel ratio threshold.",
-    starterCode: `import { test, expect } from '@playwright/test';
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Assert Orders Table Basics',
+      description: 'Write a test that verifies the Orders table loads correctly with the expected data. Check row count, column headers, and basic data presence.',
+      starterCode: `import { test, expect } from '@playwright/test';
 
-test('orders table visual regression', async ({ page }) => {
+test('orders table displays data', async ({ page }) => {
   await page.goto('/orders');
-  await expect(page.getByTestId('orders-table')).toBeVisible();
 
-  // TODO: Add visual regression assertion with:
-  // 1. Mask the date column to avoid false failures
-  // 2. Set maxDiffPixelRatio to 0.01 (1% tolerance)
-  await expect(page.getByTestId('orders-table')).toHaveScreenshot();
+  // TODO: Assert the data table is visible
+  // TODO: Assert 5 rows are visible (first page shows 5 of 15)
+  // TODO: Assert the row count indicator shows the total
+  // TODO: Assert the first row has an ID, customer name, and amount
 });`,
-    solutionCode: `import { test, expect } from '@playwright/test';
+      solutionCode: `import { test, expect } from '@playwright/test';
 
-test('orders table visual regression', async ({ page }) => {
+test('orders table displays data', async ({ page }) => {
   await page.goto('/orders');
-  await expect(page.getByTestId('orders-table')).toBeVisible();
 
-  await expect(page.getByTestId('orders-table')).toHaveScreenshot(
+  await expect(page.getByTestId('data-table')).toBeVisible();
+  await expect(page.getByTestId('table-row')).toHaveCount(5);
+  await expect(page.getByTestId('row-count')).toBeVisible();
+
+  const firstRow = page.getByTestId('table-row').first();
+  await expect(firstRow.getByTestId('cell-id')).toBeVisible();
+  await expect(firstRow.getByTestId('cell-customer')).toBeVisible();
+  await expect(firstRow.getByTestId('cell-amount')).toBeVisible();
+});`,
+      hints: [
+        'The table testid is data-table (not orders-table)',
+        'Use toHaveCount(5) since the table shows 5 rows per page',
+        'Use .first() to get the first table-row, then find cells inside it',
+        'Cell testids follow the pattern: cell-{columnName}',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Sort, Filter, and Paginate the Orders Table',
+      description: 'Write tests that exercise the table\'s interactive features: column sorting, status filtering, and pagination.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Orders Table Interactions', () => {
+  test('sort by amount column', async ({ page }) => {
+    await page.goto('/orders');
+    // TODO: Click the Amount column header to sort
+    // TODO: Assert the sort indicator appears
+    // TODO: Get the first two amounts and verify they're in order
+  });
+
+  test('filter by Shipped status', async ({ page }) => {
+    await page.goto('/orders');
+    // TODO: Select "Shipped" from the status filter
+    // TODO: Assert the row count decreased
+    // TODO: Assert every visible status cell says "Shipped"
+  });
+
+  test('navigate to page 2', async ({ page }) => {
+    await page.goto('/orders');
+    // TODO: Click page 2 in the pagination
+    // TODO: Assert different rows are now visible
+    // TODO: Assert the page info updated
+  });
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test.describe('Orders Table Interactions', () => {
+  test('sort by amount column', async ({ page }) => {
+    await page.goto('/orders');
+    await page.getByTestId('col-amount').click();
+    await expect(page.getByTestId('sort-indicator')).toBeVisible();
+    const firstAmount = await page.getByTestId('table-row').first()
+      .getByTestId('cell-amount').textContent();
+    const secondAmount = await page.getByTestId('table-row').nth(1)
+      .getByTestId('cell-amount').textContent();
+    const first = parseFloat(firstAmount!.replace('$', ''));
+    const second = parseFloat(secondAmount!.replace('$', ''));
+    expect(first).toBeLessThanOrEqual(second);
+  });
+
+  test('filter by Shipped status', async ({ page }) => {
+    await page.goto('/orders');
+    const allRows = await page.getByTestId('table-row').count();
+    await page.getByTestId('status-filter').selectOption('Shipped');
+    const filteredRows = await page.getByTestId('table-row').count();
+    expect(filteredRows).toBeLessThan(allRows);
+    const statusCells = page.getByTestId('table-row').getByTestId('cell-status');
+    for (const cell of await statusCells.all()) {
+      await expect(cell).toHaveText('Shipped');
+    }
+  });
+
+  test('navigate to page 2', async ({ page }) => {
+    await page.goto('/orders');
+    const firstPageId = await page.getByTestId('table-row').first()
+      .getByTestId('cell-id').textContent();
+    await page.getByTestId('page-2').click();
+    const secondPageId = await page.getByTestId('table-row').first()
+      .getByTestId('cell-id').textContent();
+    expect(firstPageId).not.toBe(secondPageId);
+    await expect(page.getByTestId('page-info')).toBeVisible();
+  });
+});`,
+      hints: [
+        'Click col-amount to sort — the sort-indicator element appears when sorted',
+        'Parse amounts by stripping the $ prefix: parseFloat(text.replace("$", ""))',
+        'After filtering, loop through all visible cell-status elements to verify they match',
+        'Compare row IDs between page 1 and page 2 to confirm different data loaded',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Visual Regression with Dynamic Masking',
+      description: 'Write a visual regression test for the Orders table. Mask the date column and status badges (which change between test runs) to prevent false failures.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('orders table visual snapshot', async ({ page }) => {
+  await page.goto('/orders');
+  await expect(page.getByTestId('data-table')).toBeVisible();
+
+  // TODO: Take a screenshot of the data table with:
+  // 1. A descriptive filename
+  // 2. Mask the date column cells (cell-date) to avoid time-based failures
+  // 3. Set maxDiffPixelRatio to 0.01 (1% tolerance)
+  // 4. Also mask the status cells since statuses may differ between runs
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('orders table visual snapshot', async ({ page }) => {
+  await page.goto('/orders');
+  await expect(page.getByTestId('data-table')).toBeVisible();
+
+  await expect(page.getByTestId('data-table')).toHaveScreenshot(
     'orders-table.png',
     {
-      mask: [page.locator('td:nth-child(4)')], // Date column
+      mask: [
+        page.getByTestId('cell-date'),
+        page.getByTestId('cell-status'),
+      ],
       maxDiffPixelRatio: 0.01,
     }
   );
 });`,
-    hints: [
-      "Pass a filename as the first argument to toHaveScreenshot() for readable baseline names",
-      "Use the mask option with an array of locators to cover dynamic content",
-      "maxDiffPixelRatio accepts a value between 0 and 1 (0.01 = 1%)",
-    ],
-  },
+      hints: [
+        'The table testid is data-table (not orders-table)',
+        'Pass a filename as the first argument: toHaveScreenshot("orders-table.png", options)',
+        'The mask option takes an array of locators — use getByTestId for date and status cells',
+        'maxDiffPixelRatio: 0.01 means 1% pixel difference tolerance',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Generate Visual Regression Test",

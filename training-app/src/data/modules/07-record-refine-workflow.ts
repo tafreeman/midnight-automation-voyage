@@ -73,16 +73,48 @@ npx playwright show-report`,
       tip: "Non-coders: Run with --headed the first few times so you can watch the browser execute your test. It builds confidence and helps you spot incorrect flows."
     }
   ],
-  exercise: {
-    title: "Refine a Raw Recording",
-    description: "This is raw recorded code from Playwright codegen. Write a Copilot Chat prompt that would refine it into a production-quality test.",
-    starterCode: `// Raw recorded test — needs refinement
+  exercises: [
+    {
+      difficulty: 'beginner',
+      title: 'Fix the Selectors in a Recorded Test',
+      description: 'This raw codegen recording uses fragile CSS selectors. Replace each one with the correct data-testid selector. Don\'t change the test logic — just fix the selectors.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
 test('test', async ({ page }) => {
-await page.goto('http://localhost:3000/login');
-await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
-await page.locator('#root > div > form > input:nth-child(2)').fill('password123');
-await page.locator('#root > div > form > button').click();
-await page.waitForURL('**/dashboard');
+  await page.goto('http://localhost:5173/login');
+  // FIX: Replace these fragile selectors with data-testid versions
+  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
+  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
+  await page.locator('#root > div > form > button').click();
+  await page.waitForURL('**/dashboard');
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+  await page.waitForURL('**/dashboard');
+});`,
+      hints: [
+        'Replace input:nth-child(1) with getByTestId(\'email-input\')',
+        'Replace input:nth-child(2) with getByTestId(\'password-input\')',
+        'Replace the button selector with getByTestId(\'login-button\')',
+        'Use page.getByTestId() instead of page.locator() for data-testid selectors',
+      ],
+    },
+    {
+      difficulty: 'intermediate',
+      title: 'Write a Refinement Prompt',
+      description: 'This is raw recorded code from Playwright codegen. Write a Copilot Chat prompt that would refine it into a production-quality test.',
+      starterCode: `// Raw recorded test — needs refinement
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
+  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
+  await page.locator('#root > div > form > button').click();
+  await page.waitForURL('**/dashboard');
 });
 
 // YOUR TASK: Write the Copilot Chat prompt you would use
@@ -90,7 +122,7 @@ await page.waitForURL('**/dashboard');
 // Write your prompt as a comment below:
 
 // PROMPT: "`,
-    solutionCode: `// Suggested Copilot Chat prompt:
+      solutionCode: `// Suggested Copilot Chat prompt:
 
 // PROMPT: "Refine this recorded Playwright test:
 // 1. Replace CSS nth-child selectors with data-testid locators
@@ -99,15 +131,60 @@ await page.waitForURL('**/dashboard');
 // 3. Add assertions:
 //    - Login page loads (heading visible)
 //    - After login, dashboard URL is reached
-//    - Dashboard shows welcome message with user's name
-// 4. Remove implicit waits, rely on Playwright auto-wait
-// 5. Extract locators into a LoginPage class if possible"`,
-    hints: [
-      "Focus on replacing the fragile CSS selectors first — that's the biggest reliability win",
-      "Every click or navigation should have an assertion that verifies the expected outcome",
-      "Mention the specific data-testid names so Copilot uses them"
-    ]
-  },
+//    - Dashboard shows welcome heading
+// 4. Remove hardcoded URLs, use baseURL from config
+// 5. Add Arrange/Act/Assert comments"`,
+      hints: [
+        'Focus on replacing the fragile CSS selectors first — that\'s the biggest reliability win',
+        'Every click or navigation should have an assertion that verifies the expected outcome',
+        'Mention the specific data-testid names so Copilot uses them',
+      ],
+    },
+    {
+      difficulty: 'advanced',
+      title: 'Full Refinement: Recording to Production Test',
+      description: 'Transform this raw codegen recording into a complete, production-quality test. Fix selectors, add a descriptive name, add assertions after every action, use baseURL, and structure with Arrange/Act/Assert.',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+// Raw codegen output — transform this into a production-quality test
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
+  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
+  await page.locator('#root > div > form > button').click();
+  await page.waitForURL('**/dashboard');
+});
+
+// YOUR TASK: Rewrite the test above as production-quality code:
+// 1. Descriptive test name explaining the user scenario
+// 2. Replace all CSS selectors with data-testid locators
+// 3. Use relative URL (baseURL handles the host)
+// 4. Add assertions: page loaded, form visible, redirect happened, dashboard content visible
+// 5. Structure with Arrange / Act / Assert comments`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('successful login redirects to dashboard', async ({ page }) => {
+  // Arrange — navigate to login page
+  await page.goto('/login');
+  await expect(page.getByRole('heading', { name: /log in/i })).toBeVisible();
+
+  // Act — fill credentials and submit
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+
+  // Assert — verify redirect and dashboard content
+  await page.waitForURL('/dashboard');
+  await expect(page.getByTestId('dashboard-heading')).toBeVisible();
+});`,
+      hints: [
+        'Change the test name from \'test\' to something descriptive like \'successful login redirects to dashboard\'',
+        'Use relative URLs like \'/login\' instead of full URLs — baseURL in config handles the host',
+        'Add await expect() assertions after navigation and after clicking login',
+        'Use Arrange/Act/Assert comments to structure the test clearly',
+      ],
+    },
+  ],
   promptTemplates: [
     {
       label: "Refine Codegen Recording",
