@@ -1,0 +1,17 @@
+{
+  "eval_id": 1,
+  "eval_name": "full-system-design",
+  "prompt": "Full system redesign of 30-module training platform with phased execution, subagents, three-panel layout, theme cycling, and progress tracking.",
+  "assertions": [
+    {"text": "Output is organized into distinct phases (discovery, design, foundation, components, pages, audit)", "passed": null, "evidence": ""},
+    {"text": "Explores existing codebase before designing (Phase 1 discovery)", "passed": null, "evidence": ""},
+    {"text": "Produces a design specification document before writing code", "passed": null, "evidence": ""},
+    {"text": "Defines three-panel shell (left nav, center content, right support)", "passed": null, "evidence": ""},
+    {"text": "Uses named themes (Signal Cobalt, Arctic Steel, Linear, Gamma Dark) not generic dark/light", "passed": null, "evidence": ""},
+    {"text": "References specific layout IDs from registry (nav-hub, two-col, stat-cards, eng-*)", "passed": null, "evidence": ""},
+    {"text": "Defines progress tracking at multiple levels (course, module, section)", "passed": null, "evidence": ""},
+    {"text": "Includes theme cycling strategy across modules", "passed": null, "evidence": ""},
+    {"text": "Produces React/TypeScript components (not standalone HTML)", "passed": null, "evidence": ""},
+    {"text": "Includes accessibility considerations", "passed": null, "evidence": ""}
+  ]
+}

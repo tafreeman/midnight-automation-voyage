@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 7 / Lesson 3 - Writing Your First Playwright Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #18181b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+    .notebook-cell {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cellFadeIn 0.4s ease-out forwards;
+    }
+    .notebook-cell:nth-child(1) { animation-delay: 0.05s; }
+    .notebook-cell:nth-child(2) { animation-delay: 0.12s; }
+    .notebook-cell:nth-child(3) { animation-delay: 0.19s; }
+    .notebook-cell:nth-child(4) { animation-delay: 0.26s; }
+    .notebook-cell:nth-child(5) { animation-delay: 0.33s; }
+    .notebook-cell:nth-child(6) { animation-delay: 0.40s; }
+    .notebook-cell:nth-child(7) { animation-delay: 0.47s; }
+    .notebook-cell:nth-child(8) { animation-delay: 0.54s; }
+
+    @keyframes cellFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .diff-added-line {
+      animation: diffPulse 0.6s ease-out;
+    }
+    @keyframes diffPulse {
+      0% { background-color: rgba(16, 185, 129, 0.25); }
+      100% { background-color: rgba(16, 185, 129, 0.08); }
+    }
+
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.6s ease-out;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-zinc-950/95 backdrop-blur-sm border-b border-zinc-800/80">
+    <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors" aria-label="Back to modules">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="flex items-center gap-1.5 text-xs">
+          <span class="text-zinc-600 font-mono">M07</span>
+          <span class="text-zinc-700">/</span>
+          <span class="text-zinc-400">Record &amp; Refine Workflow</span>
+          <span class="text-zinc-700">/</span>
+          <span class="text-emerald-400 font-medium">Lesson 3</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-zinc-600">Module</span>
+          <span class="text-xs font-mono text-zinc-400">7<span class="text-zinc-700">/</span>30</span>
+        </div>
+        <div class="w-px h-4 bg-zinc-800"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-zinc-600">Lesson</span>
+          <span class="text-xs font-mono text-zinc-400">3<span class="text-zinc-700">/</span>8</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex w-64 flex-shrink-0 border-r border-zinc-800 bg-zinc-950 flex-col h-[calc(100vh-48px)] sticky top-12">
+      <div class="p-4 border-b border-zinc-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-lg">&#127916;</span>
+          <div>
+            <p class="text-xs font-semibold text-zinc-300 font-mono">MODULE 07</p>
+            <p class="text-xs text-zinc-500 mt-0.5">Record &amp; Refine Workflow</p>
+          </div>
+        </div>
+        <div class="mt-3">
+          <div class="flex justify-between text-xs text-zinc-600 mb-1">
+            <span>Progress</span>
+            <span>2 of 8</span>
+          </div>
+          <div class="h-1 bg-zinc-800 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500/60 rounded-full" style="width: 25%"></div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto p-2 space-y-0.5">
+        <button class="w-full text-left px-3 py-2.5 rounded-md flex items-start gap-2.5 opacity-60">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="mt-0.5 text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><p class="text-xs text-zinc-400">1. Why Record First?</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md flex items-start gap-2.5 opacity-60">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="mt-0.5 text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><p class="text-xs text-zinc-400">2. Launching the Recorder</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-emerald-500 mt-0.5 flex-shrink-0 w-4 text-center">3</span>
+          <div><p class="text-xs text-emerald-300 font-medium">Writing Your First Test</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-900 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-4 text-center">4</span>
+          <div><p class="text-xs text-zinc-500">Refining with Copilot</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-900 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-4 text-center">5</span>
+          <div><p class="text-xs text-zinc-500">Adding Assertions</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-900 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-4 text-center">6</span>
+          <div><p class="text-xs text-zinc-500">Running &amp; Debugging</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-900 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-4 text-center">7</span>
+          <div><p class="text-xs text-zinc-500">Exercise: Login Flow</p></div>
+        </button>
+        <button class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-900 flex items-start gap-2.5">
+          <span class="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-4 text-center">8</span>
+          <div><p class="text-xs text-zinc-500">Quiz &amp; Review</p></div>
+        </button>
+      </nav>
+
+      <div class="p-3 border-t border-zinc-800">
+        <div class="flex items-center gap-2">
+          <svg width="32" height="32" viewBox="0 0 36 36" class="flex-shrink-0">
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#27272a" stroke-width="2.5"/>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"
+              class="progress-ring-circle"
+              stroke-dasharray="94.25"
+              stroke-dashoffset="72"/>
+          </svg>
+          <div>
+            <p class="text-xs text-zinc-400 font-mono">23%</p>
+            <p class="text-xs text-zinc-600">Overall course</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto" style="height: calc(100vh - 48px)">
+      <div class="max-w-3xl mx-auto px-6 py-8">
+
+        <!-- Lesson Progress Dots -->
+        <div class="flex items-center gap-1.5 mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-500" title="Lesson 1 - Complete"></span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500" title="Lesson 2 - Complete"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-emerald-400/30" title="Lesson 3 - Current" id="dot-3"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-700" title="Lesson 4"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-700" title="Lesson 5"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-700" title="Lesson 6"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-700" title="Lesson 7"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-700" title="Lesson 8"></span>
+          <span class="ml-2 text-xs text-zinc-600 font-mono">3 / 8</span>
+        </div>
+
+        <!-- Thin progress bar -->
+        <div class="h-0.5 bg-zinc-800 rounded-full mb-8">
+          <div class="h-full bg-emerald-500/60 rounded-full transition-all duration-500" style="width: 37.5%"></div>
+        </div>
+
+        <!-- Title Block -->
+        <div class="mb-10">
+          <span class="text-3xl mb-2 block" role="img" aria-label="Writing test">&#9997;&#65039;</span>
+          <h1 class="text-2xl font-bold text-zinc-100 tracking-tight font-mono">
+            Writing Your First Playwright Test
+          </h1>
+          <p class="text-sm text-zinc-500 mt-1.5">Navigate to pages and interact with elements using page.goto() and page.click()</p>
+          <div class="flex items-center gap-2 mt-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs border border-zinc-700 text-zinc-500">All Roles</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs border border-emerald-500/30 text-emerald-400">Hands-on</span>
+            <span class="text-xs text-zinc-600 ml-2">~15 min</span>
+          </div>
+        </div>
+
+        <!-- NOTEBOOK-STYLE CONTENT SCROLL -->
+        <div class="space-y-6" id="notebook">
+
+          <!-- Cell 1: What You Will Learn -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                What You Will Learn
+              </h2>
+              <p class="text-[13px] text-zinc-400 leading-relaxed">
+                Every Playwright test starts with two fundamental actions: navigating to a URL and interacting with elements on the page. In this lesson you will learn <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.goto()</code> for navigation and <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.click()</code> for triggering user interactions. By the end, you will write a working test against the practice app's login page.
+              </p>
+              <div class="mt-3 px-4 py-3 border-l-2 border-emerald-500 bg-emerald-500/5 rounded-r-md">
+                <p class="text-[12px] text-emerald-200/80 leading-relaxed">
+                  These two methods form the foundation of every Playwright test. Master them and you can automate any user workflow.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cell 2: page.goto() -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                Navigating with page.goto()
+              </h2>
+              <p class="text-[13px] text-zinc-400 leading-relaxed mb-3">
+                <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.goto(url)</code> navigates the browser to the given URL. Playwright automatically waits for the page to reach the <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">load</code> state before continuing. If you configure a <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">baseURL</code> in your Playwright config, you can use relative paths.
+              </p>
+              <div class="relative group rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+                <div class="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500/60"></span>
+                    <span class="text-xs text-zinc-500 uppercase tracking-wider font-mono">typescript</span>
+                  </div>
+                  <button onclick="copyCode(this)" class="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 rounded">Copy</button>
+                </div>
+                <pre class="p-4 overflow-x-auto text-[12px] leading-relaxed font-mono"><code>// Navigate to an absolute URL
+await page.goto('http://localhost:5173/login');
+
+// With baseURL configured, use a relative path
+await page.goto('/login');
+
+// Wait for a specific load state
+await page.goto('/dashboard', {
+  waitUntil: 'networkidle'
+});</code></pre>
+              </div>
+              <div class="mt-3 px-4 py-2.5 bg-blue-500/5 border border-blue-500/10 rounded-md">
+                <p class="text-xs text-blue-300/80 leading-relaxed">
+                  <span class="font-semibold text-blue-400">Tip:</span> Always set <code class="font-mono text-blue-300">baseURL</code> in <code class="font-mono text-blue-300">playwright.config.ts</code> so your tests use relative paths. This makes them portable across environments.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cell 3: goto() options table -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                goto() Options Reference
+              </h2>
+              <div class="overflow-x-auto border border-zinc-800 rounded-lg">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="bg-zinc-800/50">
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap">Option</th>
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap">Default</th>
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20 transition-colors">
+                      <td class="px-3 py-2 text-emerald-300 font-mono">waitUntil</td>
+                      <td class="px-3 py-2 text-zinc-500 font-mono">'load'</td>
+                      <td class="px-3 py-2 text-zinc-300 leading-relaxed">When to consider navigation succeeded: 'load', 'domcontentloaded', 'networkidle', 'commit'</td>
+                    </tr>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20 transition-colors">
+                      <td class="px-3 py-2 text-emerald-300 font-mono">timeout</td>
+                      <td class="px-3 py-2 text-zinc-500 font-mono">30000</td>
+                      <td class="px-3 py-2 text-zinc-300 leading-relaxed">Max time in ms to wait for navigation</td>
+                    </tr>
+                    <tr class="hover:bg-zinc-800/20 transition-colors">
+                      <td class="px-3 py-2 text-emerald-300 font-mono">referer</td>
+                      <td class="px-3 py-2 text-zinc-500 font-mono">undefined</td>
+                      <td class="px-3 py-2 text-zinc-300 leading-relaxed">Set referer header value</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cell 4: page.click() -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                Clicking Elements with page.click()
+              </h2>
+              <p class="text-[13px] text-zinc-400 leading-relaxed mb-3">
+                <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.click(selector)</code> finds an element matching the selector, scrolls it into view, and clicks it. Playwright automatically waits for the element to be visible, enabled, and stable before clicking. The preferred selectors are <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">data-testid</code> attributes and role-based locators.
+              </p>
+              <div class="relative group rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+                <div class="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500/60"></span>
+                    <span class="text-xs text-zinc-500 uppercase tracking-wider font-mono">typescript</span>
+                  </div>
+                  <button onclick="copyCode(this)" class="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 rounded">Copy</button>
+                </div>
+                <pre class="p-4 overflow-x-auto text-[12px] leading-relaxed font-mono"><code>// Click by data-testid (recommended)
+await page.click('[data-testid="login-button"]');
+
+// Modern locator API (preferred)
+await page.getByTestId('login-button').click();
+
+// Click by role (great for accessibility)
+await page.getByRole('button', { name: 'Log In' }).click();
+
+// Click by visible text
+await page.getByText('Submit').click();</code></pre>
+              </div>
+              <div class="mt-3 px-4 py-2.5 bg-red-500/5 border border-red-500/10 rounded-md">
+                <p class="text-xs text-red-300/80 leading-relaxed">
+                  <span class="font-semibold text-red-400">Warning:</span> Avoid CSS selectors like <code class="font-mono">.btn-primary</code> or <code class="font-mono">#root > div > button</code>. These break when the UI is refactored. Always prefer <code class="font-mono text-emerald-300">data-testid</code> or role-based locators.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cell 5: Complete login test -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                Putting It Together: A Complete Login Test
+              </h2>
+              <p class="text-[13px] text-zinc-400 leading-relaxed mb-3">
+                Combining <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.goto()</code>, <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.fill()</code>, and <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">page.click()</code> lets you automate a complete login flow. Notice the Arrange / Act / Assert structure.
+              </p>
+              <div class="relative group rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+                <div class="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500/60"></span>
+                    <span class="text-xs text-zinc-500 uppercase tracking-wider font-mono">typescript</span>
+                    <span class="text-xs text-zinc-600 italic ml-2">Complete login test</span>
+                  </div>
+                  <button onclick="copyCode(this)" class="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 rounded">Copy</button>
+                </div>
+                <pre class="p-4 overflow-x-auto text-[12px] leading-relaxed font-mono"><code>import { test, expect } from '@playwright/test';
+
+test('successful login redirects to dashboard', async ({ page }) =&gt; {
+  // ARRANGE - navigate to the login page
+  await page.goto('/login');
+
+  // ACT - fill in credentials and submit
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+
+  // ASSERT - verify we landed on the dashboard
+  await expect(page).toHaveURL(/dashboard/);
+});</code></pre>
+              </div>
+              <div class="mt-3 px-4 py-2.5 bg-blue-500/5 border border-blue-500/10 rounded-md">
+                <p class="text-xs text-blue-300/80 leading-relaxed">
+                  <span class="font-semibold text-blue-400">Tip:</span> Notice the Arrange / Act / Assert pattern. Every well-structured test follows this. When reviewing tests, check that each section is present.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cell 6: Practice App Login Page reference -->
+          <div class="notebook-cell">
+            <section>
+              <h2 class="text-sm font-semibold text-zinc-200 mb-2 flex items-center gap-2">
+                <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block flex-shrink-0"></span>
+                The Practice App Login Page
+              </h2>
+              <p class="text-[13px] text-zinc-400 leading-relaxed mb-3">
+                The practice app at <code class="text-emerald-300 bg-zinc-800/80 px-1.5 py-0.5 rounded text-xs font-mono">http://localhost:5173/login</code> has these testable elements. Understanding the available <code class="font-mono text-emerald-300 text-xs">data-testid</code> attributes is essential for writing reliable selectors.
+              </p>
+              <div class="overflow-x-auto border border-zinc-800 rounded-lg">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="bg-zinc-800/50">
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap">Element</th>
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800 whitespace-nowrap font-mono">data-testid</th>
+                      <th class="px-3 py-2 text-left text-zinc-400 font-medium border-b border-zinc-800">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20">
+                      <td class="px-3 py-2 text-zinc-300">Email input</td>
+                      <td class="px-3 py-2 text-emerald-300 font-mono">email-input</td>
+                      <td class="px-3 py-2 text-zinc-500">Accepts email format</td>
+                    </tr>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20">
+                      <td class="px-3 py-2 text-zinc-300">Password input</td>
+                      <td class="px-3 py-2 text-emerald-300 font-mono">password-input</td>
+                      <td class="px-3 py-2 text-zinc-500">Min 8 characters</td>
+                    </tr>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20">
+                      <td class="px-3 py-2 text-zinc-300">Login button</td>
+                      <td class="px-3 py-2 text-emerald-300 font-mono">login-button</td>
+                      <td class="px-3 py-2 text-zinc-500">Disabled until both fields filled</td>
+                    </tr>
+                    <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/20">
+                      <td class="px-3 py-2 text-zinc-300">Error message</td>
+                      <td class="px-3 py-2 text-emerald-300 font-mono">error-message</td>
+                      <td class="px-3 py-2 text-zinc-500">Shows on invalid credentials</td>
+                    </tr>
+                    <tr class="hover:bg-zinc-800/20">
+                      <td class="px-3 py-2 text-zinc-300">Lockout message</td>
+                      <td class="px-3 py-2 text-emerald-300 font-mono">lockout-message</td>
+                      <td class="px-3 py-2 text-zinc-500">After 5 failed attempts</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <a href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer"
+                class="block mt-4 p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors">
+                <div class="text-emerald-400 font-semibold text-sm mb-1">Try It Now</div>
+                <div class="text-xs text-zinc-300">Open the practice app login page</div>
+                <div class="text-xs text-zinc-500 mt-1">Run the practice-app first: <code class="font-mono text-emerald-300">cd practice-app &amp;&amp; pnpm dev</code></div>
+              </a>
+            </section>
+          </div>
+
+          <!-- Cell 7: EXERCISE with diff -->
+          <div class="notebook-cell">
+            <div class="mt-2 border border-zinc-800 rounded-lg overflow-hidden" id="exercise-section">
+              <div class="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
+                <span class="text-blue-400">&#9889;</span>
+                <span class="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Hands-On Exercise</span>
+              </div>
+              <div class="p-5">
+                <h4 class="text-sm font-semibold text-zinc-200 mb-1">Write a Login Test</h4>
+                <p class="text-xs text-zinc-400 mb-4 leading-relaxed">
+                  Complete the test below to verify that a user can log in to the practice app. Use <code class="font-mono text-emerald-300">page.goto()</code>, <code class="font-mono text-emerald-300">getByTestId().fill()</code>, and <code class="font-mono text-emerald-300">getByTestId().click()</code> to navigate, enter credentials, and submit the form. Add an assertion to verify the redirect to the dashboard.
+                </p>
+
+                <!-- Diff Code Block -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2" id="diff-container">
+                  <!-- Starter -->
+                  <div class="rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80">
+                    <div class="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+                      <span class="text-xs text-zinc-500 uppercase tracking-wider">Your Starting Point</span>
+                      <button onclick="copyStarter()" class="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5" id="copy-starter-btn">Copy</button>
+                    </div>
+                    <pre class="p-3 overflow-x-auto text-xs leading-relaxed font-mono"><code>import { test, expect } from '@playwright/test';
+
+test('user can log in successfully', async ({ page }) =&gt; {
+  // TODO: Navigate to the login page
+
+  // TODO: Fill in the email field
+  // Use test data: user@test.com
+
+  // TODO: Fill in the password field
+  // Use test data: Password123!
+
+  // TODO: Click the login button
+
+  // TODO: Assert the URL contains /dashboard
+
+});</code></pre>
+                  </div>
+
+                  <!-- Solution panel -->
+                  <div class="rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900/80 transition-all duration-300" id="solution-panel">
+                    <div class="flex items-center justify-between px-3 py-1.5 bg-zinc-800/60 border-b border-zinc-800">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs text-zinc-500 uppercase tracking-wider">Solution</span>
+                        <span class="hidden items-center gap-1.5 text-xs" id="diff-legend">
+                          <span class="inline-block w-2 h-2 rounded-sm bg-emerald-400/80"></span>
+                          <span class="text-emerald-400/70">= changed / added</span>
+                        </span>
+                      </div>
+                      <button onclick="copySolution()" class="text-xs text-zinc-500 hover:text-emerald-400 transition-colors px-2 py-0.5 hidden" id="copy-solution-btn">Copy</button>
+                    </div>
+                    <div class="p-8 flex items-center justify-center" id="solution-hidden">
+                      <p class="text-xs text-zinc-600 italic">Click "Check My Answer" below to see the solution with changes highlighted</p>
+                    </div>
+                    <pre class="p-3 overflow-x-auto text-xs leading-relaxed font-mono hidden" id="solution-revealed"><code id="solution-code"></code></pre>
+                  </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex items-center gap-3 mt-4">
+                  <button onclick="revealSolution()" id="reveal-btn"
+                    class="px-4 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors">
+                    Check My Answer
+                  </button>
+                  <button onclick="hideSolution()" id="hide-btn"
+                    class="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 border border-zinc-700 rounded-md transition-colors hidden">
+                    Hide Solution
+                  </button>
+                  <button onclick="toggleHints()" id="hints-toggle"
+                    class="text-xs text-amber-500/80 hover:text-amber-400 transition-colors flex items-center gap-1">
+                    &#9654; Need a hint?
+                  </button>
+                </div>
+
+                <!-- Hints -->
+                <div class="mt-3 space-y-1.5 pl-3 border-l border-amber-500/20 hidden" id="hints-section">
+                  <p class="text-xs text-zinc-400"><span class="text-amber-500/60 mr-1">&rarr;</span> Start with <code class="font-mono text-emerald-300">page.goto('/login')</code> to navigate to the login page</p>
+                  <p class="text-xs text-zinc-400"><span class="text-amber-500/60 mr-1">&rarr;</span> Use <code class="font-mono text-emerald-300">page.getByTestId('email-input').fill('user@test.com')</code> for the email</p>
+                  <p class="text-xs text-zinc-400"><span class="text-amber-500/60 mr-1">&rarr;</span> The login button's test ID is <code class="font-mono text-emerald-300">login-button</code></p>
+                  <p class="text-xs text-zinc-400"><span class="text-amber-500/60 mr-1">&rarr;</span> Use <code class="font-mono text-emerald-300">expect(page).toHaveURL(/dashboard/)</code> for the assertion</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell 8: Quiz -->
+          <div class="notebook-cell">
+            <div class="mt-2 border border-zinc-800 rounded-lg overflow-hidden" id="quiz-section">
+              <div class="px-5 py-3 bg-zinc-800/40 border-b border-zinc-800 flex items-center gap-2">
+                <span class="text-amber-400">&#10022;</span>
+                <span class="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Knowledge Check</span>
+              </div>
+              <div class="p-5">
+                <p class="text-sm text-zinc-200 mb-4 leading-relaxed">
+                  What does Playwright do automatically when you call <code class="font-mono text-emerald-300 text-xs">page.click()</code> on an element?
+                </p>
+                <div class="space-y-2" id="quiz-options">
+                  <button onclick="selectOption(0)" data-idx="0" class="quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed">
+                    <span class="mr-2 font-mono text-zinc-600">A.</span>It clicks immediately without any checks
+                  </button>
+                  <button onclick="selectOption(1)" data-idx="1" class="quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed">
+                    <span class="mr-2 font-mono text-zinc-600">B.</span>It waits for the element to be visible, enabled, and stable, then scrolls it into view and clicks
+                  </button>
+                  <button onclick="selectOption(2)" data-idx="2" class="quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed">
+                    <span class="mr-2 font-mono text-zinc-600">C.</span>It requires a manual waitForSelector() call first
+                  </button>
+                  <button onclick="selectOption(3)" data-idx="3" class="quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed">
+                    <span class="mr-2 font-mono text-zinc-600">D.</span>It only works with CSS selectors, not test IDs
+                  </button>
+                </div>
+                <button onclick="submitQuiz()" id="quiz-submit" disabled
+                  class="mt-4 px-4 py-2 rounded-md text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  Check Answer
+                </button>
+                <div class="hidden mt-4 p-3 rounded-md text-xs leading-relaxed border" id="quiz-result"></div>
+                <button onclick="retryQuiz()" id="quiz-retry" class="hidden mt-3 text-xs text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded px-3 py-1.5 transition-colors">
+                  Try Again
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end notebook -->
+
+        <!-- Navigation Footer -->
+        <div class="mt-12 pt-6 border-t border-zinc-800 flex items-center justify-between">
+          <button class="px-4 py-2 text-xs text-zinc-400 hover:text-zinc-200 transition-colors">
+            &larr; Previous: Launching the Recorder
+          </button>
+          <div class="flex items-center gap-3">
+            <button onclick="markComplete()" id="mark-complete-btn"
+              class="px-4 py-2 text-xs text-zinc-400 hover:text-emerald-400 border border-zinc-800 hover:border-emerald-500/30 rounded-md transition-all">
+              Mark Complete
+            </button>
+            <button class="px-5 py-2 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition-colors">
+              Next: Refining with Copilot &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="h-12"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ---- Code Copy ----
+    function copyCode(btn) {
+      var pre = btn.closest('.rounded-lg').querySelector('pre');
+      var text = pre ? pre.textContent : '';
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = '\u2713 Copied';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    // ---- Exercise Data ----
+    var starterLines = [
+      "import { test, expect } from '@playwright/test';",
+      "",
+      "test('user can log in successfully', async ({ page }) => {",
+      "  // TODO: Navigate to the login page",
+      "",
+      "  // TODO: Fill in the email field",
+      "  // Use test data: user@test.com",
+      "",
+      "  // TODO: Fill in the password field",
+      "  // Use test data: Password123!",
+      "",
+      "  // TODO: Click the login button",
+      "",
+      "  // TODO: Assert the URL contains /dashboard",
+      "",
+      "});"
+    ];
+
+    var solutionLines = [
+      "import { test, expect } from '@playwright/test';",
+      "",
+      "test('user can log in successfully', async ({ page }) => {",
+      "  // ARRANGE - navigate to the login page",
+      "  await page.goto('/login');",
+      "",
+      "  // ACT - fill credentials and submit",
+      "  await page.getByTestId('email-input').fill('user@test.com');",
+      "  await page.getByTestId('password-input').fill('Password123!');",
+      "  await page.getByTestId('login-button').click();",
+      "",
+      "  // ASSERT - verify redirect to dashboard",
+      "  await expect(page).toHaveURL(/dashboard/);",
+      "});"
+    ];
+
+    var starterRaw = starterLines.join('\n');
+    var solutionRaw = solutionLines.join('\n');
+
+    function copyStarter() {
+      navigator.clipboard.writeText(starterRaw).then(function() {
+        var btn = document.getElementById('copy-starter-btn');
+        btn.textContent = '\u2713 Copied';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    function copySolution() {
+      navigator.clipboard.writeText(solutionRaw).then(function() {
+        var btn = document.getElementById('copy-solution-btn');
+        btn.textContent = '\u2713 Copied';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    // ---- Diff computation ----
+    function computeDiff() {
+      var starterSet = {};
+      starterLines.forEach(function(l) { starterSet[l.trim()] = true; });
+      return solutionLines.map(function(line) {
+        var trimmed = line.trim();
+        if (trimmed === '') return { line: line, status: 'unchanged' };
+        if (starterSet[trimmed]) return { line: line, status: 'unchanged' };
+        return { line: line, status: 'changed' };
+      });
+    }
+
+    function escapeHtml(text) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(text));
+      return div.textContent;
+    }
+
+    function revealSolution() {
+      var diff = computeDiff();
+      var codeEl = document.getElementById('solution-code');
+
+      // Clear existing content
+      while (codeEl.firstChild) { codeEl.removeChild(codeEl.firstChild); }
+
+      // Build diff lines using DOM methods
+      diff.forEach(function(d) {
+        var lineDiv = document.createElement('div');
+        if (d.status === 'changed') {
+          lineDiv.className = 'diff-added-line text-emerald-300 bg-emerald-500/10 -mx-3 px-3 border-l-2 border-emerald-400';
+        } else {
+          lineDiv.className = 'text-emerald-200/70';
+        }
+        lineDiv.textContent = d.line || '\u00A0';
+        codeEl.appendChild(lineDiv);
+      });
+
+      document.getElementById('solution-hidden').classList.add('hidden');
+      document.getElementById('solution-revealed').classList.remove('hidden');
+      document.getElementById('solution-panel').classList.remove('border-zinc-800');
+      document.getElementById('solution-panel').classList.add('border-emerald-500/20');
+      document.getElementById('diff-legend').classList.remove('hidden');
+      document.getElementById('diff-legend').classList.add('flex');
+      document.getElementById('copy-solution-btn').classList.remove('hidden');
+      document.getElementById('reveal-btn').classList.add('hidden');
+      document.getElementById('hide-btn').classList.remove('hidden');
+    }
+
+    function hideSolution() {
+      document.getElementById('solution-hidden').classList.remove('hidden');
+      document.getElementById('solution-revealed').classList.add('hidden');
+      document.getElementById('solution-panel').classList.add('border-zinc-800');
+      document.getElementById('solution-panel').classList.remove('border-emerald-500/20');
+      document.getElementById('diff-legend').classList.add('hidden');
+      document.getElementById('diff-legend').classList.remove('flex');
+      document.getElementById('copy-solution-btn').classList.add('hidden');
+      document.getElementById('reveal-btn').classList.remove('hidden');
+      document.getElementById('hide-btn').classList.add('hidden');
+    }
+
+    // ---- Hints ----
+    var hintsVisible = false;
+    function toggleHints() {
+      hintsVisible = !hintsVisible;
+      document.getElementById('hints-section').classList.toggle('hidden', !hintsVisible);
+      document.getElementById('hints-toggle').textContent = hintsVisible ? '\u25BE Hide hints' : '\u25B8 Need a hint?';
+    }
+
+    // ---- Quiz ----
+    var selectedOption = null;
+    var quizSubmitted = false;
+    var correctIndex = 1;
+
+    function selectOption(idx) {
+      if (quizSubmitted) return;
+      selectedOption = idx;
+      document.getElementById('quiz-submit').disabled = false;
+
+      var opts = document.querySelectorAll('.quiz-opt');
+      opts.forEach(function(btn, i) {
+        if (i === idx) {
+          btn.className = 'quiz-opt w-full text-left px-4 py-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 text-zinc-200 transition-all text-xs leading-relaxed';
+        } else {
+          btn.className = 'quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed';
+        }
+      });
+    }
+
+    function submitQuiz() {
+      if (selectedOption === null) return;
+      quizSubmitted = true;
+      var isCorrect = selectedOption === correctIndex;
+
+      var opts = document.querySelectorAll('.quiz-opt');
+      opts.forEach(function(btn, i) {
+        var base = 'quiz-opt w-full text-left px-4 py-3 rounded-md border transition-all text-xs leading-relaxed ';
+        if (i === correctIndex) {
+          btn.className = base + 'border-emerald-500/50 bg-emerald-500/5 text-emerald-300';
+        } else if (i === selectedOption && !isCorrect) {
+          btn.className = base + 'border-red-500/50 bg-red-500/5 text-red-300';
+        } else {
+          btn.className = base + 'border-zinc-800 bg-transparent text-zinc-500';
+        }
+      });
+
+      var result = document.getElementById('quiz-result');
+      result.classList.remove('hidden');
+      document.getElementById('quiz-submit').classList.add('hidden');
+
+      // Clear result content
+      while (result.firstChild) { result.removeChild(result.firstChild); }
+
+      if (isCorrect) {
+        result.className = 'mt-4 p-3 rounded-md text-xs leading-relaxed border bg-emerald-500/5 border-emerald-500/20 text-emerald-200';
+        var p1 = document.createElement('p');
+        p1.className = 'font-semibold mb-1';
+        p1.textContent = '\u2713 Correct!';
+        var p2 = document.createElement('p');
+        p2.className = 'text-zinc-400';
+        p2.textContent = "Playwright's auto-wait mechanism is one of its strongest features. It waits for elements to be actionable (visible, enabled, stable) before interacting, eliminating the need for manual waits.";
+        result.appendChild(p1);
+        result.appendChild(p2);
+      } else {
+        result.className = 'mt-4 p-3 rounded-md text-xs leading-relaxed border bg-amber-500/5 border-amber-500/20 text-amber-200';
+        var p1 = document.createElement('p');
+        p1.className = 'font-semibold mb-1';
+        p1.textContent = '\u2717 Not quite.';
+        var p2 = document.createElement('p');
+        p2.className = 'text-zinc-400';
+        p2.textContent = "Playwright automatically waits for elements to be visible, enabled, and stable before clicking. You do not need manual waitForSelector() calls. This built-in auto-wait is what makes Playwright tests more reliable than older frameworks.";
+        result.appendChild(p1);
+        result.appendChild(p2);
+        document.getElementById('quiz-retry').classList.remove('hidden');
+      }
+    }
+
+    function retryQuiz() {
+      quizSubmitted = false;
+      selectedOption = null;
+      document.getElementById('quiz-submit').classList.remove('hidden');
+      document.getElementById('quiz-submit').disabled = true;
+      document.getElementById('quiz-result').classList.add('hidden');
+      document.getElementById('quiz-retry').classList.add('hidden');
+      var opts = document.querySelectorAll('.quiz-opt');
+      opts.forEach(function(btn) {
+        btn.className = 'quiz-opt w-full text-left px-4 py-3 rounded-md border border-zinc-800 hover:border-zinc-600 bg-transparent hover:bg-zinc-900/50 text-zinc-400 transition-all text-xs leading-relaxed';
+      });
+    }
+
+    // ---- Mark Complete ----
+    function markComplete() {
+      var btn = document.getElementById('mark-complete-btn');
+      btn.textContent = '\u2713 Completed';
+      btn.className = 'px-4 py-2 text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 rounded-md cursor-default';
+      btn.disabled = true;
+      var dot = document.getElementById('dot-3');
+      if (dot) {
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+      }
+    }
+  </script>
+
+</body>
+</html>

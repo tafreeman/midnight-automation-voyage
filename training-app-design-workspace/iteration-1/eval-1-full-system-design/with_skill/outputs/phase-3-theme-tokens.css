@@ -1,0 +1,175 @@
+/**
+ * tokens.css
+ * Target: training-app/src/themes/tokens.css
+ *
+ * Design system theme tokens for 4 named themes.
+ * Import in index.css alongside Tailwind imports.
+ */
+
+/* ─── Spacing Scale ────────────────────────────────────────────── */
+:root {
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --rail-left-width: 260px;
+  --rail-right-width: 280px;
+  --topbar-height: 48px;
+  --bottombar-height: 56px;
+  --content-max-width: 720px;
+  --prose-max-width: 65ch;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ─── Signal Cobalt (Dark, Engineering-Forward) ────────────────── */
+[data-theme="signal-cobalt"] {
+  --surface-primary: #0f1729;
+  --surface-elevated: #1a2744;
+  --surface-code: #0d1117;
+  --surface-hover: #1e3055;
+
+  --text-primary: #e8edf5;
+  --text-secondary: #7b8da6;
+  --text-muted: #4a5a73;
+
+  --border-subtle: #1e3055;
+  --border-strong: #2d4a7a;
+
+  --accent-action: #a3e635;
+  --accent-info: #38bdf8;
+  --accent-highlight: #fbbf24;
+  --accent-special: #c084fc;
+
+  --diff-added-bg: rgba(163, 230, 53, 0.1);
+  --diff-added-text: #a3e635;
+  --diff-removed-bg: rgba(248, 113, 113, 0.1);
+  --diff-removed-text: #f87171;
+
+  --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --code-glow: 0 0 0 1px rgba(56, 189, 248, 0.15);
+  --focus-ring: 0 0 0 2px rgba(56, 189, 248, 0.5);
+
+  color-scheme: dark;
+}
+
+/* ─── Arctic Steel (Light, Minimal, Technical) ─────────────────── */
+[data-theme="arctic-steel"] {
+  --surface-primary: #f8f9fb;
+  --surface-elevated: #ffffff;
+  --surface-code: #f0f2f5;
+  --surface-hover: #e8ebf0;
+
+  --text-primary: #1a1f2e;
+  --text-secondary: #5a6577;
+  --text-muted: #8b95a5;
+
+  --border-subtle: #e2e6ed;
+  --border-strong: #c5cbd6;
+
+  --accent-action: #059669;
+  --accent-info: #2563eb;
+  --accent-highlight: #d97706;
+  --accent-special: #7c3aed;
+
+  --diff-added-bg: rgba(5, 150, 105, 0.08);
+  --diff-added-text: #059669;
+  --diff-removed-bg: rgba(220, 38, 38, 0.08);
+  --diff-removed-text: #dc2626;
+
+  --shadow-elevation: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --code-glow: 0 0 0 1px rgba(37, 99, 235, 0.1);
+  --focus-ring: 0 0 0 2px rgba(37, 99, 235, 0.4);
+
+  color-scheme: light;
+}
+
+/* ─── Linear (Light, Blue-Tinted Modernism) ────────────────────── */
+[data-theme="linear"] {
+  --surface-primary: #fafbfe;
+  --surface-elevated: #ffffff;
+  --surface-code: #f4f6fb;
+  --surface-hover: #edf0f8;
+
+  --text-primary: #1e2330;
+  --text-secondary: #6b7489;
+  --text-muted: #9099ad;
+
+  --border-subtle: #e5e8f0;
+  --border-strong: #c8cede;
+
+  --accent-action: #10b981;
+  --accent-info: #3b82f6;
+  --accent-highlight: #f59e0b;
+  --accent-special: #ec4899;
+
+  --diff-added-bg: rgba(16, 185, 129, 0.08);
+  --diff-added-text: #10b981;
+  --diff-removed-bg: rgba(239, 68, 68, 0.08);
+  --diff-removed-text: #ef4444;
+
+  --shadow-elevation: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --code-glow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+  --focus-ring: 0 0 0 2px rgba(59, 130, 246, 0.4);
+
+  color-scheme: light;
+}
+
+/* ─── Gamma Dark (Dark, Warm, Developer-Friendly) ──────────────── */
+[data-theme="gamma-dark"] {
+  --surface-primary: #1a1a2e;
+  --surface-elevated: #242442;
+  --surface-code: #0d1117;
+  --surface-hover: #2e2e52;
+
+  --text-primary: #f0f0f0;
+  --text-secondary: #8b8fa3;
+  --text-muted: #5a5e73;
+
+  --border-subtle: #2e2e52;
+  --border-strong: #3d3d6b;
+
+  --accent-action: #a3e635;
+  --accent-info: #60a5fa;
+  --accent-highlight: #fb923c;
+  --accent-special: #f472b6;
+
+  --diff-added-bg: rgba(163, 230, 53, 0.1);
+  --diff-added-text: #a3e635;
+  --diff-removed-bg: rgba(248, 113, 113, 0.1);
+  --diff-removed-text: #f87171;
+
+  --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --code-glow: 0 0 0 1px rgba(251, 146, 60, 0.15);
+  --focus-ring: 0 0 0 2px rgba(96, 165, 250, 0.5);
+
+  color-scheme: dark;
+}
+
+/* ─── Theme Transition ─────────────────────────────────────────── */
+[data-theme] {
+  transition: var(--transition-theme);
+}
+
+/* ─── Focus Styles ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ─── Reduced Motion ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme] {
+    transition: none;
+  }
+}

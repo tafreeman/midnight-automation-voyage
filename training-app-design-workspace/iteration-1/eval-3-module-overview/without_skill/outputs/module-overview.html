@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 14: Page Object Model - Course Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+
+    /* Custom scrollbar for sidebar */
+    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+    /* Progress ring */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Card hover effect */
+    .lesson-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .lesson-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .lesson-card:focus-within {
+      outline: 2px solid #059669;
+      outline-offset: 2px;
+    }
+
+    /* Focus visible */
+    :focus-visible {
+      outline: 2px solid #059669;
+      outline-offset: 2px;
+    }
+
+    /* Mobile sidebar toggle */
+    @media (max-width: 767px) {
+      .sidebar-panel { display: none; }
+      .sidebar-panel.open { display: flex; position: fixed; z-index: 50; inset: 0; }
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- ===== LEFT SIDEBAR (Dark) ===== -->
+  <aside class="sidebar-panel w-[280px] flex-shrink-0 bg-zinc-950 text-zinc-100 flex flex-col h-full border-r border-zinc-800" role="navigation" aria-label="Course navigation">
+
+    <!-- Sidebar Header -->
+    <div class="p-4 border-b border-zinc-800">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h1 class="text-sm font-bold tracking-wide text-emerald-400 font-mono">PLAYWRIGHT</h1>
+          <p class="text-[11px] text-zinc-500 tracking-widest uppercase mt-0.5">+ GitHub Copilot</p>
+        </div>
+        <button class="text-zinc-600 hover:text-zinc-400 transition-colors p-1 md:hidden" aria-label="Close navigation" onclick="document.querySelector('.sidebar-panel').classList.remove('open')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M12 12L4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </div>
+
+      <!-- Progress -->
+      <div class="space-y-1.5" role="status" aria-live="polite">
+        <div class="flex justify-between text-[11px] text-zinc-500">
+          <span>Course Progress</span>
+          <span>43%</span>
+        </div>
+        <div class="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+          <div class="h-full bg-emerald-500 rounded-full transition-all" style="width: 43%"></div>
+        </div>
+        <p class="text-[11px] text-zinc-600">13 of 30 modules completed</p>
+      </div>
+    </div>
+
+    <!-- Module List -->
+    <nav class="flex-1 overflow-y-auto sidebar-scroll py-2" aria-label="Module list">
+
+      <!-- Group: Foundations -->
+      <div class="px-3 pt-3 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">Foundations</p>
+      </div>
+      <div class="px-2 space-y-0.5" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">01. Orientation</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">02. Mindset Shifts</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">03. What to Automate</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">04. Why Playwright + Copilot</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">05. Environment Setup</span>
+        </a>
+      </div>
+
+      <!-- Group: Core Skills -->
+      <div class="px-3 pt-4 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">Core Skills</p>
+      </div>
+      <div class="px-2 space-y-0.5" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">06. Copilot Prompt Engineering</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">07. Record & Refine Workflow</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">08. Writing Tests</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">09. Page Object Model (Intro)</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">10. API Testing</span>
+        </a>
+      </div>
+
+      <!-- Group: Advanced Prompting -->
+      <div class="px-3 pt-4 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">Advanced Prompting</p>
+      </div>
+      <div class="px-2 space-y-0.5" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">11. Prompt Templates</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">12. Reading Results</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-400 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-emerald-400 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="truncate">13. HITL Checklist</span>
+        </a>
+
+        <!-- MODULE 14 - ACTIVE -->
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 transition-colors" aria-current="page">
+          <span class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-[10px] font-bold text-emerald-400 flex-shrink-0">14</span>
+          <span class="truncate">Page Object Model</span>
+        </a>
+
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">15. CI/CD Reference</span>
+        </a>
+      </div>
+
+      <!-- Group: Professional Patterns -->
+      <div class="px-3 pt-4 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">Professional Patterns</p>
+      </div>
+      <div class="px-2 space-y-0.5" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">16. Auth Fixtures</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">17. Visual Regression</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">18. Accessibility Testing</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">19. Flaky Test Diagnosis</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">20. Test Data Strategies</span>
+        </a>
+      </div>
+
+      <!-- Group: Assessment & Tools -->
+      <div class="px-3 pt-4 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">Assessment & Tools</p>
+      </div>
+      <div class="px-2 space-y-0.5" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">21. Assessment & Certification</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">22. Trace Viewer</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">23. Mobile & Responsive</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">24. Parallel & Sharding</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">25. Multi-Browser Projects</span>
+        </a>
+      </div>
+
+      <!-- Group: CI/CD & Scaling -->
+      <div class="px-3 pt-4 pb-1">
+        <p class="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">CI/CD & Scaling</p>
+      </div>
+      <div class="px-2 space-y-0.5 pb-4" role="list">
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">26. Test Tagging</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">27. GitHub Actions</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">28. Network Mocking</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">29. Playwright MCP & AI Agents</span>
+        </a>
+        <a href="#" role="listitem" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-zinc-600 hover:bg-zinc-900 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-zinc-700 flex-shrink-0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="truncate">30. Component Testing</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="p-3 border-t border-zinc-800">
+      <div class="flex items-center gap-2 text-[11px] text-zinc-600">
+        <div class="w-2 h-2 rounded-full bg-emerald-500/50"></div>
+        <span>Interactive Learning Guide</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT (Light Theme) ===== -->
+  <main class="flex-1 overflow-y-auto bg-white" role="main">
+    <div class="max-w-4xl mx-auto px-6 md:px-10 py-8">
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden mb-4 p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" aria-label="Open navigation" onclick="document.querySelector('.sidebar-panel').classList.add('open')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-1.5 text-[13px]">
+          <li><a href="#" class="text-slate-400 hover:text-emerald-600 transition-colors">Playwright + Copilot</a></li>
+          <li class="text-slate-300">/</li>
+          <li><a href="#" class="text-slate-400 hover:text-emerald-600 transition-colors">Advanced Prompting</a></li>
+          <li class="text-slate-300">/</li>
+          <li class="text-slate-700 font-medium">Module 14</li>
+        </ol>
+      </nav>
+
+      <!-- Prerequisite Banner -->
+      <div class="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-3" role="status">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" class="text-emerald-600 mt-0.5 flex-shrink-0">
+          <path d="M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <p class="text-[13px] text-emerald-800 font-medium">Prerequisite complete</p>
+          <p class="text-[12px] text-emerald-600 mt-0.5">Module 13: HITL Checklist has been completed. You're ready to start this module.</p>
+        </div>
+      </div>
+
+      <!-- Module Hero -->
+      <header class="mb-10">
+        <div class="flex flex-col sm:flex-row sm:items-start gap-6">
+          <!-- Left: Title and metadata -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-4xl" role="img" aria-label="Page Object Model icon">&#127959;</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Intermediate</span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">Developer Focus</span>
+              </div>
+            </div>
+            <h2 class="text-[28px] font-bold text-slate-900 tracking-tight font-mono leading-tight">
+              Page Object Model
+            </h2>
+            <p class="text-[15px] text-slate-500 mt-1.5 leading-relaxed">
+              Organizing tests for long-term maintainability using class-based page abstractions.
+            </p>
+          </div>
+
+          <!-- Right: Progress Ring -->
+          <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+            <div class="relative w-[88px] h-[88px]">
+              <svg viewBox="0 0 88 88" class="w-full h-full">
+                <!-- Background ring -->
+                <circle cx="44" cy="44" r="38" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+                <!-- Progress ring (0/6 = 0%) -->
+                <circle cx="44" cy="44" r="38" fill="none" stroke="#059669" stroke-width="5"
+                  stroke-dasharray="238.76" stroke-dashoffset="238.76"
+                  class="progress-ring-circle" stroke-linecap="round"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-lg font-bold text-slate-900">0</span>
+                <span class="text-[10px] text-slate-400 -mt-0.5">of 6</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-slate-400 font-medium">Not started</span>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="flex flex-wrap items-center gap-4 mt-6 pt-5 border-t border-slate-100">
+          <div class="flex items-center gap-1.5 text-[13px] text-slate-500">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-slate-400">
+              <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span>Estimated time: <strong class="text-slate-700">2h 15m</strong></span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[13px] text-slate-500">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-slate-400">
+              <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span>6 lessons</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[13px] text-slate-500">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="text-slate-400">
+              <path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 4.5 12l.5-3.5L2.5 6l3.5-.5L8 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+            <span>Quiz + hands-on exercise</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- What You'll Build -->
+      <section class="mb-10" aria-labelledby="build-heading">
+        <h3 id="build-heading" class="text-[15px] font-semibold text-slate-900 mb-3 flex items-center gap-2">
+          <span class="w-1 h-5 bg-emerald-500 rounded-full inline-block"></span>
+          What You'll Build
+        </h3>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+          <div class="flex flex-col md:flex-row gap-5">
+            <!-- Code preview -->
+            <div class="md:w-1/2 bg-slate-900 rounded-lg p-4 overflow-hidden">
+              <div class="flex items-center gap-1.5 mb-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></div>
+                <span class="text-[10px] text-slate-500 ml-2 font-mono">LoginPage.ts</span>
+              </div>
+              <pre class="text-[11px] leading-[1.6] text-emerald-300/90 font-mono overflow-x-auto"><code><span class="text-blue-400">export class</span> <span class="text-amber-300">LoginPage</span> {
+  <span class="text-blue-400">readonly</span> page: <span class="text-amber-300">Page</span>;
+  <span class="text-blue-400">readonly</span> email: <span class="text-amber-300">Locator</span>;
+  <span class="text-blue-400">readonly</span> password: <span class="text-amber-300">Locator</span>;
+
+  <span class="text-blue-400">async</span> <span class="text-emerald-200">login</span>(user, pass) {
+    <span class="text-blue-400">await</span> <span class="text-slate-400">this</span>.email.fill(user);
+    <span class="text-blue-400">await</span> <span class="text-slate-400">this</span>.password.fill(pass);
+    <span class="text-blue-400">await</span> <span class="text-slate-400">this</span>.submitBtn.click();
+  }
+}</code></pre>
+            </div>
+            <!-- Description -->
+            <div class="md:w-1/2 flex flex-col justify-center">
+              <p class="text-[14px] text-slate-700 leading-relaxed mb-4">
+                Build a complete Page Object Model for the practice app's login, dashboard, and contact pages with reusable action methods.
+              </p>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-emerald-500 mt-0.5 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="text-[13px] text-slate-600">Class-based page object structure</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-emerald-500 mt-0.5 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="text-[13px] text-slate-600">Locator encapsulation for maintainability</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-emerald-500 mt-0.5 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="text-[13px] text-slate-600">Copilot-generated page objects from prompts</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-emerald-500 mt-0.5 flex-shrink-0"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="text-[13px] text-slate-600">Refactoring inline tests to use the POM pattern</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lessons List -->
+      <section aria-labelledby="lessons-heading" class="mb-10">
+        <h3 id="lessons-heading" class="text-[15px] font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <span class="w-1 h-5 bg-emerald-500 rounded-full inline-block"></span>
+          Lessons
+        </h3>
+
+        <ol class="space-y-3" role="list">
+          <!-- Lesson 1 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  1
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">Why Page Object Model?</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Understand the maintenance problem POM solves and when to apply the pattern.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    15 min
+                  </span>
+                  <!-- Not started circle -->
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+
+          <!-- Lesson 2 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  2
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">POM Structure & Anatomy</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Learn the anatomy of a page object class: constructors, locators, and action methods.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    25 min
+                  </span>
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+
+          <!-- Lesson 3 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  3
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">Building Your First Page Object</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Hands-on: create a LoginPage class for the practice app with real selectors.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    30 min
+                  </span>
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+
+          <!-- Lesson 4 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  4
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">Copilot-Generated Page Objects</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Use GitHub Copilot Chat to generate entire page object classes from descriptions.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    20 min
+                  </span>
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+
+          <!-- Lesson 5 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  5
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">Refactoring Tests to Use POM</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Transform inline test code into clean, maintainable tests backed by page objects.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    25 min
+                  </span>
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+
+          <!-- Lesson 6 -->
+          <li>
+            <a href="#" class="lesson-card block bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-emerald-300 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[13px] font-bold text-slate-500 flex-shrink-0">
+                  6
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-[14px] font-semibold text-slate-800">POM Best Practices & Patterns</h4>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Advanced patterns: composition over inheritance, fixture integration, and naming conventions.</p>
+                </div>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-[12px] text-slate-400">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    20 min
+                  </span>
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-200" title="Not started" aria-label="Not started"></div>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Start Module CTA -->
+      <section class="mb-10">
+        <div class="flex flex-col sm:flex-row items-center gap-4 p-6 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div class="flex-1">
+            <h4 class="text-[15px] font-semibold text-emerald-900">Ready to begin?</h4>
+            <p class="text-[13px] text-emerald-700 mt-0.5">Start with Lesson 1 to understand why POM is the most important pattern for test maintainability.</p>
+          </div>
+          <button class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[13px] font-semibold rounded-lg transition-colors shadow-sm flex-shrink-0 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+            Start Module
+          </button>
+        </div>
+      </section>
+
+      <!-- Module Navigation -->
+      <nav class="pt-6 border-t border-slate-100 flex items-center justify-between" aria-label="Module navigation">
+        <a href="#" class="flex items-center gap-2 text-[13px] text-slate-400 hover:text-emerald-600 transition-colors group">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="group-hover:-translate-x-0.5 transition-transform"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <span class="block text-[11px] text-slate-300 uppercase tracking-wide">Previous</span>
+            <span class="text-slate-500 group-hover:text-emerald-600">Module 13: HITL Checklist</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center gap-2 text-[13px] text-slate-400 hover:text-emerald-600 transition-colors group text-right">
+          <div>
+            <span class="block text-[11px] text-slate-300 uppercase tracking-wide">Next</span>
+            <span class="text-slate-500 group-hover:text-emerald-600">Module 15: CI/CD Reference</span>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="group-hover:translate-x-0.5 transition-transform"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </nav>
+
+      <div class="h-10"></div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "skill_name": "training-app-design",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "label": "With Design Skill",
+      "evals": [
+        {
+          "eval_id": 1,
+          "eval_name": "full-system-design",
+          "pass_rate": 1.0,
+          "passed": 10,
+          "total": 10,
+          "tokens": 200000,
+          "duration_seconds": 960.0
+        },
+        {
+          "eval_id": 2,
+          "eval_name": "lesson-detail-page",
+          "pass_rate": 1.0,
+          "passed": 10,
+          "total": 10,
+          "tokens": 132291,
+          "duration_seconds": 367.2
+        },
+        {
+          "eval_id": 3,
+          "eval_name": "module-overview-page",
+          "pass_rate": 1.0,
+          "passed": 10,
+          "total": 10,
+          "tokens": 133245,
+          "duration_seconds": 381.6
+        },
+        {
+          "eval_id": 4,
+          "eval_name": "quiz-code-diff-component",
+          "pass_rate": 1.0,
+          "passed": 10,
+          "total": 10,
+          "tokens": 111843,
+          "duration_seconds": 320.1
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 1.0,
+        "mean_tokens": 144345,
+        "mean_duration_seconds": 507.2
+      }
+    },
+    {
+      "name": "without_skill",
+      "label": "Baseline (No Skill)",
+      "evals": [
+        {
+          "eval_id": 1,
+          "eval_name": "full-system-design",
+          "pass_rate": 0.8,
+          "passed": 8,
+          "total": 10,
+          "tokens": 200000,
+          "duration_seconds": 960.0
+        },
+        {
+          "eval_id": 2,
+          "eval_name": "lesson-detail-page",
+          "pass_rate": 0.7,
+          "passed": 7,
+          "total": 10,
+          "tokens": 133148,
+          "duration_seconds": 473.0
+        },
+        {
+          "eval_id": 3,
+          "eval_name": "module-overview-page",
+          "pass_rate": 0.7,
+          "passed": 7,
+          "total": 10,
+          "tokens": 115742,
+          "duration_seconds": 373.1
+        },
+        {
+          "eval_id": 4,
+          "eval_name": "quiz-code-diff-component",
+          "pass_rate": 0.7,
+          "passed": 7,
+          "total": 10,
+          "tokens": 100827,
+          "duration_seconds": 241.8
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.725,
+        "mean_tokens": 137429,
+        "mean_duration_seconds": 512.0
+      }
+    }
+  ],
+  "delta": {
+    "pass_rate": "+27.5%",
+    "tokens": "+5.0%",
+    "duration": "-0.9%"
+  },
+  "analyst_observations": [
+    "The skill adds ~5% more tokens on average but achieves 100% pass rate vs 72.5% baseline — the extra context pays for itself in design-system consistency.",
+    "Named themes (Signal Cobalt, Arctic Steel, Linear, Gamma Dark) and registry layout IDs (nav-hub, stat-cards, two-col, eng-*) are the clearest differentiators — baseline never uses these.",
+    "The baseline for Eval 2 produced HTML instead of React/TSX, which doesn't match the project stack. The skill correctly steered toward TSX.",
+    "The baseline for Eval 1 modified the actual codebase rather than saving deliverables to the workspace — a riskier approach that the phased skill methodology avoided.",
+    "Both approaches produced three-panel shells and progress tracking — these are common sense decisions the skill doesn't uniquely enable. The skill's value is in the specifics: which themes, which layouts, which tone for microcopy."
+  ]
+}
