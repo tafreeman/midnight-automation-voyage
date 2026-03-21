@@ -60,7 +60,7 @@ export function Sidebar({
   }
 
   return (
-    <aside className="w-76 flex-shrink-0 border-r border-border bg-card flex flex-col h-full">
+    <aside className="w-[19rem] flex-shrink-0 border-r border-border bg-card flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-5 pb-4 border-b border-border">
         <div className="flex items-center justify-between mb-4">
