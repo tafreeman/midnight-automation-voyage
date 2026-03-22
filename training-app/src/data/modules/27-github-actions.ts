@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "GitHub Actions CI/CD",
   subtitle: "Workflow YAML, artifact management, sharding matrix, and branch protection",
   icon: "🚀",
-  audience: "All Roles",
   sections: [
     {
       heading: "GitHub Actions vs GitLab CI",

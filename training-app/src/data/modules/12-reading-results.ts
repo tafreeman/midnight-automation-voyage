@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Reading Test Results",
   subtitle: "Understanding what passed, what failed, and why",
   icon: "📊",
-  audience: "All Roles — Non-Coder Essential",
   sections: [
     {
       heading: "The HTML Report",
@@ -34,7 +33,7 @@ npx playwright show-report
           ["strict mode violation: locator matched 3 elements", "Selector is too broad", "Make selector more specific (add text filter)"],
         ]
       },
-      tip: "Non-coders: You don't need to fix every error. Your job is to identify whether it's a test problem (wrong selector) or an app problem (feature is broken) and route it to the right person."
+      tip: "You do not need to fix every error personally. Your job is to identify whether the failure points to the test, the environment, or the product behavior and route it clearly."
     },
     {
       heading: "The Trace Viewer",

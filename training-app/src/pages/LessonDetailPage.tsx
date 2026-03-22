@@ -5,7 +5,6 @@ import {
   type ReactNode,
 } from "react";
 import {
-  BookOpen,
   CheckCircle2,
   ChevronRight,
   Copy,
@@ -65,7 +64,7 @@ export function LessonDetailPage({
           saveScrollPosition(lesson.id, scrollRef.current.scrollTop);
         }
       }}
-      className="space-y-8"
+      className="lesson-detail-page space-y-8"
     >
       <LessonHero
         module={module}
@@ -114,9 +113,11 @@ function LessonHero({
   lessonIndex: number;
   completed: boolean;
 }) {
+  const { currentTheme } = useTheme();
+
   return (
     <section
-      className="overflow-hidden rounded-2xl border"
+      className="page-hero lesson-hero overflow-hidden rounded-2xl border"
       style={{
         background:
           "linear-gradient(135deg, color-mix(in srgb, var(--surface-elevated) 92%, transparent), color-mix(in srgb, var(--surface-hover) 88%, transparent))",
@@ -143,10 +144,6 @@ function LessonHero({
 
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.28em]" style={{ borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}>
-              <BookOpen size={12} />
-              <span>{lesson.audience ?? "all"}</span>
-            </div>
             <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" style={{ color: "var(--text-primary)", fontFamily: "var(--font-mono)" }}>
               {lesson.title}
             </h1>
@@ -155,11 +152,11 @@ function LessonHero({
             </p>
           </div>
           <div className="hidden shrink-0 rounded-2xl border px-4 py-3 md:block" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-code)" }}>
-            <div className="text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>
-              Current Theme
+              <div className="text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>
+              Active Theme
             </div>
             <div className="mt-1 text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-              {module.theme}
+              {currentTheme}
             </div>
           </div>
         </div>
@@ -306,7 +303,7 @@ function QuizPanel({ quiz, onAttempt }: { quiz: Quiz; onAttempt: () => void }) {
   const isCorrect = selected === quiz.correctIndex;
 
   return (
-    <section className="rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
+    <section className="lesson-panel lesson-panel-quiz rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
       <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>
         <CheckCircle2 size={14} />
         Knowledge Check
@@ -361,7 +358,7 @@ function QuizPanel({ quiz, onAttempt }: { quiz: Quiz; onAttempt: () => void }) {
             onAttempt();
           }}
           className="mt-4 rounded-lg px-4 py-2 text-sm font-medium transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ backgroundColor: "var(--accent-action)", color: "#081012" }}
+          style={{ backgroundColor: "var(--accent-action)", color: "var(--surface-primary)" }}
         >
           Check Answer
         </button>
@@ -383,7 +380,7 @@ function ExercisePanel({ exercise }: { exercise: CodeExercise }) {
   const [showSolution, setShowSolution] = useState(false);
 
   return (
-    <section className="rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
+    <section className="lesson-panel lesson-panel-exercise rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
       <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>
         <Play size={14} />
         Hands-On Exercise
@@ -395,7 +392,7 @@ function ExercisePanel({ exercise }: { exercise: CodeExercise }) {
         {exercise.description}
       </p>
 
-      <div className="mt-4 rounded-xl border" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-code)" }}>
+      <div className="lesson-code-surface mt-4 rounded-xl border" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-code)" }}>
         <div className="flex items-center justify-between border-b px-4 py-2 text-xs" style={{ borderColor: "var(--border-subtle)", color: "var(--text-muted)" }}>
           <span>{showSolution ? "Solution" : "Starter"}</span>
           <button
@@ -414,7 +411,7 @@ function ExercisePanel({ exercise }: { exercise: CodeExercise }) {
 
       <div className="mt-4 grid gap-2 md:grid-cols-2">
         {exercise.hints.map((hint) => (
-          <div key={hint} className="rounded-lg border px-3 py-2 text-sm leading-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-code)", color: "var(--text-secondary)" }}>
+          <div key={hint} className="lesson-hint-surface rounded-lg border px-3 py-2 text-sm leading-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-code)", color: "var(--text-secondary)" }}>
             {hint}
           </div>
         ))}
@@ -425,7 +422,7 @@ function ExercisePanel({ exercise }: { exercise: CodeExercise }) {
 
 function PromptTemplatesPanel({ templates }: { templates: PromptTemplate[] }) {
   return (
-    <section className="rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
+    <section className="lesson-panel lesson-panel-prompts rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--surface-elevated)" }}>
       <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>
         <Sparkles size={14} />
         Copilot Prompts
@@ -463,7 +460,7 @@ function PracticeLinkCard({
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="block rounded-2xl border p-5 md:p-6 transition-colors"
+      className="lesson-panel lesson-panel-practice block rounded-2xl border p-5 md:p-6 transition-colors"
       style={{
         borderColor: "var(--accent-action)",
         background:

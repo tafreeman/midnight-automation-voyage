@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Trace Viewer Deep-Dive",
   subtitle: "Debugging failures with actions, snapshots, network, and timeline",
   icon: "🔍",
-  audience: "All Roles",
   sections: [
     {
       heading: "What's Inside a Trace File",
@@ -58,7 +57,7 @@ export default defineConfig({
     {
       heading: "Opening Traces",
       content:
-        "Trace files can be opened locally with the CLI or online via Playwright's hosted viewer. Both show the same data; the online viewer is convenient for sharing with teammates.",
+        "Trace files can be opened locally with the CLI or online via Playwright's hosted viewer. Both show the same data; the online viewer is convenient when you need to share a failure snapshot.",
       code: `# Open a local trace file
 npx playwright show-trace test-results/login-test/trace.zip
 

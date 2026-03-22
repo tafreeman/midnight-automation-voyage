@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "API & Network Testing",
   subtitle: "Testing beyond the UI",
   icon: "🌐",
-  audience: "Developers",
   sections: [
     {
       heading: "API Testing with Playwright",

@@ -2,10 +2,9 @@ import type { Lesson } from "../types";
 
 export const lesson: Lesson = {
   id: 100,
-  title: "Mindset Shifts: Manual → Automated",
-  subtitle: "The 5 mental model changes that trip up every manual tester",
+  title: "Mindset Shifts for Automation",
+  subtitle: "The mental model changes that matter when turning human checks into reliable scripts",
   icon: "🧠",
-  audience: "All Roles — Non-Coder Essential",
   sections: [
     {
       heading: "Your Manual Testing Skills ARE the Foundation",
@@ -15,7 +14,7 @@ export const lesson: Lesson = {
     {
       heading: "Shift 1: From 'I Am the Test Tool' to 'I Instruct the Test Tool'",
       content: "In manual testing, you ARE the software agent executing the test. Your eyes validate the UI, your brain catches oddities, your intuition flags issues. In automation, you hand those instructions to a robot. The critical shift: the robot only checks what you explicitly tell it to check. It has no eyes, no intuition, and no understanding of your application. If you don't write an assertion, it won't notice a problem — even if the entire page is broken.",
-      warning: "The #1 mistake manual testers make in automation: creating flows with no assertions. The test 'passes' because the app didn't crash, but nothing was actually verified. A test without assertions is like a manual test where you click through the app with your eyes closed."
+      warning: "The #1 mistake teams make in automation is creating flows with no assertions. The test 'passes' because the app didn't crash, but nothing was actually verified. A test without assertions is like clicking through the app with your eyes closed."
     },
     {
       heading: "Shift 2: From End-to-End Flows to Targeted Checks",
@@ -64,7 +63,7 @@ export const lesson: Lesson = {
     {
       label: "Convert Manual Test Case to Automation Candidate",
       context: "Use when you have a manual test case and want to evaluate whether it's worth automating.",
-      prompt: "Context: I am a manual tester transitioning to automation with Playwright. I have a manual test case that I need to evaluate for automation.\n\nActions:\n1. Analyze the manual test case below and determine whether it is a good automation candidate.\n2. Score it on three factors (1–5 each): execution frequency, repeatability, and deterministic verifiability.\n3. If it IS a good candidate, suggest the automation approach (e.g., UI test, API test, hybrid) and list the specific assertions that should be included.\n4. If it is NOT a good candidate, explain why and recommend keeping it manual.\n\nRules:\n- A good automation candidate runs frequently, has deterministic expected results, and doesn't require human judgment.\n- Prefer data-testid selectors and getByRole locators over CSS selectors.\n- Each meaningful user action should have at least one assertion.\n- Flag any steps that require human judgment (visual checks, UX evaluation) as manual-only.\n\nData — Manual Test Case:\n[PASTE YOUR MANUAL TEST CASE STEPS, EXPECTED RESULTS, AND PRECONDITIONS HERE]",
+      prompt: "Context: I have a manual test case that I need to evaluate for automation with Playwright.\n\nActions:\n1. Analyze the manual test case below and determine whether it is a good automation candidate.\n2. Score it on three factors (1–5 each): execution frequency, repeatability, and deterministic verifiability.\n3. If it IS a good candidate, suggest the automation approach (e.g., UI test, API test, hybrid) and list the specific assertions that should be included.\n4. If it is NOT a good candidate, explain why and recommend keeping it manual.\n\nRules:\n- A good automation candidate runs frequently, has deterministic expected results, and doesn't require human judgment.\n- Prefer data-testid selectors and getByRole locators over CSS selectors.\n- Each meaningful user action should have at least one assertion.\n- Flag any steps that require human judgment (visual checks, UX evaluation) as manual-only.\n\nData — Manual Test Case:\n[PASTE YOUR MANUAL TEST CASE STEPS, EXPECTED RESULTS, AND PRECONDITIONS HERE]",
     },
     {
       label: "Identify Automation ROI for Test Suite",
@@ -73,7 +72,7 @@ export const lesson: Lesson = {
     },
   ],
   quiz: {
-    question: "A manual tester records a Playwright test that walks through the entire checkout flow (login → search → add to cart → pay → confirm). What's the problem?",
+    question: "A recorded Playwright test walks through the entire checkout flow (login → search → add to cart → pay → confirm). What's the problem?",
     options: [
       "Nothing — comprehensive tests are always better",
       "The test is too long; if login fails, you won't know if checkout also has a bug",

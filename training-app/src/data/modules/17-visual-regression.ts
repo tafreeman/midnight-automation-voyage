@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Visual Regression Testing",
   subtitle: "Catching CSS bugs and layout shifts with toHaveScreenshot()",
   icon: "📸",
-  audience: "All Roles",
   sections: [
     {
       heading: "What Functional Tests Miss",
@@ -97,7 +96,7 @@ await expect(page).toHaveScreenshot('dashboard.png', {
     {
       heading: "Baseline Management and Update Policy",
       content:
-        "Baselines must be committed to version control so the whole team shares the same reference images. Establish a clear policy for when and how baselines are updated to prevent accidental regressions from being 'accepted' without review.",
+        "Baselines must be committed to version control so the same reference images are used consistently. Establish a clear policy for when and how baselines are updated to prevent accidental regressions from being 'accepted' without review.",
       table: {
         headers: ["Rule", "Why"],
         rows: [

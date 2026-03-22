@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Why Playwright + Copilot",
   subtitle: "Understanding the productivity multiplier",
   icon: "🚀",
-  audience: "All Roles",
   sections: [
     {
       heading: "The Testing Bottleneck",
@@ -92,7 +91,7 @@ const roleLocator = page.getByRole('button', { name: 'Sign In' });
 // Resilient: semantic, accessible, reads like English
 
 // Which is most resilient? Why?
-// ANSWER: data-testid is the team convention — it survives
+// ANSWER: data-testid is the repository convention — it survives
 // CSS refactors, text changes (if localized), and restructuring.
 // getByRole is also excellent and preferred by Playwright docs.
 // CSS selectors are the most fragile and should be avoided.`,

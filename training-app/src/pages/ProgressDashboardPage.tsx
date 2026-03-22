@@ -55,9 +55,9 @@ export function ProgressDashboardPage({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="dashboard-page space-y-8">
       <section
-        className="overflow-hidden rounded-2xl border"
+        className="page-hero dashboard-hero overflow-hidden rounded-2xl border"
         style={{
           borderColor: "var(--border-subtle)",
           background:
@@ -205,7 +205,7 @@ function StatCard({
 }) {
   return (
     <div
-      className="rounded-2xl border p-4"
+      className="page-card stat-card rounded-2xl border p-4"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-code)",
@@ -239,7 +239,7 @@ function ActionCard({
 }) {
   return (
     <section
-      className="rounded-2xl border p-5 md:p-6"
+      className="page-card action-card rounded-2xl border p-5 md:p-6"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-elevated)",
@@ -261,7 +261,7 @@ function ActionCard({
         className="mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         style={{
           backgroundColor: "var(--accent-action)",
-          color: "#081012",
+          color: "var(--surface-primary)",
         }}
       >
         {buttonLabel}

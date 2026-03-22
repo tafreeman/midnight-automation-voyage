@@ -119,3 +119,61 @@
 
   color-scheme: dark;
 }
+
+[data-theme="zine-pop"] {
+  --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", "JetBrains Mono", "Fira Code", monospace;
+
+  --surface-primary: #ff6a00;
+  --surface-elevated: #f3ddc9;
+  --surface-code: #ffee43;
+  --surface-hover: #17a5ff;
+
+  --text-primary: #131313;
+  --text-secondary: #33261a;
+  --text-muted: #2b2613;
+
+  --border-subtle: #111111;
+  --border-strong: #111111;
+
+  --accent-action: #3d004d;
+  --accent-info: #1b1f57;
+  --accent-highlight: #322100;
+  --accent-special: #2a1248;
+
+  --diff-added-bg: rgba(32, 240, 0, 0.16);
+  --diff-removed-bg: rgba(255, 0, 120, 0.12);
+  --diff-removed-text: #5c0830;
+  --shadow-elevation: 0 0 0 2px #111111, 8px 8px 0 rgba(17, 17, 17, 0.88);
+
+  color-scheme: light;
+}
+
+[data-theme="handbook-notes"] {
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", "Fira Code", monospace;
+
+  --surface-primary: #efe5d2;
+  --surface-elevated: #fffdf8;
+  --surface-code: #fff1bd;
+  --surface-hover: #d9e7fb;
+
+  --text-primary: #171513;
+  --text-secondary: #4d4439;
+  --text-muted: #695d50;
+
+  --border-subtle: #1d1b19;
+  --border-strong: #1d1b19;
+
+  --accent-action: #284f8f;
+  --accent-info: #8b4e1f;
+  --accent-highlight: #6c5a14;
+  --accent-special: #7b315d;
+
+  --diff-added-bg: rgba(40, 79, 143, 0.1);
+  --diff-removed-bg: rgba(123, 49, 93, 0.1);
+  --diff-removed-text: #6b284f;
+  --shadow-elevation: 0 0 0 1px rgba(29, 27, 25, 0.12), 4px 6px 0 rgba(29, 27, 25, 0.16);
+
+  color-scheme: light;
+}

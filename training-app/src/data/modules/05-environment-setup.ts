@@ -5,11 +5,10 @@ export const lesson: Lesson = {
   title: "Environment Setup",
   subtitle: "Getting your local dev environment ready",
   icon: "⚙️",
-  audience: "All Roles",
   sections: [
     {
       heading: "Prerequisites",
-      content: "You need Node.js 18+, VS Code, and three extensions. If you're a non-coder, ask a developer to walk through the initial npm install with you the first time. After setup, you won't need to touch the command line often — the VS Code extension handles most interactions.",
+      content: "You need Node.js 18+, VS Code, and three extensions. If local setup is new to you, follow the install once carefully and capture the steps in your project README. After the initial setup, most day-to-day interaction can happen through the VS Code Playwright tooling.",
       code: `# Check your Node version (must be 18+)
 node --version
 
@@ -22,11 +21,11 @@ npm init playwright@latest
 #   GitHub Actions: Yes
 #   Install browsers: Yes`,
       codeLanguage: "bash",
-      tip: "Non-coders: You only run this once per project. After initial setup, you'll primarily use the VS Code GUI — not the terminal."
+      tip: "Treat setup as a reusable project asset, not tribal knowledge. Good setup notes pay off every time the environment needs to be recreated."
     },
     {
       heading: "VS Code Extensions",
-      content: "Install these three extensions from the VS Code marketplace. The Playwright extension gives you a sidebar with a 'Record new' button — this is your primary entry point as a non-coder.",
+      content: "Install these three extensions from the VS Code marketplace. The Playwright extension gives you a sidebar with a 'Record new' button, which is a fast onramp for capturing real flows before refining them.",
       code: `# Search in VS Code Extensions panel (Ctrl+Shift+X):
 ms-playwright.playwright        # Playwright Test for VS Code
 GitHub.copilot                   # GitHub Copilot
@@ -35,7 +34,7 @@ GitHub.copilot-chat              # GitHub Copilot Chat`,
     },
     {
       heading: "Project Configuration",
-      content: "The playwright.config.ts file controls which browsers to test, where your app runs, and how failures are recorded. Here's a production config. Non-coders: you rarely edit this directly — but understanding what it does helps you read test results.",
+      content: "The playwright.config.ts file controls which browsers to test, where your app runs, and how failures are recorded. You may not edit this file every day, but understanding what it does helps everyone read failures, reason about retries, and spot environment drift.",
       code: `// playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';
 
@@ -59,8 +58,8 @@ projects: [
       codeLanguage: "typescript",
     },
     {
-      heading: "Team Copilot Instructions",
-      content: "This is the highest-leverage Copilot investment. A .github/copilot-instructions.md file in your repo root teaches Copilot your team's testing conventions. Every developer and non-coder gets the same guardrails automatically.",
+      heading: "Repository Copilot Instructions",
+      content: "This is the highest-leverage Copilot investment. A `.github/copilot-instructions.md` file in your repo root teaches Copilot the testing conventions for that codebase so suggestions stay consistent automatically.",
       code: `<!-- .github/copilot-instructions.md -->
 # Testing Conventions
 - Use Playwright Test (@playwright/test) for all E2E tests

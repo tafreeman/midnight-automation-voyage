@@ -10,6 +10,7 @@ import {
 import type { ReactNode } from "react";
 
 import { useProgress } from "../../contexts/ProgressContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import type { Lesson, Module } from "../../types/curriculum";
 
 interface ModuleHeroProps {
@@ -17,6 +18,8 @@ interface ModuleHeroProps {
 }
 
 export function ModuleHero({ module }: ModuleHeroProps) {
+  const { currentTheme } = useTheme();
+
   return (
     <section
       className="rounded-2xl border p-6 md:p-8"
@@ -58,7 +61,7 @@ export function ModuleHero({ module }: ModuleHeroProps) {
         <div className="grid gap-2 text-xs md:min-w-56">
           <StatPill icon={<Clock3 size={14} />} label="Est. time" value={`${module.estimatedMinutes} min`} />
           <StatPill icon={<BookOpen size={14} />} label="Lessons" value={`${module.lessons.length}`} />
-          <StatPill icon={<GraduationCap size={14} />} label="Theme" value={module.theme} />
+          <StatPill icon={<GraduationCap size={14} />} label="Active Theme" value={currentTheme} />
         </div>
       </div>
 
@@ -115,9 +118,6 @@ export function LessonHero({
         </span>
         <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border-subtle)" }}>
           Module {String(module.number).padStart(2, "0")}
-        </span>
-        <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border-subtle)" }}>
-          {lesson.audience ?? "all"}
         </span>
         {isCompleted && (
           <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--accent-action)", color: "var(--accent-action)" }}>

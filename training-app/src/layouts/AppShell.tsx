@@ -27,15 +27,15 @@ export function AppShell({
 }: AppShellProps) {
   return (
     <div
-      className="h-screen overflow-hidden"
+      className="app-shell h-screen overflow-hidden"
       style={{
         backgroundColor: "var(--surface-primary)",
         color: "var(--text-primary)",
       }}
     >
-      <div className="flex h-full flex-col">
+      <div className="shell-stack flex h-full flex-col">
         <header
-          className="border-b px-4"
+          className="shell-header border-b px-4"
           style={{
             minHeight: "var(--topbar-height)",
             backgroundColor: "var(--surface-elevated)",
@@ -45,7 +45,7 @@ export function AppShell({
           <div className="flex h-full items-center">{titleBar}</div>
         </header>
 
-        <div className="relative flex-1 overflow-hidden">
+        <div className="shell-frame relative flex-1 overflow-hidden">
           {isMobile ? (
             <>
               {leftOpen && (
@@ -57,7 +57,7 @@ export function AppShell({
                     onClick={onToggleLeft}
                   />
                   <aside
-                    className="absolute inset-y-0 left-0 z-40 w-[18rem] overflow-y-auto border-r"
+                    className="shell-rail shell-rail-left absolute inset-y-0 left-0 z-40 w-[18rem] overflow-y-auto border-r"
                     style={{
                       backgroundColor: "var(--surface-elevated)",
                       borderColor: "var(--border-subtle)",
@@ -77,7 +77,7 @@ export function AppShell({
                     onClick={onToggleRight}
                   />
                   <aside
-                    className="absolute inset-y-0 right-0 z-40 w-[19rem] overflow-y-auto border-l"
+                    className="shell-rail shell-rail-right absolute inset-y-0 right-0 z-40 w-[19rem] overflow-y-auto border-l"
                     style={{
                       backgroundColor: "var(--surface-elevated)",
                       borderColor: "var(--border-subtle)",
@@ -88,10 +88,9 @@ export function AppShell({
                 </>
               )}
 
-              <main className="h-full overflow-y-auto">
+              <main className="shell-main h-full overflow-y-auto">
                 <div
-                  className="mx-auto px-4 py-5"
-                  style={{ maxWidth: "var(--content-max-width)" }}
+                  className="shell-main-inner w-full px-4 py-5"
                 >
                   {children}
                 </div>
@@ -101,7 +100,7 @@ export function AppShell({
             <div className="flex h-full">
               {leftOpen && (
                 <aside
-                  className="h-full w-[var(--rail-left-width)] overflow-y-auto border-r"
+                  className="shell-rail shell-rail-left h-full w-[var(--rail-left-width)] overflow-y-auto border-r"
                   style={{
                     backgroundColor: "var(--surface-elevated)",
                     borderColor: "var(--border-subtle)",
@@ -111,10 +110,9 @@ export function AppShell({
                 </aside>
               )}
 
-              <main className="min-w-0 flex-1 overflow-y-auto">
+              <main className="shell-main min-w-0 flex-1 overflow-y-auto">
                 <div
-                  className="mx-auto px-5 py-6 md:px-8 md:py-8"
-                  style={{ maxWidth: "var(--content-max-width)" }}
+                  className="shell-main-inner w-full px-5 py-6 md:px-8 md:py-8"
                 >
                   {children}
                 </div>
@@ -122,7 +120,7 @@ export function AppShell({
 
               {rightOpen && (
                 <aside
-                  className="h-full w-[var(--rail-right-width)] overflow-y-auto border-l"
+                  className="shell-rail shell-rail-right h-full w-[var(--rail-right-width)] overflow-y-auto border-l"
                   style={{
                     backgroundColor: "var(--surface-elevated)",
                     borderColor: "var(--border-subtle)",
@@ -136,7 +134,7 @@ export function AppShell({
         </div>
 
         <footer
-          className="border-t px-4 py-3"
+          className="shell-footer border-t px-4 py-3"
           style={{
             minHeight: "var(--bottombar-height)",
             backgroundColor: "var(--surface-elevated)",

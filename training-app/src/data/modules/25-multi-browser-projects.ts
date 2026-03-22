@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Multi-Browser & Projects Config",
   subtitle: "Cross-browser testing with Chromium, Firefox, WebKit, and project dependencies",
   icon: "🌐",
-  audience: "Developers",
   sections: [
     {
       heading: "Playwright's Browser Engines",

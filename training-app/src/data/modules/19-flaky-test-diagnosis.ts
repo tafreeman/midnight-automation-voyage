@@ -5,13 +5,12 @@ export const lesson: Lesson = {
   title: "Flaky Test Diagnosis & Recovery",
   subtitle: "Root cause taxonomy, quarantine protocol, and evidence-first triage",
   icon: "🔄",
-  audience: "All Roles",
   sections: [
     {
       heading: "What Makes a Test Flaky?",
       content:
         "A flaky test is one that passes and fails on the same code without any changes. It erodes team confidence in the test suite — when people stop trusting test results, they stop paying attention to failures. The most common causes are timing dependencies, shared state, environment differences, and animation interference. Every flaky test has a root cause; the challenge is diagnosing it.",
-      callout: "A test suite with 5% flake rate and 200 tests means ~10 false failures per run. After a few weeks, the team starts ignoring ALL failures — including real bugs.",
+      callout: "A test suite with 5% flake rate and 200 tests means ~10 false failures per run. After a few weeks, people start ignoring all failures, including real bugs.",
     },
     {
       heading: "Root Cause Taxonomy",
@@ -94,7 +93,7 @@ export default defineConfig({
     {
       heading: "Communicating Failure Severity",
       content:
-        "Not all flaky tests are equal. Use a severity scale to help the team prioritize fixes and understand impact. Communicate flaky test status in standups and sprint reviews so they don't become invisible technical debt.",
+        "Not all flaky tests are equal. Use a severity scale to prioritize fixes and understand impact. Communicate flaky test status clearly so it does not become invisible technical debt.",
       table: {
         headers: ["Severity", "Definition", "SLA"],
         rows: [

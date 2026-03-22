@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Page Object Model",
   subtitle: "Organizing tests for long-term maintainability",
   icon: "🏗️",
-  audience: "Developers — Non-coders: awareness only",
   sections: [
     {
       heading: "Why POM?",

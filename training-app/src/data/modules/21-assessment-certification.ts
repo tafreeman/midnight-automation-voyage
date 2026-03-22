@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Assessment & Certification",
   subtitle: "Competency matrix, capstone structure, and three certification tiers",
   icon: "🎓",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why Assessment Matters",

@@ -2,14 +2,13 @@ import type { Lesson } from "../types";
 
 export const lesson: Lesson = {
   id: 11,
-  title: "Non-Coder Survival Guide",
-  subtitle: "Practical tips for testers who don't code daily",
+  title: "Test Authoring Guide",
+  subtitle: "Practical habits for turning product knowledge into reliable automation",
   icon: "🎯",
-  audience: "Non-Coder Essential",
   sections: [
     {
       heading: "Your Superpower: Domain Knowledge",
-      content: "You know the business rules better than any developer on the team. You know the edge cases users hit. You know which flows break in production. That knowledge is MORE valuable than coding skill for test quality. Your job is to specify WHAT to test — Copilot + Playwright handle HOW to test it.",
+      content: "The people closest to requirements, defects, and customer behavior bring the strongest ideas for what should be automated. Business rules, edge cases, and production pain points are often more valuable than raw typing speed. Your job is to specify what matters; Playwright and Copilot help express that precisely.",
       callout: "The best test suite isn't the one with the most code — it's the one that catches the most real bugs. That comes from domain knowledge, not programming skill."
     },
     {
@@ -27,24 +26,24 @@ export const lesson: Lesson = {
       }
     },
     {
-      heading: "When to Escalate to a Developer",
-      content: "You don't need to solve everything. Here's your decision tree for when to escalate.",
+      heading: "When to Pause and Re-Evaluate",
+      content: "You do not need to solve every problem in one pass. Here is a quick decision tree for when to stop, gather more context, or get a second set of eyes before making the test more complex.",
       table: {
         headers: ["Situation", "Your Action"],
         rows: [
-          ["Test fails — wrong selector", "Try the debug prompt template. If stuck after 5 min, escalate."],
-          ["Test needs auth/fixture setup", "Escalate — fixture configuration is developer territory."],
-          ["Need to mock an API response", "Escalate — network interception requires code understanding."],
-          ["Copilot generates confusing code", "Use /explain command first. If still unclear, escalate."],
-          ["Test passes but you're unsure it's correct", "ALWAYS escalate — false confidence is worse than no test."],
-          ["Need to test a flow across multiple pages", "Record it as one flow. If it breaks, escalate for POM refactoring."],
+          ["Test fails because a selector drifted", "Try the debug prompt template. If you are still blocked after 5 minutes, stop and inspect the page state before changing more code."],
+          ["Test needs auth or fixture setup", "Check whether the setup belongs in a reusable fixture instead of inlining it into the spec."],
+          ["Need to mock an API response", "Pause and decide whether network interception is really needed or whether a more stable test boundary exists."],
+          ["Copilot generates confusing code", "Use /explain first. If it still feels opaque, do not merge it until the logic is clear."],
+          ["Test passes but you are unsure it is correct", "Always pause and review the assertions. False confidence is worse than no test."],
+          ["Need to cover a long multi-page flow", "Record it first, then decide whether it should stay inline or move into page objects."],
         ]
       },
-      tip: "Escalating is a sign of good judgment, not weakness. Better to ask for help than merge a bad test."
+      tip: "Stopping to clarify the boundary is a sign of good judgment. Better to pause than merge a bad test."
     },
     {
-      heading: "Common Gotchas for Non-Coders",
-      content: "These are the mistakes we see most often from people new to test automation.",
+      heading: "Common Early-Stage Gotchas",
+      content: "These are the mistakes we see most often from people who are new to test automation.",
       table: {
         headers: ["Gotcha", "What Happens", "Prevention"],
         rows: [
@@ -91,12 +90,12 @@ export const lesson: Lesson = {
     },
     {
       heading: "The Automation Paradox: Why You're Already Ahead",
-      content: "Industry research reveals an irony: the hardest skills in automation aren't programming — they're testing skills that manual testers already have. Knowing what to test, how to design meaningful scenarios, recognizing when something 'feels wrong,' understanding how system components affect each other, and triaging whether a failure is a real bug or a test environment issue. Developers learning automation often struggle with exactly these skills because they think like builders, not breakers. Your testing mindset is the foundation that makes automation valuable — without it, you just have scripts that click buttons and check nothing meaningful.",
-      callout: "A developer who can code but can't think like a tester writes automation that misses real bugs. A manual tester who can think but is learning to code writes automation that catches real bugs. Invest in yourself — the hard part is already done."
+      content: "Industry research reveals an irony: the hardest skills in automation are often not syntax. They are deciding what matters, designing meaningful scenarios, recognizing when something feels wrong, understanding how system components affect each other, and triaging whether a failure is a real bug or a test environment issue. Those testing skills are what make automation valuable. Without them, you just have scripts that click buttons and verify very little.",
+      callout: "Strong automation comes from combining product insight, testing judgment, and implementation discipline. The win is the combination, not one role outranking another."
     }
   ],
   quiz: {
-    question: "A non-coder records a test, refines it with Copilot, and it passes. What's the critical next step before committing?",
+    question: "A test is recorded, refined with Copilot, and passes. What is the critical next step before committing?",
     options: [
       "Run it again to make sure",
       "Verify every assertion maps to an acceptance criterion from the ticket",
@@ -154,7 +153,7 @@ test('contact form submits successfully with valid data', async ({ page }) => {
     {
       label: "Generate Test from User Story",
       context: "Convert a plain-English user story into a Playwright test using CARD format.",
-      prompt: "Context: I'm a manual tester. I have this user story: 'As a user, I can log in with my email and password, and see my dashboard with my recent orders.'\n\nAction: Convert this user story into a Playwright test. I don't know code, so use simple, readable patterns.\n\nResult: The test should verify login works and the dashboard shows orders.\n\nDetails: Use getByRole and getByText selectors (they read like English). Add comments explaining each step.",
+      prompt: "Context: I have this user story: 'As a user, I can log in with my email and password, and see my dashboard with my recent orders.'\n\nAction: Convert this user story into a Playwright test using simple, readable patterns.\n\nResult: The test should verify login works and the dashboard shows orders.\n\nDetails: Use getByRole and getByText selectors where possible. Add comments explaining each step.",
     },
     {
       label: "Record and Clean Up Test",
@@ -164,7 +163,7 @@ test('contact form submits successfully with valid data', async ({ page }) => {
     {
       label: "Explain Test Code Simply",
       context: "When you encounter Playwright code you don't understand, ask for a plain-English explanation.",
-      prompt: "Explain this Playwright test to me like I'm a manual tester who doesn't write code. For each line, tell me: what it does in plain English, why it's there, and what the equivalent manual testing step would be. Don't use jargon.",
+      prompt: "Explain this Playwright test in plain English. For each line, tell me what it does, why it is there, and what the equivalent exploratory or verification step would be. Do not use jargon.",
     },
   ],
 };

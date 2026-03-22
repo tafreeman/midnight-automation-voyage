@@ -1,7 +1,6 @@
 import { lessons as legacyLessons } from "./index";
 import type { Lesson as LegacyLesson } from "./types";
 import type {
-  Audience,
   Module,
   Lesson,
   Section,
@@ -14,7 +13,7 @@ function pad(value: number) {
 
 function themeForModule(moduleNumber: number): ThemeName {
   const darkThemes: ThemeName[] = ["signal-cobalt", "gamma-dark"];
-  const lightThemes: ThemeName[] = ["arctic-steel", "linear"];
+  const lightThemes: ThemeName[] = ["arctic-steel", "linear", "zine-pop", "handbook-notes"];
   const groupIndex = Math.floor((moduleNumber - 1) / 3);
   if (groupIndex % 2 === 0) {
     return darkThemes[Math.floor(groupIndex / 2) % darkThemes.length];
@@ -26,13 +25,6 @@ function difficultyForModule(moduleNumber: number): Module["difficulty"] {
   if (moduleNumber <= 12) return "beginner";
   if (moduleNumber <= 27) return "intermediate";
   return "advanced";
-}
-
-function audienceForLesson(value?: string): Audience {
-  if (!value) return "all";
-  if (value.toLowerCase().includes("non-coder")) return "non-coder";
-  if (value.toLowerCase().includes("developer")) return "developer";
-  return "all";
 }
 
 function estimatedMinutesFromLegacy(legacy: LegacyLesson) {
@@ -113,14 +105,12 @@ function sectionsFromLegacy(legacy: LegacyLesson): Section[] {
   });
 }
 
-function lessonFromLegacy(legacy: LegacyLesson): Lesson {
-  const moduleNumber = legacy.id;
+function lessonFromLegacy(legacy: LegacyLesson, moduleNumber: number): Lesson {
   return {
     id: `lesson-${pad(moduleNumber)}-01`,
     title: legacy.title,
     subtitle: legacy.subtitle,
     estimatedMinutes: estimatedMinutesFromLegacy(legacy),
-    audience: audienceForLesson(legacy.audience),
     sections: sectionsFromLegacy(legacy),
     quiz: legacy.quiz,
     exercise: legacy.exercise ?? legacy.exercises?.[0],
@@ -129,9 +119,9 @@ function lessonFromLegacy(legacy: LegacyLesson): Lesson {
   };
 }
 
-export const curriculum: Module[] = legacyLessons.map((legacy) => {
-  const moduleNumber = legacy.id;
-  const lesson = lessonFromLegacy(legacy);
+export const curriculum: Module[] = legacyLessons.map((legacy, index) => {
+  const moduleNumber = index + 1;
+  const lesson = lessonFromLegacy(legacy, moduleNumber);
   return {
     id: `module-${pad(moduleNumber)}`,
     number: moduleNumber,

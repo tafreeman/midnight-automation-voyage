@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "What to Automate (and What Not To)",
   subtitle: "Not every test deserves a script — here's how to decide",
   icon: "🎯",
-  audience: "All Roles — Non-Coder Essential",
   sections: [
     {
       heading: "The Automation Decision Framework",
@@ -51,16 +50,16 @@ export const lesson: Lesson = {
           ["4", "Can test data be created programmatically?", "Automate with caution — data setup may be fragile"],
         ]
       },
-      tip: "Non-coders: Use this flowchart when deciding which acceptance criteria to record as Playwright tests vs. which to keep in your manual test suite. Not everything needs to be automated."
+      tip: "Use this flowchart when deciding which acceptance criteria belong in Playwright and which should stay as human-led checks. Not everything needs to be automated."
     },
     {
       heading: "The Hybrid Approach",
-      content: "The best teams don't choose between manual and automated — they combine both strategically. Automate the repetitive regression checks so your manual testers are freed up for the high-value work: exploratory testing, usability evaluation, and creative edge case discovery. Think of it as: automation handles the checking (did the expected thing happen?), humans handle the testing (is this actually the right thing?).",
+      content: "The best automation programs do not treat manual and automated work as competing paths. They combine them strategically. Automate the repetitive regression checks so more time can go toward exploratory testing, usability evaluation, and creative edge case discovery. Think of it as: automation handles the checking, humans handle the deeper testing judgment.",
       callout: "Automation handles checking: did the button work? Did the page load? Did the data save? Humans handle testing: is this confusing? Does this flow make sense? What would a real user try that we haven't thought of?"
     },
     {
       heading: "Start Small, Expand Gradually",
-      content: "Don't try to automate your entire regression suite in week one. Start with the 10 most-repeated manual test cases. Automate those. Stabilize them. Then expand. Industry guidance is consistent: begin with small, low-risk pilot projects, validate the approach, and gradually increase coverage. Teams that try to automate everything at once typically see their suites decay within months because maintenance overwhelms the team.",
+      content: "Don't try to automate your entire regression suite in week one. Start with the 10 most-repeated manual test cases. Automate those. Stabilize them. Then expand. Industry guidance is consistent: begin with small, low-risk pilot projects, validate the approach, and gradually increase coverage. Efforts that try to automate everything at once typically see their suites decay within months because maintenance quickly overwhelms the available capacity.",
       table: {
         headers: ["Week", "Target", "Expected Outcome"],
         rows: [
@@ -90,7 +89,7 @@ export const lesson: Lesson = {
       "Automate it now so testing is covered during the redesign",
       "Wait until the feature stabilizes — automating now creates maintenance debt",
       "Automate it but skip assertions so it doesn't break",
-      "Ask a developer to handle it since it's complicated"
+      "Hand it off to someone else because it's complicated"
     ],
     correctIndex: 1,
     explanation: "Automating unstable features creates tests that break every time the feature changes. This wastes more time maintaining the test than running it manually. Wait until the feature is stable, then automate. Use manual/exploratory testing during the redesign phase."

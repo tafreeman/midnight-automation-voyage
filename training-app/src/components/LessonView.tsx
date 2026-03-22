@@ -554,20 +554,6 @@ export function LessonView({ lesson, lessonIndex, totalLessons, onNext, onPrev, 
           <span className="text-xs text-zinc-600 font-mono">
             {String(lessonIndex + 1).padStart(2, "0")} / {String(totalLessons).padStart(2, "0")}
           </span>
-          {lesson.audience && (
-            <Badge
-              variant="outline"
-              className={`text-xs ${
-                lesson.audience.includes("Non-Coder")
-                  ? "border-amber-500/30 text-amber-400"
-                  : lesson.audience.includes("Developer")
-                  ? "border-blue-500/30 text-blue-400"
-                  : "border-zinc-700 text-zinc-500"
-              }`}
-            >
-              {lesson.audience}
-            </Badge>
-          )}
         </div>
         {isCompleted && (
           <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">

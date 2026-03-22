@@ -1,0 +1,522 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - button "Close navigation" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+        - button "Training App" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - text: Training App
+        - generic [ref=e15]:
+          - img [ref=e16]
+          - button "Module 03" [ref=e18] [cursor=pointer]
+          - img [ref=e19]
+          - generic [ref=e21]: What to Automate (and What Not To)
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - combobox [ref=e30]:
+            - option "Auto"
+            - option "signal-cobalt"
+            - option "arctic-steel"
+            - option "linear"
+            - option "gamma-dark"
+            - option "zine-pop" [selected]
+            - option "handbook-notes"
+        - button "Open support rail" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+  - generic [ref=e35]:
+    - complementary [ref=e36]:
+      - navigation [ref=e37]:
+        - generic [ref=e38]:
+          - button "Progress Dashboard" [ref=e39] [cursor=pointer]:
+            - img [ref=e40]
+            - generic [ref=e43]: Progress Dashboard
+          - generic [ref=e44]:
+            - button "Module 01 Course Orientation 1 lessons" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]:
+                - paragraph [ref=e47]: Module 01
+                - paragraph [ref=e48]: Course Orientation
+              - generic [ref=e49]: 1 lessons
+            - button "Course Orientation" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: Course Orientation
+              - img [ref=e53]
+          - generic [ref=e55]:
+            - button "Module 02 Mindset Shifts for Automation 1 lessons" [ref=e56] [cursor=pointer]:
+              - generic [ref=e57]:
+                - paragraph [ref=e58]: Module 02
+                - paragraph [ref=e59]: Mindset Shifts for Automation
+              - generic [ref=e60]: 1 lessons
+            - button "Mindset Shifts for Automation" [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: Mindset Shifts for Automation
+              - img [ref=e64]
+          - generic [ref=e66]:
+            - button "Module 03 What to Automate (and What Not To) 1 lessons" [ref=e67] [cursor=pointer]:
+              - generic [ref=e68]:
+                - paragraph [ref=e69]: Module 03
+                - paragraph [ref=e70]: What to Automate (and What Not To)
+              - generic [ref=e71]: 1 lessons
+            - button "What to Automate (and What Not To)" [ref=e73] [cursor=pointer]:
+              - generic [ref=e74]: What to Automate (and What Not To)
+              - img [ref=e75]
+          - generic [ref=e77]:
+            - button "Module 04 Why Playwright + Copilot 1 lessons" [ref=e78] [cursor=pointer]:
+              - generic [ref=e79]:
+                - paragraph [ref=e80]: Module 04
+                - paragraph [ref=e81]: Why Playwright + Copilot
+              - generic [ref=e82]: 1 lessons
+            - button "Why Playwright + Copilot" [ref=e84] [cursor=pointer]:
+              - generic [ref=e85]: Why Playwright + Copilot
+              - img [ref=e86]
+          - generic [ref=e88]:
+            - button "Module 05 Environment Setup 1 lessons" [ref=e89] [cursor=pointer]:
+              - generic [ref=e90]:
+                - paragraph [ref=e91]: Module 05
+                - paragraph [ref=e92]: Environment Setup
+              - generic [ref=e93]: 1 lessons
+            - button "Environment Setup" [ref=e95] [cursor=pointer]:
+              - generic [ref=e96]: Environment Setup
+              - img [ref=e97]
+          - generic [ref=e99]:
+            - button "Module 06 Copilot Prompt Engineering 1 lessons" [ref=e100] [cursor=pointer]:
+              - generic [ref=e101]:
+                - paragraph [ref=e102]: Module 06
+                - paragraph [ref=e103]: Copilot Prompt Engineering
+              - generic [ref=e104]: 1 lessons
+            - button "Copilot Prompt Engineering" [ref=e106] [cursor=pointer]:
+              - generic [ref=e107]: Copilot Prompt Engineering
+              - img [ref=e108]
+          - generic [ref=e110]:
+            - button "Module 07 Record → Refine Workflow 1 lessons" [ref=e111] [cursor=pointer]:
+              - generic [ref=e112]:
+                - paragraph [ref=e113]: Module 07
+                - paragraph [ref=e114]: Record → Refine Workflow
+              - generic [ref=e115]: 1 lessons
+            - button "Record → Refine Workflow" [ref=e117] [cursor=pointer]:
+              - generic [ref=e118]: Record → Refine Workflow
+              - img [ref=e119]
+          - generic [ref=e121]:
+            - button "Module 08 Writing Tests from Scratch 1 lessons" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]:
+                - paragraph [ref=e124]: Module 08
+                - paragraph [ref=e125]: Writing Tests from Scratch
+              - generic [ref=e126]: 1 lessons
+            - button "Writing Tests from Scratch" [ref=e128] [cursor=pointer]:
+              - generic [ref=e129]: Writing Tests from Scratch
+              - img [ref=e130]
+          - generic [ref=e132]:
+            - button "Module 09 Page Object Model 1 lessons" [ref=e133] [cursor=pointer]:
+              - generic [ref=e134]:
+                - paragraph [ref=e135]: Module 09
+                - paragraph [ref=e136]: Page Object Model
+              - generic [ref=e137]: 1 lessons
+            - button "Page Object Model" [ref=e139] [cursor=pointer]:
+              - generic [ref=e140]: Page Object Model
+              - img [ref=e141]
+          - generic [ref=e143]:
+            - button "Module 10 API & Network Testing 1 lessons" [ref=e144] [cursor=pointer]:
+              - generic [ref=e145]:
+                - paragraph [ref=e146]: Module 10
+                - paragraph [ref=e147]: API & Network Testing
+              - generic [ref=e148]: 1 lessons
+            - button "API & Network Testing" [ref=e150] [cursor=pointer]:
+              - generic [ref=e151]: API & Network Testing
+              - img [ref=e152]
+          - generic [ref=e154]:
+            - button "Module 11 Prompt Template Library 1 lessons" [ref=e155] [cursor=pointer]:
+              - generic [ref=e156]:
+                - paragraph [ref=e157]: Module 11
+                - paragraph [ref=e158]: Prompt Template Library
+              - generic [ref=e159]: 1 lessons
+            - button "Prompt Template Library" [ref=e161] [cursor=pointer]:
+              - generic [ref=e162]: Prompt Template Library
+              - img [ref=e163]
+          - generic [ref=e165]:
+            - button "Module 12 Reading Test Results 1 lessons" [ref=e166] [cursor=pointer]:
+              - generic [ref=e167]:
+                - paragraph [ref=e168]: Module 12
+                - paragraph [ref=e169]: Reading Test Results
+              - generic [ref=e170]: 1 lessons
+            - button "Reading Test Results" [ref=e172] [cursor=pointer]:
+              - generic [ref=e173]: Reading Test Results
+              - img [ref=e174]
+          - generic [ref=e176]:
+            - button "Module 13 HITL Review Checklist 1 lessons" [ref=e177] [cursor=pointer]:
+              - generic [ref=e178]:
+                - paragraph [ref=e179]: Module 13
+                - paragraph [ref=e180]: HITL Review Checklist
+              - generic [ref=e181]: 1 lessons
+            - button "HITL Review Checklist" [ref=e183] [cursor=pointer]:
+              - generic [ref=e184]: HITL Review Checklist
+              - img [ref=e185]
+          - generic [ref=e187]:
+            - button "Module 14 Test Authoring Guide 1 lessons" [ref=e188] [cursor=pointer]:
+              - generic [ref=e189]:
+                - paragraph [ref=e190]: Module 14
+                - paragraph [ref=e191]: Test Authoring Guide
+              - generic [ref=e192]: 1 lessons
+            - button "Test Authoring Guide" [ref=e194] [cursor=pointer]:
+              - generic [ref=e195]: Test Authoring Guide
+              - img [ref=e196]
+          - generic [ref=e198]:
+            - button "Module 15 CI/CD & Quick Reference 1 lessons" [ref=e199] [cursor=pointer]:
+              - generic [ref=e200]:
+                - paragraph [ref=e201]: Module 15
+                - paragraph [ref=e202]: CI/CD & Quick Reference
+              - generic [ref=e203]: 1 lessons
+            - button "CI/CD & Quick Reference" [ref=e205] [cursor=pointer]:
+              - generic [ref=e206]: CI/CD & Quick Reference
+              - img [ref=e207]
+          - generic [ref=e209]:
+            - button "Module 16 Auth Fixtures & Storage State 1 lessons" [ref=e210] [cursor=pointer]:
+              - generic [ref=e211]:
+                - paragraph [ref=e212]: Module 16
+                - paragraph [ref=e213]: Auth Fixtures & Storage State
+              - generic [ref=e214]: 1 lessons
+            - button "Auth Fixtures & Storage State" [ref=e216] [cursor=pointer]:
+              - generic [ref=e217]: Auth Fixtures & Storage State
+              - img [ref=e218]
+          - generic [ref=e220]:
+            - button "Module 17 Visual Regression Testing 1 lessons" [ref=e221] [cursor=pointer]:
+              - generic [ref=e222]:
+                - paragraph [ref=e223]: Module 17
+                - paragraph [ref=e224]: Visual Regression Testing
+              - generic [ref=e225]: 1 lessons
+            - button "Visual Regression Testing" [ref=e227] [cursor=pointer]:
+              - generic [ref=e228]: Visual Regression Testing
+              - img [ref=e229]
+          - generic [ref=e231]:
+            - button "Module 18 Accessibility Testing with axe-core 1 lessons" [ref=e232] [cursor=pointer]:
+              - generic [ref=e233]:
+                - paragraph [ref=e234]: Module 18
+                - paragraph [ref=e235]: Accessibility Testing with axe-core
+              - generic [ref=e236]: 1 lessons
+            - button "Accessibility Testing with axe-core" [ref=e238] [cursor=pointer]:
+              - generic [ref=e239]: Accessibility Testing with axe-core
+              - img [ref=e240]
+          - generic [ref=e242]:
+            - button "Module 19 Flaky Test Diagnosis & Recovery 1 lessons" [ref=e243] [cursor=pointer]:
+              - generic [ref=e244]:
+                - paragraph [ref=e245]: Module 19
+                - paragraph [ref=e246]: Flaky Test Diagnosis & Recovery
+              - generic [ref=e247]: 1 lessons
+            - button "Flaky Test Diagnosis & Recovery" [ref=e249] [cursor=pointer]:
+              - generic [ref=e250]: Flaky Test Diagnosis & Recovery
+              - img [ref=e251]
+          - generic [ref=e253]:
+            - button "Module 20 Test Data Strategies 1 lessons" [ref=e254] [cursor=pointer]:
+              - generic [ref=e255]:
+                - paragraph [ref=e256]: Module 20
+                - paragraph [ref=e257]: Test Data Strategies
+              - generic [ref=e258]: 1 lessons
+            - button "Test Data Strategies" [ref=e260] [cursor=pointer]:
+              - generic [ref=e261]: Test Data Strategies
+              - img [ref=e262]
+          - generic [ref=e264]:
+            - button "Module 21 Assessment & Certification 1 lessons" [ref=e265] [cursor=pointer]:
+              - generic [ref=e266]:
+                - paragraph [ref=e267]: Module 21
+                - paragraph [ref=e268]: Assessment & Certification
+              - generic [ref=e269]: 1 lessons
+            - button "Assessment & Certification" [ref=e271] [cursor=pointer]:
+              - generic [ref=e272]: Assessment & Certification
+              - img [ref=e273]
+          - generic [ref=e275]:
+            - button "Module 22 Trace Viewer Deep-Dive 1 lessons" [ref=e276] [cursor=pointer]:
+              - generic [ref=e277]:
+                - paragraph [ref=e278]: Module 22
+                - paragraph [ref=e279]: Trace Viewer Deep-Dive
+              - generic [ref=e280]: 1 lessons
+            - button "Trace Viewer Deep-Dive" [ref=e282] [cursor=pointer]:
+              - generic [ref=e283]: Trace Viewer Deep-Dive
+              - img [ref=e284]
+          - generic [ref=e286]:
+            - button "Module 23 Mobile & Responsive Testing 1 lessons" [ref=e287] [cursor=pointer]:
+              - generic [ref=e288]:
+                - paragraph [ref=e289]: Module 23
+                - paragraph [ref=e290]: Mobile & Responsive Testing
+              - generic [ref=e291]: 1 lessons
+            - button "Mobile & Responsive Testing" [ref=e293] [cursor=pointer]:
+              - generic [ref=e294]: Mobile & Responsive Testing
+              - img [ref=e295]
+          - generic [ref=e297]:
+            - button "Module 24 Parallel Execution & Sharding 1 lessons" [ref=e298] [cursor=pointer]:
+              - generic [ref=e299]:
+                - paragraph [ref=e300]: Module 24
+                - paragraph [ref=e301]: Parallel Execution & Sharding
+              - generic [ref=e302]: 1 lessons
+            - button "Parallel Execution & Sharding" [ref=e304] [cursor=pointer]:
+              - generic [ref=e305]: Parallel Execution & Sharding
+              - img [ref=e306]
+          - generic [ref=e308]:
+            - button "Module 25 Multi-Browser & Projects Config 1 lessons" [ref=e309] [cursor=pointer]:
+              - generic [ref=e310]:
+                - paragraph [ref=e311]: Module 25
+                - paragraph [ref=e312]: Multi-Browser & Projects Config
+              - generic [ref=e313]: 1 lessons
+            - button "Multi-Browser & Projects Config" [ref=e315] [cursor=pointer]:
+              - generic [ref=e316]: Multi-Browser & Projects Config
+              - img [ref=e317]
+          - generic [ref=e319]:
+            - button "Module 26 Test Tagging & Pipeline Gating 1 lessons" [ref=e320] [cursor=pointer]:
+              - generic [ref=e321]:
+                - paragraph [ref=e322]: Module 26
+                - paragraph [ref=e323]: Test Tagging & Pipeline Gating
+              - generic [ref=e324]: 1 lessons
+            - button "Test Tagging & Pipeline Gating" [ref=e326] [cursor=pointer]:
+              - generic [ref=e327]: Test Tagging & Pipeline Gating
+              - img [ref=e328]
+          - generic [ref=e330]:
+            - button "Module 27 GitHub Actions CI/CD 1 lessons" [ref=e331] [cursor=pointer]:
+              - generic [ref=e332]:
+                - paragraph [ref=e333]: Module 27
+                - paragraph [ref=e334]: GitHub Actions CI/CD
+              - generic [ref=e335]: 1 lessons
+            - button "GitHub Actions CI/CD" [ref=e337] [cursor=pointer]:
+              - generic [ref=e338]: GitHub Actions CI/CD
+              - img [ref=e339]
+          - generic [ref=e341]:
+            - button "Module 28 Playwright MCP and AI Agents 1 lessons" [ref=e342] [cursor=pointer]:
+              - generic [ref=e343]:
+                - paragraph [ref=e344]: Module 28
+                - paragraph [ref=e345]: Playwright MCP and AI Agents
+              - generic [ref=e346]: 1 lessons
+            - button "Playwright MCP and AI Agents" [ref=e348] [cursor=pointer]:
+              - generic [ref=e349]: Playwright MCP and AI Agents
+              - img [ref=e350]
+          - generic [ref=e352]:
+            - button "Module 29 Component Testing for React 1 lessons" [ref=e353] [cursor=pointer]:
+              - generic [ref=e354]:
+                - paragraph [ref=e355]: Module 29
+                - paragraph [ref=e356]: Component Testing for React
+              - generic [ref=e357]: 1 lessons
+            - button "Component Testing for React" [ref=e359] [cursor=pointer]:
+              - generic [ref=e360]: Component Testing for React
+              - img [ref=e361]
+          - generic [ref=e363]:
+            - button "Module 30 Performance Baseline Testing 1 lessons" [ref=e364] [cursor=pointer]:
+              - generic [ref=e365]:
+                - paragraph [ref=e366]: Module 30
+                - paragraph [ref=e367]: Performance Baseline Testing
+              - generic [ref=e368]: 1 lessons
+            - button "Performance Baseline Testing" [ref=e370] [cursor=pointer]:
+              - generic [ref=e371]: Performance Baseline Testing
+              - img [ref=e372]
+          - generic [ref=e374]:
+            - button "Module 31 Custom Reporters and Notifications 1 lessons" [ref=e375] [cursor=pointer]:
+              - generic [ref=e376]:
+                - paragraph [ref=e377]: Module 31
+                - paragraph [ref=e378]: Custom Reporters and Notifications
+              - generic [ref=e379]: 1 lessons
+            - button "Custom Reporters and Notifications" [ref=e381] [cursor=pointer]:
+              - generic [ref=e382]: Custom Reporters and Notifications
+              - img [ref=e383]
+    - main [ref=e385]:
+      - generic [ref=e387]:
+        - generic [ref=e389]:
+          - generic [ref=e390]:
+            - generic [ref=e391]: Module 03
+            - generic [ref=e392]: •
+            - generic [ref=e393]: Lesson 01 of 01
+            - generic [ref=e394]: •
+            - generic [ref=e395]: 21 min
+          - generic [ref=e396]:
+            - generic [ref=e397]:
+              - heading "What to Automate (and What Not To)" [level=1] [ref=e398]
+              - paragraph [ref=e399]: Not every test deserves a script — here's how to decide
+            - generic [ref=e400]:
+              - generic [ref=e401]: Current Theme
+              - generic [ref=e402]: signal-cobalt
+          - generic [ref=e403]:
+            - generic [ref=e404]:
+              - img [ref=e405]
+              - text: 12 sections
+            - generic [ref=e408]:
+              - img [ref=e409]
+              - text: Quiz included
+            - generic [ref=e411]:
+              - img [ref=e412]
+              - text: No exercise
+        - generic [ref=e414]:
+          - article [ref=e415]:
+            - heading "The Automation Decision Framework" [level=2] [ref=e416]
+            - paragraph [ref=e417]: One of the most common mistakes new automation teams make is trying to automate everything. Industry leaders typically achieve 60–80% automation coverage for regression testing, and that's considered excellent. The remaining 20–40% consists of tests where manual execution is more practical, cost-effective, or genuinely necessary. Your goal isn't 100% automation — it's automating the RIGHT things.
+          - article [ref=e418]:
+            - heading "Automate These (High Value)" [level=2] [ref=e419]
+            - paragraph [ref=e420]: These test types deliver the highest return on automation investment. They run often, they're repetitive, and they catch regression bugs early.
+          - generic [ref=e421]:
+            - heading "Automate These (High Value)" [level=2] [ref=e422]
+            - table [ref=e424]:
+              - rowgroup [ref=e425]:
+                - row "Test Type Why Automate Example" [ref=e426]:
+                  - columnheader "Test Type" [ref=e427]
+                  - columnheader "Why Automate" [ref=e428]
+                  - columnheader "Example" [ref=e429]
+              - rowgroup [ref=e430]:
+                - row "Regression tests Run every sprint — too many for manual execution Login flow, core navigation, CRUD operations" [ref=e431]:
+                  - cell "Regression tests" [ref=e432]
+                  - cell "Run every sprint — too many for manual execution" [ref=e433]
+                  - cell "Login flow, core navigation, CRUD operations" [ref=e434]
+                - row "Smoke tests Must pass before any other testing starts Homepage loads, API responds, auth works" [ref=e435]:
+                  - cell "Smoke tests" [ref=e436]
+                  - cell "Must pass before any other testing starts" [ref=e437]
+                  - cell "Homepage loads, API responds, auth works" [ref=e438]
+                - row "Data-driven tests Same flow with hundreds of input variations Form validation with valid/invalid email formats" [ref=e439]:
+                  - cell "Data-driven tests" [ref=e440]
+                  - cell "Same flow with hundreds of input variations" [ref=e441]
+                  - cell "Form validation with valid/invalid email formats" [ref=e442]
+                - row "Cross-browser checks Impractical to test 3+ browsers manually every time Layout renders correctly in Chrome, Firefox, Safari" [ref=e443]:
+                  - cell "Cross-browser checks" [ref=e444]
+                  - cell "Impractical to test 3+ browsers manually every time" [ref=e445]
+                  - cell "Layout renders correctly in Chrome, Firefox, Safari" [ref=e446]
+                - row "Happy path flows Critical business paths that must never break User signup → first order → confirmation" [ref=e447]:
+                  - cell "Happy path flows" [ref=e448]
+                  - cell "Critical business paths that must never break" [ref=e449]
+                  - cell "User signup → first order → confirmation" [ref=e450]
+          - article [ref=e451]:
+            - heading "Keep These Manual (Low Automation Value)" [level=2] [ref=e452]
+            - paragraph [ref=e453]: These tests require human judgment, are run rarely, or cost more to automate and maintain than they save.
+          - generic [ref=e454]:
+            - heading "Keep These Manual (Low Automation Value)" [level=2] [ref=e455]
+            - table [ref=e457]:
+              - rowgroup [ref=e458]:
+                - row "Test Type Why Keep Manual Example" [ref=e459]:
+                  - columnheader "Test Type" [ref=e460]
+                  - columnheader "Why Keep Manual" [ref=e461]
+                  - columnheader "Example" [ref=e462]
+              - rowgroup [ref=e463]:
+                - row "Exploratory testing Requires curiosity, intuition, and creative deviation from scripts Trying unexpected inputs to see what breaks" [ref=e464]:
+                  - cell "Exploratory testing" [ref=e465]
+                  - cell "Requires curiosity, intuition, and creative deviation from scripts" [ref=e466]
+                  - cell "Trying unexpected inputs to see what breaks" [ref=e467]
+                - row "Usability / UX testing Automation can't judge if a flow 'feels confusing' Is the checkout flow intuitive for first-time users?" [ref=e468]:
+                  - cell "Usability / UX testing" [ref=e469]
+                  - cell "Automation can't judge if a flow 'feels confusing'" [ref=e470]
+                  - cell "Is the checkout flow intuitive for first-time users?" [ref=e471]
+                - row "One-time tests Automating a test you'll run once wastes time Verifying a data migration completed correctly" [ref=e472]:
+                  - cell "One-time tests" [ref=e473]
+                  - cell "Automating a test you'll run once wastes time" [ref=e474]
+                  - cell "Verifying a data migration completed correctly" [ref=e475]
+                - row "Visual design review Automation can't assess aesthetic quality Does the new design match the mockups?" [ref=e476]:
+                  - cell "Visual design review" [ref=e477]
+                  - cell "Automation can't assess aesthetic quality" [ref=e478]
+                  - cell "Does the new design match the mockups?" [ref=e479]
+                - row "Edge cases in unstable features Features still changing → tests break every sprint A feature in active development that changes weekly" [ref=e480]:
+                  - cell "Edge cases in unstable features" [ref=e481]
+                  - cell "Features still changing → tests break every sprint" [ref=e482]
+                  - cell "A feature in active development that changes weekly" [ref=e483]
+          - article [ref=e484]:
+            - heading "The Decision Flowchart" [level=2] [ref=e485]
+            - paragraph [ref=e486]: When looking at a test case, ask these four questions in order. If any answer is 'No,' consider keeping it manual.
+          - complementary [ref=e487]:
+            - generic [ref=e488]:
+              - img [ref=e489]
+              - text: tip
+            - generic [ref=e491]: The Decision Flowchart
+            - paragraph [ref=e492]: Use this flowchart when deciding which acceptance criteria belong in Playwright and which should stay as human-led checks. Not everything needs to be automated.
+          - generic [ref=e493]:
+            - heading "The Decision Flowchart" [level=2] [ref=e494]
+            - table [ref=e496]:
+              - rowgroup [ref=e497]:
+                - row "# Question If No →" [ref=e498]:
+                  - columnheader "#" [ref=e499]
+                  - columnheader "Question" [ref=e500]
+                  - columnheader "If No →" [ref=e501]
+              - rowgroup [ref=e502]:
+                - row "1 Will this test run more than 3 times? Keep manual — automation ROI too low" [ref=e503]:
+                  - cell "1" [ref=e504]
+                  - cell "Will this test run more than 3 times?" [ref=e505]
+                  - cell "Keep manual — automation ROI too low" [ref=e506]
+                - row "2 Can the expected result be verified by code (not human judgment)? Keep manual — need human eyes" [ref=e507]:
+                  - cell "2" [ref=e508]
+                  - cell "Can the expected result be verified by code (not human judgment)?" [ref=e509]
+                  - cell "Keep manual — need human eyes" [ref=e510]
+                - row "3 Is the feature stable enough that the test won't break next sprint? Wait to automate — too much maintenance debt" [ref=e511]:
+                  - cell "3" [ref=e512]
+                  - cell "Is the feature stable enough that the test won't break next sprint?" [ref=e513]
+                  - cell "Wait to automate — too much maintenance debt" [ref=e514]
+                - row "4 Can test data be created programmatically? Automate with caution — data setup may be fragile" [ref=e515]:
+                  - cell "4" [ref=e516]
+                  - cell "Can test data be created programmatically?" [ref=e517]
+                  - cell "Automate with caution — data setup may be fragile" [ref=e518]
+          - article [ref=e519]:
+            - heading "The Hybrid Approach" [level=2] [ref=e520]
+            - paragraph [ref=e521]: "The best automation programs do not treat manual and automated work as competing paths. They combine them strategically. Automate the repetitive regression checks so more time can go toward exploratory testing, usability evaluation, and creative edge case discovery. Think of it as: automation handles the checking, humans handle the deeper testing judgment."
+          - complementary [ref=e522]:
+            - generic [ref=e523]:
+              - img [ref=e524]
+              - text: info
+            - generic [ref=e526]: The Hybrid Approach
+            - paragraph [ref=e527]: "Automation handles checking: did the button work? Did the page load? Did the data save? Humans handle testing: is this confusing? Does this flow make sense? What would a real user try that we haven't thought of?"
+          - article [ref=e528]:
+            - heading "Start Small, Expand Gradually" [level=2] [ref=e529]
+            - paragraph [ref=e530]: "Don't try to automate your entire regression suite in week one. Start with the 10 most-repeated manual test cases. Automate those. Stabilize them. Then expand. Industry guidance is consistent: begin with small, low-risk pilot projects, validate the approach, and gradually increase coverage. Efforts that try to automate everything at once typically see their suites decay within months because maintenance quickly overwhelms the available capacity."
+          - generic [ref=e531]:
+            - heading "Start Small, Expand Gradually" [level=2] [ref=e532]
+            - table [ref=e534]:
+              - rowgroup [ref=e535]:
+                - row "Week Target Expected Outcome" [ref=e536]:
+                  - columnheader "Week" [ref=e537]
+                  - columnheader "Target" [ref=e538]
+                  - columnheader "Expected Outcome" [ref=e539]
+              - rowgroup [ref=e540]:
+                - row "1–2 Automate 5 smoke tests (login, nav, homepage) Team learns the toolchain, builds confidence" [ref=e541]:
+                  - cell "1–2" [ref=e542]
+                  - cell "Automate 5 smoke tests (login, nav, homepage)" [ref=e543]
+                  - cell "Team learns the toolchain, builds confidence" [ref=e544]
+                - row "3–4 Add 10 regression tests for core features First real regression catches in CI pipeline" [ref=e545]:
+                  - cell "3–4" [ref=e546]
+                  - cell "Add 10 regression tests for core features" [ref=e547]
+                  - cell "First real regression catches in CI pipeline" [ref=e548]
+                - row "5–8 Expand to 25–30 tests covering all critical paths Manual regression load drops noticeably" [ref=e549]:
+                  - cell "5–8" [ref=e550]
+                  - cell "Expand to 25–30 tests covering all critical paths" [ref=e551]
+                  - cell "Manual regression load drops noticeably" [ref=e552]
+                - row "Ongoing Add 3–5 new tests per sprint, maintain existing Sustainable growth without maintenance debt" [ref=e553]:
+                  - cell "Ongoing" [ref=e554]
+                  - cell "Add 3–5 new tests per sprint, maintain existing" [ref=e555]
+                  - cell "Sustainable growth without maintenance debt" [ref=e556]
+        - generic [ref=e557]:
+          - generic [ref=e558]:
+            - img [ref=e559]
+            - text: Knowledge Check
+          - paragraph [ref=e562]: Your team wants to automate a test for a feature that is actively being redesigned and will change significantly next sprint. What should you do?
+          - generic [ref=e563]:
+            - button "A.Automate it now so testing is covered during the redesign" [ref=e564] [cursor=pointer]:
+              - generic [ref=e565]: A.
+              - text: Automate it now so testing is covered during the redesign
+            - button "B.Wait until the feature stabilizes — automating now creates maintenance debt" [ref=e566] [cursor=pointer]:
+              - generic [ref=e567]: B.
+              - text: Wait until the feature stabilizes — automating now creates maintenance debt
+            - button "C.Automate it but skip assertions so it doesn't break" [ref=e568] [cursor=pointer]:
+              - generic [ref=e569]: C.
+              - text: Automate it but skip assertions so it doesn't break
+            - button "D.Hand it off to someone else because it's complicated" [ref=e570] [cursor=pointer]:
+              - generic [ref=e571]: D.
+              - text: Hand it off to someone else because it's complicated
+          - button "Check Answer" [disabled] [ref=e572]
+        - generic [ref=e573]:
+          - generic [ref=e574]:
+            - img [ref=e575]
+            - text: Copilot Prompts
+          - generic [ref=e578]:
+            - group [ref=e579]:
+              - generic "Automation Decision Matrix" [ref=e580] [cursor=pointer]
+            - group [ref=e581]:
+              - generic "Generate Test Priority Backlog" [ref=e582] [cursor=pointer]
+        - link "Practice Link Explore the Orders page — a great candidate for automation with its table, pagination, and sorting The Orders page demonstrates a data-heavy feature that is ideal for automation" [ref=e583] [cursor=pointer]:
+          - /url: http://localhost:5173/orders
+          - generic [ref=e584]:
+            - img [ref=e585]
+            - text: Practice Link
+          - generic [ref=e589]: Explore the Orders page — a great candidate for automation with its table, pagination, and sorting
+          - paragraph [ref=e590]: The Orders page demonstrates a data-heavy feature that is ideal for automation
+  - contentinfo [ref=e592]:
+    - generic [ref=e593]:
+      - generic [ref=e594]:
+        - paragraph [ref=e595]: What to Automate (and What Not To)
+        - paragraph [ref=e596]: What to Automate (and What Not To) • 0%
+      - generic [ref=e597]:
+        - button "Prev" [ref=e598] [cursor=pointer]
+        - button "Mark Complete" [ref=e599] [cursor=pointer]
+        - button "Next" [ref=e600] [cursor=pointer]

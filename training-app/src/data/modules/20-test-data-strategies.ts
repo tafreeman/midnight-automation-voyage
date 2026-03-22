@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Test Data Strategies",
   subtitle: "Factories, seeding, isolation, and parallel-safe data patterns",
   icon: "🏭",
-  audience: "Developers",
   sections: [
     {
       heading: "The Problem with Hardcoded Data",

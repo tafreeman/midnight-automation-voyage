@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "CI/CD & Quick Reference",
   subtitle: "Running tests in pipelines and command cheat sheet",
   icon: "🔧",
-  audience: "All Roles",
   sections: [
     {
       heading: "GitLab CI Pipeline",

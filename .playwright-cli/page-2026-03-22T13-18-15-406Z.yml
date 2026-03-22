@@ -1,0 +1,136 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - link "Deck.Gallery®" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e5]:
+      - link "About" [ref=e6] [cursor=pointer]:
+        - /url: /about
+      - link "Submit deck" [ref=e7] [cursor=pointer]:
+        - /url: https://tally.so/r/m6ZPKe
+  - generic [ref=e8]:
+    - generic [ref=e9]: January 25th, 2025
+    - heading "Combo's Employee Handbook" [level=2] [ref=e10]
+    - paragraph
+    - paragraph [ref=e11]: With this handbook, you'll discover what to expect on your first day, throughout the first month, and over the course of your first year at Combo.
+    - paragraph
+    - paragraph [ref=e12]:
+      - 'link "Creator: Combo ↗" [ref=e13] [cursor=pointer]':
+        - /url: https://www.combo.co/?ref=deck.gallery
+        - text: "Creator:"
+        - generic [ref=e14]: Combo
+        - text: ↗
+  - generic [ref=e15]:
+    - paragraph [ref=e16]:
+      - img "Slide from the presentation" [ref=e17]
+    - paragraph [ref=e18]:
+      - img "Slide from the presentation" [ref=e19]
+    - paragraph [ref=e20]:
+      - img "Slide from the presentation" [ref=e21]
+    - paragraph [ref=e22]:
+      - img "Slide from the presentation" [ref=e23]
+    - paragraph [ref=e24]:
+      - img "Slide from the presentation" [ref=e25]
+    - paragraph [ref=e26]:
+      - img "Slide from the presentation" [ref=e27]
+    - paragraph [ref=e28]:
+      - img "Slide from the presentation" [ref=e29]
+    - paragraph [ref=e30]:
+      - img "Slide from the presentation" [ref=e31]
+    - paragraph [ref=e32]:
+      - img "Slide from the presentation" [ref=e33]
+    - paragraph [ref=e34]:
+      - img "Slide from the presentation" [ref=e35]
+    - paragraph [ref=e36]:
+      - img "Slide from the presentation" [ref=e37]
+    - paragraph [ref=e38]:
+      - img "Slide from the presentation" [ref=e39]
+    - paragraph [ref=e40]:
+      - img "Slide from the presentation" [ref=e41]
+    - paragraph [ref=e42]:
+      - img "Slide from the presentation" [ref=e43]
+    - paragraph [ref=e44]:
+      - img "Slide from the presentation" [ref=e45]
+    - paragraph [ref=e46]:
+      - img "Slide from the presentation" [ref=e47]
+    - paragraph [ref=e48]:
+      - img "Slide from the presentation" [ref=e49]
+    - paragraph [ref=e50]:
+      - img "Slide from the presentation" [ref=e51]
+    - paragraph [ref=e52]:
+      - img "Slide from the presentation" [ref=e53]
+    - paragraph [ref=e54]:
+      - img "Slide from the presentation" [ref=e55]
+    - paragraph [ref=e56]:
+      - img "Slide from the presentation" [ref=e57]
+    - paragraph [ref=e58]:
+      - img "Slide from the presentation" [ref=e59]
+    - paragraph [ref=e60]:
+      - img "Slide from the presentation" [ref=e61]
+    - paragraph [ref=e62]:
+      - img "Slide from the presentation" [ref=e63]
+    - paragraph [ref=e64]:
+      - img "Slide from the presentation" [ref=e65]
+    - paragraph [ref=e66]:
+      - img "Slide from the presentation" [ref=e67]
+    - paragraph [ref=e68]:
+      - img "Slide from the presentation" [ref=e69]
+    - paragraph [ref=e70]:
+      - img "Slide from the presentation" [ref=e71]
+    - paragraph [ref=e72]:
+      - img "Slide from the presentation" [ref=e73]
+    - paragraph [ref=e74]:
+      - img "Slide from the presentation" [ref=e75]
+    - paragraph [ref=e76]:
+      - img "Slide from the presentation" [ref=e77]
+    - paragraph [ref=e78]:
+      - img "Slide from the presentation" [ref=e79]
+    - paragraph [ref=e80]:
+      - img "Slide from the presentation" [ref=e81]
+    - paragraph [ref=e82]:
+      - img "Slide from the presentation" [ref=e83]
+    - paragraph [ref=e84]:
+      - img "Slide from the presentation" [ref=e85]
+    - paragraph [ref=e86]:
+      - img "Slide from the presentation" [ref=e87]
+    - paragraph [ref=e88]:
+      - img "Slide from the presentation" [ref=e89]
+    - paragraph [ref=e90]:
+      - img "Slide from the presentation" [ref=e91]
+    - paragraph [ref=e92]:
+      - img "Slide from the presentation" [ref=e93]
+    - generic [ref=e94]:
+      - text: Deck.Gallery® curated by
+      - link "Muharrem Şenyıl" [ref=e95] [cursor=pointer]:
+        - /url: https://x.com/senyil
+    - link "Back home" [ref=e96] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e99]:
+      - textbox "Email address..." [ref=e100]
+      - button "Sign up" [ref=e101] [cursor=pointer]
+  - contentinfo [ref=e102]:
+    - generic [ref=e103]:
+      - generic [ref=e104]: 
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - paragraph [ref=e107]: Deck.Gallery® newsletter
+          - generic [ref=e109]:
+            - textbox "Email address..." [ref=e110]
+            - button "Sign up" [ref=e111] [cursor=pointer]
+          - paragraph [ref=e112]: Aiming to send it weekly, hopefully, eventually
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - link "About" [ref=e115] [cursor=pointer]:
+              - /url: /about
+            - link "Submit" [ref=e116] [cursor=pointer]:
+              - /url: https://tally.so/r/m6ZPKe
+            - link "Newsletter" [ref=e117] [cursor=pointer]:
+              - /url: https://deckgallery.substack.com/
+          - generic [ref=e118]:
+            - link "X (@deckgallery)" [ref=e119] [cursor=pointer]:
+              - /url: https://twitter.com/deckgallery
+            - link "Contact" [ref=e120] [cursor=pointer]:
+              - /url: mailto:mo@senyil.com?subject=Deck.Gallery%C2%AE%20Contact
+      - generic [ref=e121]:
+        - text: All rights reserved © 2023 Deck.Gallery® curated by
+        - link "Muharrem Şenyıl" [ref=e122] [cursor=pointer]:
+          - /url: https://x.com/senyil

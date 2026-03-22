@@ -5,11 +5,10 @@ export const lesson: Lesson = {
   title: "HITL Review Checklist",
   subtitle: "The governance gate before any test merges",
   icon: "✅",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why a Checklist?",
-      content: "AI-generated code passes syntax checks and even runs successfully — but it can still be wrong. A test that clicks buttons without asserting outcomes, or asserts the wrong thing, gives false confidence. This checklist is the team's quality gate.",
+      content: "AI-generated code passes syntax checks and even runs successfully — but it can still be wrong. A test that clicks buttons without asserting outcomes, or asserts the wrong thing, gives false confidence. This checklist is the quality gate.",
       callout: "This checklist applies to ALL test code entering the repo — whether hand-written, recorded, or Copilot-generated. No exceptions."
     },
     {
@@ -27,7 +26,7 @@ export const lesson: Lesson = {
           ["7", "Is test data independent (no shared state between tests)?", "Shared state creates hidden ordering dependencies"],
           ["8", "Does the test name describe the user scenario?", "test('test 1') tells reviewers nothing"],
           ["9", "No hardcoded URLs or environment-specific values?", "Tests must run against any environment via baseURL"],
-          ["10", "No sensitive data (real passwords, PII, tokens)?", "Test code is committed to the repo and visible to the team"],
+          ["10", "No sensitive data (real passwords, PII, tokens)?", "Test code is committed to the repo and visible to anyone with repository access"],
         ]
       }
     },
@@ -184,7 +183,7 @@ test.describe('Admin Page Bug Discovery', () => {
       difficulty: 'advanced',
       title: 'HITL Review: Admin Invite and Search',
       description: 'Write a test for the admin invite flow and search functionality, then review your own test against the HITL checklist. Identify and fix any violations before submitting.',
-      narration: "Write the test in a natural first pass — login, navigate, fill the invite form with admin-invite-name, admin-invite-email, and admin-invite-role, submit, then search — and only then put on your reviewer hat. Go through each of the six checklist items in the comment scaffold and honestly mark every one pass or fail against your own code, because the skill here is catching your own blind spots before a teammate has to. Notice that after every navigation or form submission there should be an assertion confirming the expected state, not just the next action; an assertion like expect(rows.first()).toContainText('Test User') after the search is what separates a test that verifies behavior from one that just runs through the motions.",
+      narration: "Write the test in a natural first pass — login, navigate, fill the invite form with admin-invite-name, admin-invite-email, and admin-invite-role, submit, then search — and only then put on your reviewer hat. Go through each of the six checklist items in the comment scaffold and honestly mark every one pass or fail against your own code, because the skill here is catching your own blind spots before formal review. Notice that after every navigation or form submission there should be an assertion confirming the expected state, not just the next action; an assertion like expect(rows.first()).toContainText('Test User') after the search is what separates a test that verifies behavior from one that just runs through the motions.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 // Write a test that:

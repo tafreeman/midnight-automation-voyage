@@ -21,7 +21,7 @@ import { lesson as apiTesting } from "./modules/10-api-testing";
 import { lesson as promptTemplates } from "./modules/11-prompt-templates";
 import { lesson as readingResults } from "./modules/12-reading-results";
 import { lesson as hitlChecklist } from "./modules/13-hitl-checklist";
-import { lesson as nonCoderGuide } from "./modules/14-non-coder-guide";
+import { lesson as collaborativeGuide } from "./modules/14-collaborative-test-authoring";
 import { lesson as cicdReference } from "./modules/15-cicd-reference";
 import { lesson as authFixtures } from "./modules/16-auth-fixtures";
 import { lesson as visualRegression } from "./modules/17-visual-regression";
@@ -35,11 +35,10 @@ import { lesson as parallelSharding } from "./modules/24-parallel-sharding";
 import { lesson as multiBrowserProjects } from "./modules/25-multi-browser-projects";
 import { lesson as testTagging } from "./modules/26-test-tagging";
 import { lesson as githubActions } from "./modules/27-github-actions";
-import { lesson as networkMocking } from "./modules/28-network-mocking";
-import { lesson as playwrightMcpAiAgents } from "./modules/29-playwright-mcp-ai-agents";
-import { lesson as componentTesting } from "./modules/30-component-testing";
-import { lesson as performanceTesting } from "./modules/31-performance-testing";
-import { lesson as customReporters } from "./modules/32-custom-reporters";
+import { lesson as mcpAiAgents } from "./modules/28-mcp-ai-agents";
+import { lesson as componentTesting } from "./modules/29-component-testing";
+import { lesson as performanceTesting } from "./modules/30-performance-testing";
+import { lesson as customReporters } from "./modules/31-custom-reporters";
 
 import type { Lesson } from "./types";
 
@@ -57,7 +56,7 @@ export const lessons: Lesson[] = [
   promptTemplates,
   readingResults,
   hitlChecklist,
-  nonCoderGuide,
+  collaborativeGuide,
   cicdReference,
   authFixtures,
   visualRegression,
@@ -71,8 +70,7 @@ export const lessons: Lesson[] = [
   multiBrowserProjects,
   testTagging,
   githubActions,
-  networkMocking,
-  playwrightMcpAiAgents,
+  mcpAiAgents,
   componentTesting,
   performanceTesting,
   customReporters,

@@ -2,28 +2,27 @@ import type { Lesson } from "../types";
 
 export const lesson: Lesson = {
   id: 0,
-  title: "Who This Is For",
-  subtitle: "Whether you code daily or have never touched a test file",
+  title: "Course Orientation",
+  subtitle: "A practical workflow for learning Playwright and Copilot together",
   icon: "👋",
   sections: [
     {
-      heading: "Two Tracks, One Goal",
-      content: "This guide serves two audiences. Developers who write code daily and want to accelerate their test authoring. And non-coders — manual testers, QA analysts, BAs, and front-end testers — who want to use Playwright + Copilot without becoming full-time programmers. Every lesson marks which audience it targets. If a section says 'All Roles' — everyone reads it. If it says 'Developers' — non-coders can skim or skip. If it says 'Non-Coder Friendly' — it's written specifically for people without daily coding experience.",
-      callout: "You do NOT need to be a developer to create useful Playwright tests. The recorder + Copilot workflow lets you generate, refine, and maintain tests with minimal hand-written code."
+      heading: "What This Guide Optimizes For",
+      content: "This guide is built for people who want to turn acceptance criteria into reliable automated checks with as little friction as possible. Playwright handles browser automation, Copilot accelerates authoring, and the workflow stays grounded in visible assertions and human review. The goal is simple: faster, clearer feedback with less guesswork.",
+      callout: "You do not need to be a full-time programmer to create useful Playwright tests. The record, refine, review workflow keeps the focus on behavior and evidence."
     },
     {
       heading: "What You'll Be Able To Do",
-      content: "By the end of this guide, regardless of your role, you will be able to: record user flows and turn them into repeatable tests, use Copilot Chat prompts to generate and refine tests from plain English, read test output and identify what failed, contribute test cases to the team's test suite via merge requests, and apply the team's human-in-the-loop review checklist before merging.",
+      content: "By the end of this guide, you will be able to record user flows and turn them into repeatable tests, use Copilot Chat prompts to generate and refine tests from plain English, read test output and identify what failed, contribute test cases through pull requests, and apply a human-in-the-loop review checklist before merging.",
       table: {
-        headers: ["Skill", "Developer Track", "Non-Coder Track"],
+        headers: ["Skill", "Outcome", "Starting Point"],
         rows: [
-          ["Record a test", "✅ Lesson 4", "✅ Lesson 4"],
-          ["Write tests from scratch", "✅ Lesson 5–6", "⏭ Optional"],
-          ["Use Copilot prompts", "✅ Lesson 3", "✅ Lesson 3 + 8"],
-          ["Read test results", "✅ Lesson 9", "✅ Lesson 9"],
-          ["Page Object Model", "✅ Lesson 6", "⏭ Awareness only"],
-          ["HITL Review Checklist", "✅ Lesson 10", "✅ Lesson 10"],
-          ["Prompt Templates", "✅ Lesson 8", "✅ Lesson 8"],
+          ["Record a test", "Capture a real user flow quickly", "Lesson 07"],
+          ["Refine with Copilot", "Turn recordings into maintainable specs", "Lessons 06 and 07"],
+          ["Add strong assertions", "Prove the expected outcome, not just clicks", "Lessons 08 and 13"],
+          ["Read test results", "Triage failures with confidence", "Lesson 12"],
+          ["Use shared abstractions", "Reuse page objects, fixtures, and prompts", "Lessons 09, 10, and 16"],
+          ["Review before merge", "Apply human judgment to every generated test", "Lesson 13"],
         ]
       }
     },

@@ -9,11 +9,9 @@ interface SidebarProps {
   open: boolean;
   onToggle: () => void;
   progress: number;
-  roleFilter: "all" | "developer" | "non-coder";
-  onRoleChange: (role: "all" | "developer" | "non-coder") => void;
 }
 
-export function Sidebar({ lessons, currentLesson, completedLessons, onSelect, open, onToggle, progress, roleFilter, onRoleChange }: SidebarProps) {
+export function Sidebar({ lessons, currentLesson, completedLessons, onSelect, open, onToggle, progress }: SidebarProps) {
   if (!open) {
     return (
       <aside className="w-10 h-full bg-zinc-900/90 border-r border-zinc-800 flex flex-col items-center pt-4">
@@ -53,21 +51,6 @@ export function Sidebar({ lessons, currentLesson, completedLessons, onSelect, op
           <Progress value={progress} className="h-1 bg-zinc-800 [&>[role=progressbar]]:bg-emerald-500" />
           <p className="text-xs text-zinc-600">{completedLessons.size} of {lessons.length} lessons</p>
         </div>
-        <div className="flex gap-1 mt-3">
-          {(["all", "developer", "non-coder"] as const).map((role) => (
-            <button
-              key={role}
-              onClick={() => onRoleChange(role)}
-              className={`px-2 py-1 rounded text-xs capitalize transition-colors ${
-                roleFilter === role
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                  : "text-zinc-500 hover:text-zinc-300 border border-transparent"
-              }`}
-            >
-              {role === "non-coder" ? "Non-Coder" : role === "all" ? "All" : "Developer"}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Lesson List */}
@@ -75,13 +58,11 @@ export function Sidebar({ lessons, currentLesson, completedLessons, onSelect, op
         {lessons.map((lesson, idx) => {
           const isActive = idx === currentLesson;
           const isComplete = completedLessons.has(idx);
-          const isRelevant = roleFilter === "all" || !lesson.audience ||
-            lesson.audience.toLowerCase().includes(roleFilter);
           return (
             <button
               key={lesson.id}
               onClick={() => onSelect(idx)}
-              className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-150 group flex items-start gap-2.5 ${!isRelevant ? "opacity-40" : ""} ${
+              className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-150 group flex items-start gap-2.5 ${
                 isActive
                   ? "bg-emerald-500/10 border border-emerald-500/20"
                   : "hover:bg-zinc-900 border border-transparent"
@@ -102,13 +83,6 @@ export function Sidebar({ lessons, currentLesson, completedLessons, onSelect, op
                 }`}>
                   {lesson.title}
                 </p>
-                {lesson.audience && (
-                  <p className={`text-xs mt-0.5 truncate ${
-                    lesson.audience.includes("Non-Coder") ? "text-amber-500/70" : "text-zinc-600"
-                  }`}>
-                    {lesson.audience}
-                  </p>
-                )}
               </div>
             </button>
           );

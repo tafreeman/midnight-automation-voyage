@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Accessibility Testing with axe-core",
   subtitle: "Automated WCAG compliance scanning for enterprise applications",
   icon: "♿",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why Accessibility Matters",

@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Copilot Prompt Engineering",
   subtitle: "Structured prompts that produce reviewable tests",
   icon: "💬",
-  audience: "All Roles",
   sections: [
     {
       heading: "The CARD Formula",

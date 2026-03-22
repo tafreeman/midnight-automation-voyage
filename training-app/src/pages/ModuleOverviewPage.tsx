@@ -22,7 +22,7 @@ export function ModuleOverviewPage({
   onSelectLesson,
 }: ModuleOverviewPageProps) {
   const { isLessonCompleted, getModuleCompletion } = useProgress();
-  const { applyModuleTheme } = useTheme();
+  const { applyModuleTheme, currentTheme } = useTheme();
   const completion = getModuleCompletion(module.id, module.lessons.length);
 
   useEffect(() => {
@@ -30,9 +30,9 @@ export function ModuleOverviewPage({
   }, [applyModuleTheme, module.number]);
 
   return (
-    <div className="space-y-8">
+    <div className="module-overview-page space-y-8">
       <section
-        className="overflow-hidden rounded-2xl border"
+        className="page-hero module-hero overflow-hidden rounded-2xl border"
         style={{
           background:
             "linear-gradient(135deg, color-mix(in srgb, var(--surface-elevated) 94%, transparent), color-mix(in srgb, var(--surface-hover) 90%, transparent))",
@@ -68,7 +68,7 @@ export function ModuleOverviewPage({
           <div className="mt-6 grid gap-3 md:grid-cols-3">
             <HeroStat icon={<BookOpen size={18} />} label="Lessons" value={String(module.lessons.length)} />
             <HeroStat icon={<Clock3 size={18} />} label="Estimated" value={`${module.estimatedMinutes} min`} />
-            <HeroStat icon={<Layers3 size={18} />} label="Theme" value={module.theme} />
+            <HeroStat icon={<Layers3 size={18} />} label="Active Theme" value={currentTheme} />
           </div>
 
           <div className="mt-6 h-2 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-subtle)" }}>
@@ -147,7 +147,7 @@ function LessonCard({
     <button
       type="button"
       onClick={onOpen}
-      className="w-full rounded-2xl border p-4 text-left transition-colors"
+      className="page-card lesson-card w-full rounded-2xl border p-4 text-left transition-colors"
       style={{
         borderColor: completed ? "var(--accent-action)" : "var(--border-subtle)",
         backgroundColor: "var(--surface-elevated)",
@@ -166,16 +166,9 @@ function LessonCard({
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-              {lesson.title}
-            </h3>
-            {lesson.audience ? (
-              <span className="rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.2em]" style={{ borderColor: "var(--border-subtle)", color: "var(--text-muted)" }}>
-                {lesson.audience}
-              </span>
-            ) : null}
-          </div>
+          <h3 className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+            {lesson.title}
+          </h3>
           <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
             {lesson.subtitle}
           </p>
@@ -212,7 +205,7 @@ function HeroStat({
 }) {
   return (
     <div
-      className="rounded-xl border p-4"
+      className="page-card hero-stat rounded-xl border p-4"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-code)",

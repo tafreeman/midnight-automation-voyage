@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Auth Fixtures & Storage State",
   subtitle: "Reusable authentication for fast, role-based test execution",
   icon: "🔐",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why UI Login Doesn't Scale",

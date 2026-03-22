@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Writing Tests from Scratch",
   subtitle: "From acceptance criteria to working test code",
   icon: "✍️",
-  audience: "Developers — Non-coders: skim for awareness",
   sections: [
     {
       heading: "From Ticket to Test",
@@ -64,7 +63,7 @@ await expect(results.first()).toContainText('Widget Pro');
     }
   ],
   quiz: {
-    question: "What's the recommended selector strategy for the team?",
+    question: "What's the recommended selector strategy?",
     options: [
       "CSS class selectors for readability",
       "XPath for precision",
@@ -72,7 +71,7 @@ await expect(results.first()).toContainText('Widget Pro');
       "Auto-generated selectors from the recorder"
     ],
     correctIndex: 2,
-    explanation: "data-testid attributes are the team standard because they are immune to CSS refactors, content text changes, and layout restructuring. They exist solely for testing and won't break when designers restyle the UI."
+    explanation: "data-testid attributes are the recommended default because they are immune to CSS refactors, content text changes, and layout restructuring. They exist solely for testing and won't break when designers restyle the UI."
   },
   practiceLink: {
     url: "http://localhost:5173/products",

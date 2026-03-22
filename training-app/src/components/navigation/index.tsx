@@ -97,6 +97,11 @@ export function TopBar({
 
 export function ThemeSelector() {
   const { currentTheme, preference, setPreference, themes } = useTheme();
+  const isLightTheme =
+    currentTheme === "arctic-steel" ||
+    currentTheme === "linear" ||
+    currentTheme === "zine-pop" ||
+    currentTheme === "handbook-notes";
 
   return (
     <label
@@ -106,7 +111,7 @@ export function ThemeSelector() {
         color: "var(--text-secondary)",
       }}
     >
-      {currentTheme === "arctic-steel" || currentTheme === "linear" ? (
+      {isLightTheme ? (
         <SunMedium size={14} />
       ) : (
         <MoonStar size={14} />
@@ -146,12 +151,12 @@ export function ModuleNav({
   onOpenLesson,
 }: ModuleNavProps) {
   return (
-    <nav className="h-full overflow-y-auto p-4 md:p-5">
+    <nav className="module-nav h-full overflow-y-auto p-4 md:p-5">
       <div className="space-y-3">
         <button
           type="button"
           onClick={onOpenDashboard}
-          className="flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors"
+          className="module-nav-dashboard flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors"
           style={{
             backgroundColor: "var(--surface-primary)",
             borderColor: "var(--border-subtle)",
@@ -167,7 +172,7 @@ export function ModuleNav({
           return (
             <div
               key={module.id}
-              className="rounded-2xl border p-3"
+              className="module-nav-panel rounded-2xl border p-3"
               style={{
                 backgroundColor: activeModule ? "var(--surface-primary)" : "var(--surface-elevated)",
                 borderColor: activeModule ? "var(--accent-info)" : "var(--border-subtle)",
@@ -199,7 +204,7 @@ export function ModuleNav({
                       key={lesson.id}
                       type="button"
                       onClick={() => onOpenLesson(module.id, lesson.id)}
-                      className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors"
+                      className="module-nav-lesson flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors"
                       style={{
                         backgroundColor: activeLesson ? "var(--surface-hover)" : "transparent",
                         color: activeLesson ? "var(--text-primary)" : "var(--text-secondary)",

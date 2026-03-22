@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Mobile & Responsive Testing",
   subtitle: "Device emulation, viewport assertions, and touch interactions",
   icon: "📱",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why Mobile Testing Matters",

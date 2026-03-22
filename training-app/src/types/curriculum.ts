@@ -2,9 +2,9 @@ export type ThemeName =
   | "signal-cobalt"
   | "arctic-steel"
   | "linear"
-  | "gamma-dark";
-
-export type Audience = "all" | "developer" | "non-coder";
+  | "gamma-dark"
+  | "zine-pop"
+  | "handbook-notes";
 
 export interface TextSection {
   type: "text";
@@ -71,7 +71,6 @@ export interface Lesson {
   title: string;
   subtitle: string;
   estimatedMinutes: number;
-  audience?: Audience;
   sections: Section[];
   quiz?: Quiz;
   exercise?: CodeExercise;

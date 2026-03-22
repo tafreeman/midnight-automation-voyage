@@ -5,12 +5,11 @@ export const lesson: Lesson = {
   title: "Record → Refine Workflow",
   subtitle: "The fastest path from zero to production test",
   icon: "🎬",
-  audience: "All Roles — Non-Coder Primary Path",
   sections: [
     {
       heading: "Why Record-First?",
-      content: "Recording is the recommended onramp for everyone, especially non-coders. You interact with the app normally — Playwright writes the test code. Then Copilot refines that code into something maintainable. You never start from a blank file.",
-      callout: "This is the non-coder golden path. Record → Copilot Refine → Review → Merge. You can contribute real test coverage from day one."
+      content: "Recording is the recommended onramp for anyone learning a new flow. You interact with the app normally, Playwright writes the first draft, and Copilot helps refine that draft into something maintainable. You never need to start from a blank file just to contribute coverage.",
+      callout: "Record, refine, review, merge. That loop keeps the work focused on behavior and evidence instead of gatekeeping who is 'allowed' to author tests."
     },
     {
       heading: "Step 1: Launch the Recorder",
@@ -27,7 +26,7 @@ npx playwright codegen --device="iPhone 14" http://localhost:3000
 # 3. Interact with your app
 # 4. Code appears in editor automatically`,
       codeLanguage: "bash",
-      tip: "VS Code recorder is preferred — the generated code appears directly in your editor and is easier to save into the right test file."
+      tip: "VS Code recorder is preferred because the generated code lands directly in your editor, where it is easier to review and save into the right test file."
     },
     {
       heading: "Step 2: Refine with Copilot",
@@ -70,7 +69,7 @@ npx playwright test --headed
 # View the HTML report
 npx playwright show-report`,
       codeLanguage: "bash",
-      tip: "Non-coders: Run with --headed the first few times so you can watch the browser execute your test. It builds confidence and helps you spot incorrect flows."
+      tip: "Run with --headed the first few times so you can watch the browser execute the test. It builds confidence and makes incorrect flows easier to spot."
     }
   ],
   exercises: [
@@ -196,8 +195,8 @@ test('successful login redirects to dashboard', async ({ page }) => {
     },
     {
       label: "Convert Manual Step to Assertion",
-      context: "For non-coders translating manual verification steps into Playwright assertions.",
-      prompt: "I'm a manual tester. Convert this manual verification step into a Playwright assertion:\n\nManual step: \"[DESCRIBE WHAT YOU MANUALLY CHECK — e.g., 'I verify the success message says Thank you for your order']\"\n\nPage route: [URL_PATH]\nElement: [DESCRIBE THE ELEMENT — e.g., 'green banner at the top of the page']\n\nWrite the Playwright expect() assertion using data-testid or getByText selectors. Explain what the assertion does in plain English.",
+      context: "Translate a plain-English verification step into a Playwright assertion.",
+      prompt: "Convert this verification step into a Playwright assertion:\n\nVerification step: \"[DESCRIBE WHAT YOU CHECK — e.g., 'I verify the success message says Thank you for your order']\"\n\nPage route: [URL_PATH]\nElement: [DESCRIBE THE ELEMENT — e.g., 'green banner at the top of the page']\n\nWrite the Playwright expect() assertion using data-testid or getByText selectors. Explain what the assertion does in plain English.",
     },
   ],
   practiceLink: {

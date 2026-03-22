@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Parallel Execution & Sharding",
   subtitle: "Scaling test suites with workers, shards, and blob reports",
   icon: "⚡",
-  audience: "Developers",
   sections: [
     {
       heading: "Why Serial Execution Doesn't Scale",

@@ -5,11 +5,10 @@ export const lesson: Lesson = {
   title: "Prompt Template Library",
   subtitle: "Copy-paste prompts for every testing scenario",
   icon: "📋",
-  audience: "All Roles — Non-Coder Essential",
   sections: [
     {
       heading: "How to Use These Templates",
-      content: "These are ready-to-paste prompts for Copilot Chat. Replace the [BRACKETED] placeholders with your specific details. Each template produces a complete, reviewable test. Non-coders: this is your primary tool. You don't need to write code — you need to fill in templates accurately.",
+      content: "These are ready-to-paste prompts for Copilot Chat. Replace the [BRACKETED] placeholders with your specific details. Each template is designed to produce a complete, reviewable test. The important skill is not typing from scratch. It is giving the model accurate context, clear rules, and explicit expected outcomes.",
       callout: "Tip: Save your most-used customized prompts in a personal snippets file. Build a library of templates for your project's specific pages."
     },
     {
@@ -159,7 +158,7 @@ REFINEMENTS:
 4. Remove any page.waitForTimeout() calls
 5. Add comments explaining each test section (Arrange / Act / Assert)
 6. Extract repeated interactions into a Page Object if 3+ tests share the page`,
-      context: "Non-coders: This is your go-to after every recording session. Paste the raw code and this prompt into Copilot Chat to get a clean, reviewable test."
+      context: "Use this after every recording session. Paste the raw code and this prompt into Copilot Chat to get a cleaner, reviewable test."
     },
     {
       label: "🐛 Debug a Failing Test",
@@ -177,7 +176,7 @@ QUESTIONS TO ANSWER:
 3. If test bug: what's the fix?
 4. If app bug: what should I report to the developer?
 5. Are there any flaky patterns in this test that should be addressed?`,
-      context: "Non-coders: Use this when a test fails and you're not sure why. The structured questions help Copilot give you an actionable diagnosis."
+      context: "Use this when a test fails and you're not sure why. The structured questions help Copilot give you an actionable diagnosis."
     }
   ],
   exercise: {

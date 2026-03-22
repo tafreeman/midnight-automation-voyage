@@ -27,7 +27,12 @@ const themeOptions: ThemeName[] = [
   "arctic-steel",
   "linear",
   "gamma-dark",
+  "zine-pop",
+  "handbook-notes",
 ];
+
+const LIGHT_THEMES: ThemeName[] = ["arctic-steel", "linear", "zine-pop", "handbook-notes"];
+const DARK_THEMES: ThemeName[] = ["signal-cobalt", "gamma-dark"];
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
@@ -46,13 +51,11 @@ function loadThemePreference(): ThemePreference {
 }
 
 export function getModuleTheme(moduleNumber: number): ThemeName {
-  const darkThemes: ThemeName[] = ["signal-cobalt", "gamma-dark"];
-  const lightThemes: ThemeName[] = ["arctic-steel", "linear"];
   const groupIndex = Math.floor((moduleNumber - 1) / 3);
   if (groupIndex % 2 === 0) {
-    return darkThemes[Math.floor(groupIndex / 2) % darkThemes.length];
+    return DARK_THEMES[Math.floor(groupIndex / 2) % DARK_THEMES.length];
   }
-  return lightThemes[Math.floor(groupIndex / 2) % lightThemes.length];
+  return LIGHT_THEMES[Math.floor(groupIndex / 2) % LIGHT_THEMES.length];
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

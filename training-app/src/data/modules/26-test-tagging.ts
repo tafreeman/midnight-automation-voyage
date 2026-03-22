@@ -5,7 +5,6 @@ export const lesson: Lesson = {
   title: "Test Tagging & Pipeline Gating",
   subtitle: "Smoke, regression, and selective execution strategies for CI pipelines",
   icon: "🏷️",
-  audience: "All Roles",
   sections: [
     {
       heading: "Why Tagging Matters",
@@ -148,7 +147,7 @@ jobs:
     {
       heading: "Tag Governance",
       content:
-        "Tags are only useful if they're consistent. Establish governance rules so the team uses them correctly.",
+        "Tags are only useful if they're consistent. Establish governance rules so they are applied correctly.",
       table: {
         headers: ["Rule", "Why"],
         rows: [
