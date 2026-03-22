@@ -138,6 +138,7 @@ docker run --rm -v $(pwd):/work -w /work \\
       difficulty: 'beginner',
       title: 'Assert Orders Table Basics',
       description: 'Write a test that verifies the Orders table loads correctly with the expected data. Check row count, column headers, and basic data presence.',
+      narration: "Start by asserting that getByTestId('data-table') is visible — you check this first because it confirms the page fully rendered and there's something to inspect. Then assert toHaveCount(5) on getByTestId('table-row') to confirm the first page of results loaded; a count of zero would tell you data fetching is broken even if the table shell is present. For the final check, grab .first() from the table-row locator and then chain getByTestId('cell-id'), getByTestId('cell-customer'), and getByTestId('cell-amount') off that single-row reference — asserting each is visible confirms the row has data in all expected columns, not just that a row element exists.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('orders table displays data', async ({ page }) => {
@@ -173,6 +174,7 @@ test('orders table displays data', async ({ page }) => {
       difficulty: 'intermediate',
       title: 'Sort, Filter, and Paginate the Orders Table',
       description: 'Write tests that exercise the table\'s interactive features: column sorting, status filtering, and pagination.',
+      narration: "Each of these three tests follows the same pattern: trigger an interaction, then assert that the data changed in the expected way — not just that no error appeared. For sorting, click getByTestId('col-amount'), then read the textContent of cell-amount from the first and second rows and compare them numerically after stripping the dollar sign; you're verifying the sort actually reordered data, not just that a sort indicator appeared. For filtering, capture the row count before selecting 'Shipped' from getByTestId('status-filter'), then confirm the count decreased and that every visible cell-status contains exactly 'Shipped' — looping through statusCells.all() is the only way to catch a filter that shows some wrong rows. For pagination, snapshot the first row's cell-id before and after clicking getByTestId('page-2'), then assert they differ; that ID comparison proves a new dataset loaded, which is more reliable than asserting page number text.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Orders Table Interactions', () => {
@@ -247,6 +249,7 @@ test.describe('Orders Table Interactions', () => {
       difficulty: 'advanced',
       title: 'Visual Regression with Dynamic Masking',
       description: 'Write a visual regression test for the Orders table. Mask the date column and status badges (which change between test runs) to prevent false failures.',
+      narration: "You're taking a screenshot of the data-table element specifically rather than the full page, because the table is what you care about and a full-page shot would fail any time the page header or footer changed. Pass 'orders-table.png' as the first argument to toHaveScreenshot() so the baseline file has a meaningful name you can identify later in the snapshots directory. In the options object, set mask to an array containing getByTestId('cell-date') and getByTestId('cell-status') — dates change every day and status values vary per seed, so without masking those cells you'd get false failures on every run that has different data. Finally, set maxDiffPixelRatio: 0.01 to allow a 1% pixel variance, which absorbs minor font-rendering differences between environments without hiding a real layout regression.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('orders table visual snapshot', async ({ page }) => {

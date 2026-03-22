@@ -35,6 +35,11 @@ import { lesson as parallelSharding } from "./modules/24-parallel-sharding";
 import { lesson as multiBrowserProjects } from "./modules/25-multi-browser-projects";
 import { lesson as testTagging } from "./modules/26-test-tagging";
 import { lesson as githubActions } from "./modules/27-github-actions";
+import { lesson as networkMocking } from "./modules/28-network-mocking";
+import { lesson as playwrightMcpAiAgents } from "./modules/29-playwright-mcp-ai-agents";
+import { lesson as componentTesting } from "./modules/30-component-testing";
+import { lesson as performanceTesting } from "./modules/31-performance-testing";
+import { lesson as customReporters } from "./modules/32-custom-reporters";
 
 import type { Lesson } from "./types";
 
@@ -66,4 +71,9 @@ export const lessons: Lesson[] = [
   multiBrowserProjects,
   testTagging,
   githubActions,
+  networkMocking,
+  playwrightMcpAiAgents,
+  componentTesting,
+  performanceTesting,
+  customReporters,
 ];

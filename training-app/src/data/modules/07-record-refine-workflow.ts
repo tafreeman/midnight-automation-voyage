@@ -78,6 +78,7 @@ npx playwright show-report`,
       difficulty: 'beginner',
       title: 'Fix the Selectors in a Recorded Test',
       description: 'This raw codegen recording uses fragile CSS selectors. Replace each one with the correct data-testid selector. Don\'t change the test logic — just fix the selectors.',
+      narration: 'Start by scanning each locator call and asking yourself: "what is this actually targeting?" The CSS nth-child selectors here are position-dependent — if someone adds a field to the form, they break silently. You\'ll replace each one with getByTestId(), which ties the locator to an explicit attribute that can\'t drift. Notice that the test logic — filling, clicking, waiting for the URL — stays exactly the same; you\'re only changing how Playwright finds the elements, not what it does with them.',
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
@@ -108,6 +109,7 @@ test('test', async ({ page }) => {
       difficulty: 'intermediate',
       title: 'Write a Refinement Prompt',
       description: 'This is raw recorded code from Playwright codegen. Write a Copilot Chat prompt that would refine it into a production-quality test.',
+      narration: 'The key insight here is that Copilot can only act on what you tell it — vague prompts produce vague improvements. You\'ll craft a prompt that names the specific problems: the fragile CSS selectors (and what to replace them with), the missing test name, and the absent assertions. Notice that you should mention the actual data-testid values like email-input and login-button by name, because Copilot can\'t inspect the HTML itself. A well-structured prompt reads like a code review checklist — each item is a concrete, actionable instruction.',
       starterCode: `// Raw recorded test — needs refinement
 test('test', async ({ page }) => {
   await page.goto('http://localhost:5173/login');
@@ -144,6 +146,7 @@ test('test', async ({ page }) => {
       difficulty: 'advanced',
       title: 'Full Refinement: Recording to Production Test',
       description: 'Transform this raw codegen recording into a complete, production-quality test. Fix selectors, add a descriptive name, add assertions after every action, use baseURL, and structure with Arrange/Act/Assert.',
+      narration: 'Think of this as a full code review pass in one shot. Start with the test name — "test" tells no one anything, so rename it to describe the user scenario and expected outcome. Next, switch the hardcoded URL to a relative path like \'/login\' because baseURL in your config handles the host, making the test portable across environments. Add your first assertion right after goto() to confirm the login page actually loaded before you try to fill anything in — that assertion acts as an early-fail guard. Then wrap the form fill and submit in an Act section, and follow the redirect with Assert calls that verify both the URL and visible dashboard content, so you\'re proving the right page appeared, not just that navigation happened.',
       starterCode: `import { test, expect } from '@playwright/test';
 
 // Raw codegen output — transform this into a production-quality test

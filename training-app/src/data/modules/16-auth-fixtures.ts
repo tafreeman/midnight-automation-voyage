@@ -149,6 +149,7 @@ export default defineConfig({
       title: 'Test Different User Permissions',
       description:
         'Write two tests that verify role-based access. One test logs in as admin and checks admin features are enabled. The other logs in as a viewer and checks they are disabled.',
+      narration: "You'll write each test as a completely self-contained login-then-assert sequence — there's no shared state here, which is intentional. Start by navigating to '/login' and filling the email and password fields using getByTestId('email-input') and getByTestId('password-input'), then click the login button and wait for the URL to reach '/dashboard' before proceeding — that waitForURL call is your signal that the session is fully established. Navigate to '/admin' and then assert the invite submit button: toBeEnabled() for admin because they should have access, toBeDisabled() for the viewer because they shouldn't. The reason you assert the button state rather than just checking visibility is that a disabled button can still be visible, and you want to confirm the permission boundary, not just the page render.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('admin can access invite form', async ({ page }) => {
@@ -195,6 +196,7 @@ test('viewer cannot use invite form', async ({ page }) => {
       title: 'Convert Inline Login to Auth Fixture',
       description:
         'The starter code logs in via the UI before every test. Refactor it to use a storageState fixture so tests start already authenticated.',
+      narration: "The key insight here is that you're not removing the login — you're moving it out of the test and into a context setup that Playwright runs once. Create a fixtures.ts file and call base.extend(), overriding the built-in page fixture so that it opens a new browser context loaded with './auth/admin.json' via the storageState option — that JSON file is what makes the app believe the user is already logged in. Once the fixture provides the page, your test can jump straight to 'await page.goto('/admin')' with no login steps at all, which is exactly what makes this pattern worth the setup cost. Remember to call await ctx.close() in the fixture's teardown (after the use() call) so you don't leak browser contexts between tests.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('admin can see user table', async ({ page }) => {
@@ -242,6 +244,7 @@ test('admin can see user table', async ({ page }) => {
       title: 'Multi-Role Fixtures with Parameterized Tests',
       description:
         'Create three role-based page fixtures (adminPage, editorPage, viewerPage) and write a parameterized test that verifies the admin invite form is enabled/disabled based on role.',
+      narration: "Start by defining a RoleFixtures type that lists adminPage, editorPage, and viewerPage as Page properties — this gives you TypeScript's help when you later destructure fixtures in tests. Inside base.extend<RoleFixtures>(), each fixture follows the exact same shape: create a context with the matching storageState file, open a new page from it, yield it via use(), then close the context. The payoff comes in the tests themselves, where each one simply destructures the fixture it needs — ({ adminPage }) or ({ viewerPage }) — navigates to '/admin', and asserts toBeEnabled() or toBeDisabled() on admin-invite-submit. Notice that three separate storageState files mean you can run all three tests in parallel without any session collisions, which is exactly why per-role fixtures scale better than logging in inside each test.",
       starterCode: `import { test as base, expect } from '@playwright/test';
 
 // TODO: Create a custom test fixture that provides three pre-authenticated pages:

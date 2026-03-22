@@ -162,6 +162,8 @@ npx playwright show-trace test-results/login-test/trace.zip
       title: "Trace-Based Root Cause Analysis",
       description:
         "Given a failing test and trace analysis notes, identify the root cause and write the fix. The test clicks a save button and asserts a toast message, but fails intermittently.",
+      narration:
+        "Read the trace analysis notes carefully before touching any code — the timeline numbers tell the whole story. Notice that the assertion ran at T+1300ms but the text content didn't populate until T+1450ms, which means `toHaveText` fired during a 150ms window when the element existed but held empty text. That maps directly to the Timing → Race condition category from Module 19. Your fix adds `await expect(msg).toBeVisible({ timeout: 3000 })` before the text assertion because you want Playwright to confirm the element is present and stable before checking its content — and then `toHaveText` handles the remaining async delay through its own auto-retry loop. You're not guessing at a root cause here; you're reading the evidence the trace gave you and applying the right fix category.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 // This test fails ~30% of the time in CI
@@ -220,6 +222,8 @@ test('settings save shows confirmation', async ({ page }) => {
       difficulty: 'intermediate',
       title: 'Test Async Loading States on Activity Page',
       description: 'The Activity page has mock controls that simulate different loading states. Write tests that verify the loading spinner, error state, and empty state render correctly.',
+      narration:
+        "The key insight here is that these mock controls let you force specific states on demand, so your test pattern is always the same: click the mode button, click `activity-refresh` to trigger the new fetch, then assert the expected UI element. For the slow-loading test, you'll assert `activity-loading` is visible immediately after refresh — that checks the spinner — and then assert `activity-list` is visible with a generous `{ timeout: 10000 }` to wait out the simulated delay; you need both assertions because one without the other doesn't prove the loading state worked. For the error test, assert `activity-error` is visible AND that `activity-list` is not visible — the negative assertion matters because it proves the app cleared the previous data rather than showing both. The empty-state test is the simplest: just assert `activity-empty` is visible after switching modes.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Activity Page Loading States', () => {
@@ -300,6 +304,8 @@ test.describe('Activity Page Loading States', () => {
       difficulty: 'advanced',
       title: 'Test Activity Filters and Detail Panel',
       description: 'Write tests for the Activity page\'s filter buttons and detail panel. Verify that clicking a filter narrows results and clicking an activity row opens its detail view.',
+      narration:
+        "Start the filter test by capturing the unfiltered count using `page.locator('[data-testid^=\"activity-row-\"]').count()` — the `^=` attribute selector matches all rows regardless of their numeric suffix, which is more robust than trying to count by a fixed testid. After clicking the first filter button (scoped inside `activity-filters` to avoid ambiguity), assert that the new count is less than or equal to the original, then click the same button again to deselect and assert `toHaveCount(totalCount)` to confirm the full list restored. For the detail panel test, click the first row using the same `^=` selector, assert `activity-detail` is visible — this confirms the panel opened — then click `activity-detail-close` and assert the detail is no longer visible. The error-recovery test is worth doing because it proves your `beforeEach` state doesn't leak: switch to error, refresh, confirm the error state, then switch back and confirm the list reappears with rows.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Activity Filters and Detail', () => {

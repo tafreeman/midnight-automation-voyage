@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(find src/data/modules -name \"*.ts\" -exec wc -l {} +)",
+      "Bash(grep -r \"quiz\\\\|exercise\" src/data/modules/*.ts)",
+      "Bash(grep -l \"quiz:\" src/data/modules/*.ts)",
+      "Bash(grep -l \"exercise\" src/data/modules/*.ts)",
+      "Bash(grep -h \"lessons:\" src/data/modules/*.ts)",
+      "Bash(grep -E \"promptTemplates|practiceLink\" src/data/modules/*.ts)",
+      "Bash(grep -l \"promptTemplates:\" src/data/modules/*.ts)",
+      "Bash(grep -l \"practiceLink:\" src/data/modules/*.ts)",
+      "Bash(grep -E \"^\\\\s+quiz:\" src/data/modules/*.ts)"
+    ]
+  }
+}

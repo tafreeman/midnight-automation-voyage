@@ -84,6 +84,7 @@ getSubtotal, proceedToCheckout"`,
       difficulty: 'beginner',
       title: 'Use a Page Object in a Test',
       description: 'A ContactPage class has been provided for you. Write a test that uses the page object methods instead of raw selectors.',
+      narration: 'Before writing a single line of test code, spend a moment reading the ContactPage class — notice that fillForm() takes name, email, and message as parameters, and that successMessage is a getter, not a method call, so you\'ll reference it without parentheses. You\'ll instantiate the class with new ContactPage(page), passing in the page fixture, and then your test reads almost like plain English: goto, fillForm, selectSubject, submit, expect success. The message must be at least 20 characters because the form has validation — this is why you pass a realistically long string rather than just "hi", because a test that bypasses validation isn\'t testing the real user path.',
       starterCode: `import { test, expect, Page } from '@playwright/test';
 
 // This Page Object is provided — study its methods
@@ -169,6 +170,7 @@ test('should submit contact form successfully', async ({ page }) => {
       difficulty: 'intermediate',
       title: 'Extract a Contact Page Object',
       description: 'Refactor this inline test into the Page Object Model pattern. Move all selectors and actions into a ContactPage class.',
+      narration: 'The existing test works, but every getByTestId() call is exposed directly in the test — the moment a selector changes, you hunt through every test file to update it. You\'ll create a ContactPage class that takes Page in its constructor, then move each getByTestId() reference inside a meaningful method. Notice that fillForm() bundles three separate fills into one call with parameters — that grouping is intentional, because "fill the form" is a single user intent, not three separate ones. Use a getter for successMessage rather than a method because you only read it, never interact with it, and a getter makes the assertion line read naturally: expect(contact.successMessage).toBeVisible().',
       starterCode: `import { test, expect } from '@playwright/test';
 
 // TODO: Create a ContactPage class that encapsulates:
@@ -235,6 +237,7 @@ test('should submit contact form', async ({ page }) => {
       difficulty: 'advanced',
       title: 'Build an Orders Page Object with Sort and Filter',
       description: 'Create a full-featured OrdersPage class for the data table. Include methods for sorting, filtering, pagination, and row data extraction.',
+      narration: 'Start by designing the method signatures before writing any implementation — sortBy() takes a typed union so TypeScript catches typos at compile time, not at runtime. The sortBy() method clicks getByTestId(`col-${column}`), which follows the pattern col-amount, col-date, and so on — you need to click it twice for descending order, which is why the sort test calls it twice in sequence. The getRowData() method is the most interesting: it scopes every cell lookup inside a specific row using .nth(index), so cell-amount inside row 2 won\'t accidentally match cell-amount in row 5. In the sort verification test, you\'ll parse the amount strings by stripping the dollar sign before comparing, because string comparison of "$100" vs "$20" gives you the wrong answer.',
       starterCode: `import { test, expect, Page, Locator } from '@playwright/test';
 
 // TODO: Create an OrdersPage class with:

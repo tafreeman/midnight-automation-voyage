@@ -12,6 +12,7 @@ export interface CodeExercise {
   solutionCode: string;
   hints: string[];
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  narration?: string;
 }
 
 export interface PromptTemplate {

@@ -124,6 +124,8 @@ export default defineConfig({
       title: 'Spot the Flaky Line',
       description:
         'This test passes most of the time but fails randomly in CI. Read the test carefully and add a comment on the line that causes flakiness. Then explain WHY it flakes in the comment.',
+      narration:
+        "Start by reading each line and asking yourself: does this assertion wait and retry, or does it check exactly once right now? Notice that Line 5 uses the pattern `expect(await toast.textContent())` — the `await` resolves the value immediately and hands a plain string to `expect()`, so Playwright has no way to retry if the toast hasn't rendered yet. That's your flaky line. Line 6 is also suspect because the `not.toBeVisible()` assertion might race against the auto-dismiss timer — if the toast is already gone, that passes by accident rather than by design. When you write your comments, explain the mechanism: the toast appears after a 200ms delay, and a one-shot assertion can run inside that window before the text exists.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('save shows success toast', async ({ page }) => {
@@ -171,6 +173,8 @@ test('save shows success toast', async ({ page }) => {
       title: 'Fix the Flaky Toast Test',
       description:
         'The starter code has a test that sometimes fails because it asserts toast content after the auto-dismiss timer fires. Fix it to be deterministic by properly waiting for the toast to appear before asserting.',
+      narration:
+        "You have two timing problems to solve: the toast content arrives after a 200ms async delay, and the toast auto-dismisses after 5 seconds — so a slow CI run can miss both windows. Start by replacing the non-retrying `expect(await toast.textContent())` call with `await expect(toast).toBeVisible({ timeout: 3000 })`, which tells Playwright to keep checking until the element is actually in the DOM. Once you've confirmed the element is present, chain `await expect(toast).toHaveText(...)` to verify the content — `toHaveText` auto-retries internally, so it handles the 200ms content delay without any extra waiting on your part. Notice that splitting visibility and text into two assertions also gives you clearer failure messages: if the first line fails, the toast never appeared; if the second fails, it appeared but with wrong content.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('save shows success toast', async ({ page }) => {
@@ -216,6 +220,8 @@ test('save shows success toast', async ({ page }) => {
       title: 'Fix a Race Condition in Product Search',
       description:
         'This product search test has a subtle race condition. The test clicks search but asserts results before the DOM has updated. Fix ALL the flaky patterns.',
+      narration:
+        "There are three distinct bugs here, and you should fix them in order of 'establish a sync point first'. After clicking the search button, the DOM is still showing the old results — calling `.count()` immediately reads whatever is currently rendered, which may still be the unfiltered list. Your first move is to wait for `result-count` to change from its original value using `await expect(page.getByTestId('result-count')).not.toContainText(...)` — this gives you a reliable signal that the filter has completed before you measure anything. Once that sync point exists, replace the raw `textContent()` call on the first card with `await expect(...).toContainText('Laptop')` so Playwright can retry if the card text hasn't updated yet. Finally, delete `waitForTimeout(1000)` entirely — it's there as a band-aid over the missing sync point, and once you have real assertions in place you don't need it.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('search and verify results', async ({ page }) => {

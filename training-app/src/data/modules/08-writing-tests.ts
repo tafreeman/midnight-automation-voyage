@@ -84,6 +84,7 @@ await expect(results.first()).toContainText('Widget Pro');
       difficulty: 'beginner',
       title: 'Assert the Products Page Loads',
       description: 'Write your first Playwright test. Navigate to the Products page and verify key elements are visible.',
+      narration: 'You\'ll start with page.goto(\'/products\') — that\'s your Arrange step, putting the browser in the right starting state. Check the heading first with getByRole(\'heading\', { name: \'Products\' }), because that confirms you\'re on the products page and not a redirect or error screen. Then assert the search input is visible using getByTestId(\'search-input\'), which matters because a broken import could render the page shell without the actual content. Finally, use getByTestId(\'result-card\').first() to verify at least one product loaded — notice you don\'t need to count them all, just confirm the list isn\'t empty.',
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('products page displays correctly', async ({ page }) => {
@@ -111,6 +112,7 @@ test('products page displays correctly', async ({ page }) => {
       difficulty: 'intermediate',
       title: 'Search and Filter Products',
       description: 'Test the search and category filter functionality. Verify that results update correctly when searching and filtering.',
+      narration: 'For the search test, you\'ll fill getByTestId(\'search-input\') and click getByTestId(\'search-button\'), then assert against getByTestId(\'result-count\') — that element gives you a reliable, semantic signal that the filter worked, rather than just guessing at the card count. In the filter test, capture the unfiltered count with .count() before you do anything, so you have a baseline to compare against after calling selectOption(\'Electronics\') on the category dropdown; that before/after comparison is what makes the assertion meaningful. When clearing the filter, pass an empty string to selectOption(\'\') to reset it, then assert the count returns to your baseline.',
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Product Search & Filter', () => {
@@ -165,6 +167,7 @@ test.describe('Product Search & Filter', () => {
       difficulty: 'advanced',
       title: 'Negative Testing and Edge Cases',
       description: 'Write tests for scenarios where things go wrong or hit boundaries. Test empty results, combined filters, and verify the UI handles edge cases gracefully.',
+      narration: 'Start the empty-state test by searching for something deliberately nonsensical like "xyznonexistent" — the point is to guarantee zero matches so you can assert getByTestId(\'no-results\') is visible and toHaveCount(0) on result cards, proving the UI handles the empty case rather than just going silent. For combined filters, the important technique is sequencing: apply the category filter first, snapshot that count, then layer on the search term and verify the result is less than or equal to the category-only count. The case-insensitivity test works by running two separate searches — lowercase then uppercase — and comparing the counts with toBe(), which means both searches must not only match each other but also return something greater than zero, proving the feature works rather than just equally failing.',
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Product Page Edge Cases', () => {

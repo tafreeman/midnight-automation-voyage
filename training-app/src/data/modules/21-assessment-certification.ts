@@ -125,6 +125,8 @@ export const lesson: Lesson = {
       title: "Write a Capstone Test Plan",
       description:
         "Given the Settings page as a feature, outline a capstone test suite plan that covers auth setup, functional tests, accessibility scanning, and a HITL review checklist.",
+      narration:
+        "Start with auth setup because every other section depends on being in an authenticated state — you'll reference the `storageState` fixture from Module 16 here rather than writing UI login steps in each test. From there, list your functional tests tab by tab: the Profile tab needs at least a happy-path save and a validation error, and the Security tab needs both the password-mismatch case and a successful change. For the axe-core section, note that you'll scan each tab panel separately because axe only sees what's currently rendered — scanning once on load would miss hidden panels. Close out the HITL checklist by working through Module 13's criteria one by one, and make sure you call out the three known intentional a11y violations by name so a reviewer knows they're documented rather than overlooked.",
       starterCode: `// Capstone Test Plan: Settings Page
 // Feature URL: http://localhost:5173/settings
 
@@ -181,6 +183,8 @@ export const lesson: Lesson = {
       difficulty: 'intermediate',
       title: 'E2E Checkout Happy Path',
       description: 'Write an end-to-end test that completes the full checkout flow: login → shipping → payment → review → confirmation. Assert the order number appears on the confirmation page.',
+      narration:
+        "This is a multi-step flow, so your strategy is to confirm each step loaded before filling the next one — that way a failure tells you exactly which stage broke. After clicking the shipping Next button, assert that `card-input` is visible before touching payment fields; this confirms the navigation completed rather than assuming it did. On the payment step, note that `state-select` uses `selectOption('IL')` rather than `fill()` because it's a `<select>` element — using the wrong method here will silently do nothing. When you reach the review page, assert `order-summary` is visible to confirm the page rendered before you click `place-order-button`, and then assert both `confirmation-message` and `confirmation-number` at the end because the rubric checks for meaningful assertions, not just `toBeVisible()` on a container.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test('complete checkout flow', async ({ page }) => {
@@ -247,6 +251,8 @@ test('complete checkout flow', async ({ page }) => {
       difficulty: 'advanced',
       title: 'Checkout Validation and Edge Cases',
       description: 'Write tests that verify form validation across the checkout flow. Test empty fields, invalid formats, and navigation between steps.',
+      narration:
+        "You'll structure these as three separate focused tests inside a `describe` block, with `beforeEach` handling login so none of the tests repeat that boilerplate. For the empty-field test, navigate straight to `/checkout/shipping` and click `next-button` without filling anything — then assert each error testid individually (`address-error`, `city-error`, `zip-error`) rather than just checking that one appeared, because the rubric rewards coverage breadth. For the card-format test, you need to get through the shipping step first with valid data so you reach the payment page legitimately, then enter a short card number like `'123'` and assert `card-error` is visible. For the back-navigation test, complete both steps with valid data, assert `order-summary` is visible on the review page to confirm you're there, then click `back-button` and assert `card-input` reappears — that confirms the navigation worked without needing to check whether data was preserved.",
       starterCode: `import { test, expect } from '@playwright/test';
 
 test.describe('Checkout Validation', () => {

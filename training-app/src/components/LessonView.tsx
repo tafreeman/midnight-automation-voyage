@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import type { Lesson, CodeExercise } from "../data";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -206,9 +206,100 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   );
 }
 
-function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"]> }) {
+// Rank voices: neural/online > named quality voices > any English voice
+function pickBestVoice(): SpeechSynthesisVoice | undefined {
+  const voices = speechSynthesis.getVoices();
+  const english = voices.filter(v => v.lang.startsWith("en"));
+  if (english.length === 0) return undefined;
+
+  // Tier 1: Neural / Online voices (Edge, Chrome)
+  const neural = english.find(v =>
+    v.name.includes("Online") || v.name.includes("Neural") || v.name.includes("Natural")
+  );
+  if (neural) return neural;
+
+  // Tier 2: Known high-quality voices by platform
+  const quality = [
+    "Microsoft Jenny", "Microsoft Aria", "Microsoft Guy",  // Windows 11
+    "Google US English",                                     // Chrome
+    "Samantha", "Karen", "Daniel",                          // macOS
+  ];
+  const known = english.find(v => quality.some(q => v.name.includes(q)));
+  if (known) return known;
+
+  // Tier 3: Any English voice, prefer non-compact
+  return english.find(v => !v.name.includes("Compact")) || english[0];
+}
+
+function useNarrationAudio(exerciseKey: string) {
+  const [available, setAvailable] = useState(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  React.useEffect(() => {
+    const path = `/audio/narrations/${exerciseKey}.mp3`;
+    const audio = new Audio(path);
+    audio.addEventListener("canplaythrough", () => {
+      audioRef.current = audio;
+      setAvailable(true);
+    });
+    audio.addEventListener("error", () => setAvailable(false));
+    audio.addEventListener("ended", () => setPlaying(false));
+    audio.load();
+    return () => { audio.pause(); audio.src = ""; };
+  }, [exerciseKey]);
+
+  const toggle = React.useCallback(() => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setPlaying(false);
+    } else {
+      audioRef.current.play();
+      setPlaying(true);
+    }
+  }, [playing]);
+
+  return { available, playing, toggle };
+}
+
+function useNarrationSpeech(text: string) {
+  const [speaking, setSpeaking] = useState(false);
+
+  const toggle = React.useCallback(() => {
+    if (speaking) {
+      speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1;
+    const voice = pickBestVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    speechSynthesis.speak(utterance);
+  }, [text, speaking]);
+
+  React.useEffect(() => {
+    return () => { speechSynthesis.cancel(); };
+  }, []);
+
+  return { speaking, toggle };
+}
+
+function ExerciseSection({ exercise, exerciseKey }: { exercise: NonNullable<Lesson["exercise"]>; exerciseKey?: string }) {
   const [showSolution, setShowSolution] = useState(false);
   const [showHints, setShowHints] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const audioKey = exerciseKey || exercise.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const narrationAudio = useNarrationAudio(audioKey);
+  const narrationSpeech = useNarrationSpeech(exercise.narration || "");
+  const isPlaying = narrationAudio.playing || narrationSpeech.speaking;
+  const handleListen = narrationAudio.available ? narrationAudio.toggle : narrationSpeech.toggle;
 
   return (
     <div className="mt-8 border border-zinc-800 rounded-lg overflow-hidden">
@@ -219,6 +310,38 @@ function ExerciseSection({ exercise }: { exercise: NonNullable<Lesson["exercise"
       <div className="p-5">
         <h4 className="text-sm font-semibold text-zinc-200 mb-1">{exercise.title}</h4>
         <p className="text-xs text-zinc-400 mb-4 leading-relaxed">{exercise.description}</p>
+
+        {exercise.narration && (
+          <div className="mb-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowWalkthrough(!showWalkthrough)}
+                className="text-xs text-sky-400/80 hover:text-sky-300 transition-colors flex items-center gap-1.5"
+              >
+                <span>{showWalkthrough ? "▾" : "▸"}</span>
+                <span className="font-medium">Walkthrough Guide</span>
+              </button>
+              <button
+                onClick={handleListen}
+                className={`text-xs flex items-center gap-1 transition-colors ${
+                  isPlaying
+                    ? "text-sky-300 animate-pulse"
+                    : "text-zinc-500 hover:text-sky-400"
+                }`}
+                title={isPlaying ? "Stop narration" : "Listen to walkthrough"}
+              >
+                <span>{isPlaying ? "◼" : "▶"}</span>
+                <span>{isPlaying ? "Stop" : "Listen"}</span>
+                {narrationAudio.available && <span className="text-[9px] text-sky-500/60 ml-0.5">HD</span>}
+              </button>
+            </div>
+            {showWalkthrough && (
+              <div className="mt-2 p-3 rounded-md bg-sky-950/30 border border-sky-800/30">
+                <p className="text-xs text-sky-200/80 leading-relaxed whitespace-pre-line">{exercise.narration}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         <DiffCodeBlock
           starter={exercise.starterCode}
@@ -329,7 +452,7 @@ function ExercisesSection({ exercises }: { exercises: CodeExercise[] }) {
                   <DifficultyBadge difficulty={exercise.difficulty} />
                 </div>
               )}
-              <ExerciseSection exercise={exercise} />
+              <ExerciseSection exercise={exercise} exerciseKey={`${exercise.difficulty || "ex"}-${i}`} />
             </div>
           ))}
         </div>
