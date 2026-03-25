@@ -114,9 +114,9 @@ Do not auto-fix failures without explaining the cause."`,
     },
   ],
   practiceLink: {
-    url: "http://localhost:5173/assistant",
-    label: "Use the Assistant Sandbox",
+    url: "http://localhost:5173/dashboard",
+    label: "Use the Dashboard",
     description:
-      "Practice bounded assertions, prompt provenance, and reviewable AI-assisted workflows on a simulated AI surface.",
+      "Practice bounded assertions, prompt provenance, and reviewable AI-assisted workflows on the dashboard.",
   },
 };

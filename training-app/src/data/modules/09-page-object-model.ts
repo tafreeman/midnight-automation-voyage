@@ -77,6 +77,30 @@ getSubtotal, proceedToCheckout"`,
     ],
     correctIndex: 1,
     explanation: "POM encapsulates page selectors and actions in a single class. When the UI changes (e.g., a button's data-testid is renamed), you update the page object once rather than hunting through dozens of test files.",
+    additionalQuestions: [
+      {
+        question: "Where should locators be defined in a Page Object class?",
+        options: [
+          "Inside each test that uses the page object",
+          "In the constructor or as class properties, defined once and reused by all methods",
+          "In a separate JSON configuration file",
+          "In the playwright.config.ts file as global selectors",
+        ],
+        correctIndex: 1,
+        explanation: "Locators should be defined in the constructor or as readonly class properties so they are declared once and reused across all methods. This ensures a single source of truth — when a selector changes, you update it in one place. Defining locators inside tests defeats the purpose of the POM pattern.",
+      },
+      {
+        question: "When should you use a getter (e.g., get successMessage()) instead of a method in a page object?",
+        options: [
+          "For elements that require user interaction like buttons and inputs",
+          "For elements you only read or assert against, not interact with",
+          "Getters should never be used in page objects",
+          "Only when the element is conditionally rendered",
+        ],
+        correctIndex: 1,
+        explanation: "Getters are ideal for elements you only observe — success messages, error banners, headings — because they make assertion lines read naturally: expect(page.successMessage).toBeVisible(). Methods are better for actions that involve user interaction like filling forms or clicking buttons.",
+      },
+    ],
   },
   exercises: [
     {

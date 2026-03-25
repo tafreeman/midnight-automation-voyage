@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { CheckoutProvider } from "./CheckoutContext";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ToastProvider } from "./ToastContext";
+import NarratorBridge from "./NarratorBridge";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProductsPage from "./pages/ProductsPage";
@@ -56,10 +57,11 @@ function Nav() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <ToastProvider>
           <CheckoutProvider>
+            <NarratorBridge />
             <Nav />
             <Routes>
               <Route path="/" element={<LoginPage />} />
@@ -79,6 +81,6 @@ export default function App() {
           </CheckoutProvider>
         </ToastProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

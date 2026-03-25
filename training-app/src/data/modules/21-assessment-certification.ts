@@ -117,6 +117,30 @@ export const lesson: Lesson = {
     correctIndex: 1,
     explanation:
       "Bronze proves knowledge (completing modules, passing quizzes). Silver proves competency (completing advanced modules on auth, a11y, flaky tests, and data management, PLUS passing a hands-on capstone exercise). Gold proves production-readiness (contributing real tests to a project). The key differentiator is the capstone — it requires applying multiple skills together.",
+    additionalQuestions: [
+      {
+        question: "What is the minimum passing score for the capstone exercise, and how is it evaluated?",
+        options: [
+          "80% on a multiple-choice exam with 50 questions",
+          "Score 3+ on each of five rubric criteria and 18+ total out of 25",
+          "Pass all automated tests in the capstone repository",
+          "Receive approval from two peer reviewers with no further criteria",
+        ],
+        correctIndex: 1,
+        explanation: "The capstone is evaluated against five criteria (Assertion Quality, Selector Strategy, Data Independence, HITL Compliance, Coverage Breadth), each scored 1-5. A passing score requires 3 or higher on every criterion AND a total of 18 or more out of 25. This ensures competency across all dimensions, not just strength in one area.",
+      },
+      {
+        question: "Why does the certification program require peer review calibration before live capstone reviews begin?",
+        options: [
+          "To ensure enough reviewers are available for the volume of submissions",
+          "To reduce scoring variance by having reviewers independently score the same reference submission and discuss discrepancies",
+          "To train reviewers on using the automated grading tool",
+          "To give reviewers practice writing feedback comments",
+        ],
+        correctIndex: 1,
+        explanation: "Without calibration, different reviewers can score the same submission with up to 40% variance. Calibration works by having all reviewers independently score a reference submission, then comparing and discussing their scores. This alignment process reduces variance to under 10%, ensuring fair and consistent evaluation across all candidates.",
+      },
+    ],
   },
   exercises: [
     {

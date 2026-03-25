@@ -112,9 +112,9 @@ test('tabs support click and keyboard navigation', async ({ mount }) => {
     },
   ],
   practiceLink: {
-    url: "http://localhost:5173/ui-lab",
-    label: "Explore the UI Pattern Lab",
+    url: "http://localhost:5173/products",
+    label: "Explore the Products Page",
     description:
-      "Use the isolated UI patterns page to practice tab, accordion, combobox, and drawer behaviors that fit well in component tests.",
+      "Use the products page to practice testing interactive UI components like filters, cards, and list behaviors that fit well in component tests.",
   },
 };

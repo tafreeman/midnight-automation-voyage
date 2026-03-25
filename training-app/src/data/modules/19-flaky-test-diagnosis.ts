@@ -116,6 +116,30 @@ export default defineConfig({
     correctIndex: 2,
     explanation:
       "Retries are appropriate only for tests that depend on genuinely variable external factors — network latency, container startup time, third-party service availability. For selector issues, fix the selector. For timing issues like toast auto-dismiss, fix the assertion pattern. Retries should never be a substitute for proper diagnosis.",
+    additionalQuestions: [
+      {
+        question: "What is the difference between expect(await locator.textContent()).toBe('text') and await expect(locator).toHaveText('text')?",
+        options: [
+          "They are functionally identical — just different syntax",
+          "The first checks once immediately and fails if the text is not present; the second auto-retries until timeout",
+          "The first is faster because it skips the retry loop",
+          "The second only works with toHaveText, not with other matchers",
+        ],
+        correctIndex: 1,
+        explanation: "expect(await locator.textContent()) resolves the text content once, right now, and passes a plain string to expect(). If the element has not rendered yet or its text has not populated, the assertion fails immediately. await expect(locator).toHaveText() is an auto-retrying assertion — Playwright keeps checking until the text matches or the timeout expires. The auto-retrying form eliminates timing-based flakiness.",
+      },
+      {
+        question: "After fixing a flaky test, what should you do before removing the @flaky tag and restoring it to the main suite?",
+        options: [
+          "Run the test once to confirm it passes",
+          "Run the test 10 times consecutively to confirm stability",
+          "Add test.retries(2) as a safety net",
+          "Wait 30 days to see if it flakes again in CI",
+        ],
+        correctIndex: 1,
+        explanation: "Running a fixed test once only proves it can pass — it does not prove it is stable. The quarantine protocol requires running the test 10 times consecutively to confirm stability before restoring it. This catches fixes that only reduce flake frequency rather than eliminating the root cause. If any of the 10 runs fail, the fix is incomplete.",
+      },
+    ],
   },
   exercises: [
     {

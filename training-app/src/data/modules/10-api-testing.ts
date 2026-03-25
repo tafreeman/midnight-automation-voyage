@@ -66,6 +66,30 @@ await expect(page.getByTestId('error-banner'))
     ],
     correctIndex: 1,
     explanation: "Playwright's API testing uses request fixtures to call endpoints directly — no browser, no DOM, no flaky selectors. This makes API tests significantly faster and more reliable for validating backend behavior, data contracts, and status codes.",
+    additionalQuestions: [
+      {
+        question: "What does page.route() allow you to do in a Playwright test?",
+        options: [
+          "Navigate to a specific page URL",
+          "Intercept network requests and return mock responses to test UI behavior under controlled conditions",
+          "Set up URL-based routing for a single-page application",
+          "Record all network traffic for later replay",
+        ],
+        correctIndex: 1,
+        explanation: "page.route() intercepts network requests matching a URL pattern and lets you fulfill them with custom responses. This is essential for testing how the UI handles error states (500 responses), empty data, slow responses, and other edge cases without needing the actual backend to produce those conditions.",
+      },
+      {
+        question: "When testing that a POST endpoint requires authentication, what status code should the unauthenticated response return?",
+        options: [
+          "200 OK",
+          "403 Forbidden",
+          "401 Unauthorized",
+          "500 Internal Server Error",
+        ],
+        correctIndex: 2,
+        explanation: "A 401 Unauthorized status code indicates that the request lacks valid authentication credentials. While 403 Forbidden means the server understood the request but refuses to authorize it (the user is authenticated but lacks permission), 401 specifically means authentication is required and was not provided. Testing for the correct status code ensures the API enforces auth properly.",
+      },
+    ],
   },
   exercise: {
     title: "Write an API Assertion",

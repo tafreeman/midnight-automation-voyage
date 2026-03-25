@@ -68,6 +68,52 @@ test('shows validation on empty submit', async ({ page }) => {
     label: "Write CARD prompts against the Products page",
     description: "Practice writing CARD-formatted prompts for the search, filter, and product display features.",
   },
+  narrationScript: {
+    intro: "Before you write a single line of test code, you need to answer two questions. First: what should I automate? And second: how do I tell Copilot exactly what I want? Those two questions are the entire focus of this lesson. We are going to learn a framework called CARD that turns your domain knowledge — all that stuff you already know about how the app should behave — into prompts that produce real, reviewable Playwright tests. And just as importantly, we are going to talk about what not to automate, because not every test case deserves a script. Getting this decision right early saves your team hundreds of hours of maintenance down the road.",
+    steps: [
+      {
+        text: "In the previous section we covered what to automate and what to leave manual. Now let's put that decision into action with a structured way to tell Copilot exactly what you want.",
+        duration: 10
+      },
+      {
+        text: "Here is a quick decision filter. When you look at a test case, ask four questions in order. Will this test run more than three times? Can the expected result be checked by code rather than human eyes? Is the feature stable enough that the test will not break next sprint? And can the test data be set up programmatically? If any answer is no, lean toward keeping it manual. Smoke tests, regression suites, data-driven form checks, cross-browser validations — those are automation gold. Exploratory testing, visual design reviews, features still in active redesign — those stay with you, the human.",
+        duration: 40
+      },
+      {
+        text: "Here is the formula. C-A-R-D. Context — what page or component are we working with? Action — what does the user do, step by step? Rules — what are the business requirements and validation logic? And Deliverable — what test data, edge cases, and boundary conditions should the test cover? Think of CARD as a structured brief. Your product knowledge becomes the spec; Copilot translates it into working code.",
+        duration: 35
+      },
+      {
+        text: "Let me show you what this looks like in practice. I have got the login page open in our practice app right now. Let's build a CARD prompt for it together.",
+        navigateTo: "/login",
+        highlight: "email-input",
+        duration: 10
+      },
+      {
+        text: "Here is our Context: we have a React login page with an email field and a password field, both using data-testid attributes. That is the setup. For Action, we want to test: enter a wrong password, see an error message, then retry with the correct password and land on the dashboard. Rules: the app should show an error on invalid credentials, and after five failed attempts it locks the account. Deliverable data: testuser@example.com for the email, badpass as the wrong password, and Passw0rd-exclamation-mark as the correct one. Now you paste that into Copilot Chat, add the instruction 'generate a Playwright test for this flow using data-testid selectors,' and Copilot has everything it needs to write a solid first draft.",
+        navigateTo: "/login",
+        highlight: "email-input",
+        duration: 45
+      },
+      {
+        text: "The reason CARD works so well is that it maps directly to how your team already writes acceptance criteria on tickets. If your story says 'Given a user on the login page, when they enter invalid credentials, then they see an error' — that is Context plus Action plus Rules, right there. CARD is valuable regardless of your experience level because it forces specificity. Vague prompts produce vague tests. A well-structured CARD prompt produces code you can review and trust.",
+        duration: 30
+      },
+      {
+        text: "Let's talk about what happens inside the editor. Beyond Chat, Copilot also responds to inline comments. Write a descriptive comment above an empty test block — mention the selectors, mention the expected text — and Copilot autocompletes the code. The more specific your comment, the better the output. Always include the selector strategy, like data-testid, and the exact expected text. Those act as constraints that steer Copilot away from guessing.",
+        duration: 25
+      },
+      {
+        text: "One critical warning before we move on. Copilot will generate syntactically valid assertions that test the wrong thing. It does not know your business rules. It sees the page structure and guesses. So always review: is this assertion verifying what the acceptance criteria actually requires? Or just what the page happens to show right now? Never ask Copilot 'what should this test assert' — tell it exactly what to assert, drawn from your specifications. That human-in-the-loop review is what separates a useful test suite from a pile of green-checkmark theater.",
+        duration: 30
+      },
+      {
+        text: "One more practical tip: keep a prompt library. Every time you write a CARD prompt that produces a good test, save it as a template. Over a few sprints you will build a collection of reusable prompts for login flows, form validation, navigation, data tables — each one tuned to your app's selectors and business rules. That library becomes a team asset that accelerates everyone's test authoring.",
+        duration: 25
+      }
+    ],
+    outro: "So that is your two-part foundation. First, use the decision filter to pick the right tests to automate — high frequency, code-verifiable results, stable features. Second, use CARD to turn your product knowledge into structured prompts that produce solid test drafts. Next up, we are going to take these ideas off the whiteboard and into the real thing — recording your very first Playwright test with Codegen."
+  },
   exercise: {
     title: "Build a CARD Prompt",
     description: "Complete the CARD-format prompt template below. Fill in each section (Context, Action, Result, Details) to generate a Playwright test for a login form.",

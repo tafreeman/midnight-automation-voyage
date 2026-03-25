@@ -1,218 +1,289 @@
-import type { Lesson } from "../types";
+import type { Lesson } from '../types';
 
 export const lesson: Lesson = {
-  id: 4,
-  title: "Record → Refine Workflow",
-  subtitle: "The fastest path from zero to production test",
-  icon: "🎬",
+  id: 9,
+  title: 'Record Your First Test',
+  subtitle: 'Use Playwright\'s recorder to generate a working test draft, then understand what it gets right and wrong.',
+  icon: '🔴',
   sections: [
     {
-      heading: "Why Record-First?",
-      content: "Recording is the recommended onramp for anyone learning a new flow. You interact with the app normally, Playwright writes the first draft, and Copilot helps refine that draft into something maintainable. You never need to start from a blank file just to contribute coverage.",
-      callout: "Record, refine, review, merge. That loop keeps the work focused on behavior and evidence instead of gatekeeping who is 'allowed' to author tests."
+      heading: 'Why Record First?',
+      content: `Writing a test from a blank file is intimidating. You need the right imports, the test structure, the correct selectors, the proper await calls — and you need all of it before the test does anything useful. Recording skips all of that.
+
+Playwright's recorder watches you interact with your application and writes the test code as you go. Click a button, and it generates \`await page.getByTestId('login-button').click()\`. Fill a form field, and it generates the \`fill()\` call with the value you typed. Navigate to a page, and it writes \`page.goto()\`.
+
+The result is a working first draft in minutes instead of hours. It runs. It doesn't crash. It follows the exact flow you walked through.
+
+But — and this is important — a recording is a first draft, not a finished product. It captures what you did, not what you're testing. It has no assertions (it doesn't know what "correct" looks like). It often picks fragile selectors that break when the UI changes. The next lesson covers how to refine recordings into production-quality tests. This lesson focuses on getting that first draft.`,
+      tip: 'Think of the recorder like a note-taker in a meeting. It captures what happened accurately, but it doesn\'t know which parts matter. That\'s your job in the refine step.',
     },
     {
-      heading: "Step 1: Launch the Recorder",
-      content: "Use either the terminal command or the VS Code GUI button. The recorder opens a browser window where every click, type, and navigation is captured as test code in real time.",
-      code: `# Terminal approach
-npx playwright codegen http://localhost:3000
+      heading: 'Launch the Recorder',
+      content: `You have two ways to start recording. Both produce the same output — pick whichever fits your workflow.
 
-# With mobile emulation
-npx playwright codegen --device="iPhone 14" http://localhost:3000
+**Option 1: Terminal (works everywhere)**
+Open a terminal in your project directory and run the codegen command with your practice app URL. This opens a browser window and a separate inspector panel showing the generated code in real time.
 
-# VS Code approach (preferred):
-# 1. Open Test Explorer sidebar (beaker icon)
-# 2. Click "Record new" button
-# 3. Interact with your app
-# 4. Code appears in editor automatically`,
-      codeLanguage: "bash",
-      tip: "VS Code recorder is preferred because the generated code lands directly in your editor, where it is easier to review and save into the right test file."
+**Option 2: VS Code Test Explorer (preferred)**
+If you have the Playwright VS Code extension installed, open the Test Explorer sidebar and click "Record New." This embeds the recorder directly in your editor, so you can see the generated code alongside your test files. It also auto-saves the file when you stop recording.
+
+The VS Code approach is preferred because it keeps you in one tool and handles file creation automatically. The terminal approach is useful when you're working outside VS Code or need to record against a non-standard setup.
+
+Either way, make sure the practice app is running on http://localhost:5173 before you start recording.`,
+      code: `# Option 1: Terminal — opens browser + inspector panel
+npx playwright codegen http://localhost:5173
+
+# Option 2: VS Code
+# 1. Open Test Explorer (beaker icon in sidebar)
+# 2. Click "Record New" at the top of the panel
+# 3. The browser opens — interact with your app
+# 4. Stop recording — code appears in a new test file`,
+      codeLanguage: 'bash',
+      callout: 'Start the practice app first: cd practice-app && pnpm dev. The recorder needs a running application to interact with.',
     },
     {
-      heading: "Step 2: Refine with Copilot",
-      content: "Raw recordings use auto-generated selectors that break easily. Select the recorded code, open Copilot Chat (Ctrl+I or Cmd+I), and use one of these refine prompts to upgrade it.",
-      code: `// Copilot Chat prompt — paste after selecting recorded code:
+      heading: 'Record a Login Flow',
+      content: `Let's record the most common flow in the practice app: logging in. Follow these steps while the recorder is running.
 
-"Refine this recorded Playwright test:
-1. Replace auto-generated selectors with data-testid attributes
-2. Add meaningful assertions after each action
-3. Extract page interactions into a Page Object class
-4. Add descriptive test name and comments
-5. Remove any waitForTimeout calls"`,
-      codeLanguage: "typescript",
-    },
-    {
-      heading: "Step 3: Add Assertions",
-      content: "A recorded test only captures actions (click, type, navigate). It does NOT capture expected results. You must add assertions — this is the human judgment Copilot can't provide. Use this prompt pattern:",
-      code: `// After recording a checkout flow, ask Copilot:
+**Step 1:** The recorder opens a browser pointing at http://localhost:5173. Navigate to /login if it doesn't land there automatically.
 
-"Add assertions to verify:
-- Cart total updates when quantity changes
-- Shipping form shows validation on empty required fields
-- Order confirmation page displays the order number
-- User receives a success message containing 'Thank you'"`,
-      codeLanguage: "typescript",
-      warning: "A test without assertions is just a demo. It proves the app doesn't crash — not that it works correctly. Always add at least one assertion per user action."
-    },
-    {
-      heading: "Step 4: Save and Run",
-      content: "Save the refined test file in your e2e/ folder. Run it from VS Code's Test Explorer (green play button) or from the terminal. Check the HTML report for results.",
-      code: `# Run all tests
-npx playwright test
+**Step 2:** Click the email input field and type \`user@test.com\`. Watch the inspector — it generates a \`fill()\` call the moment you finish typing.
 
-# Run a specific test file
-npx playwright test e2e/login.spec.ts
+**Step 3:** Click the password input field and type \`Password123!\`. Another \`fill()\` call appears.
 
-# Run with headed browser (watch it execute)
-npx playwright test --headed
+**Step 4:** Click the "Sign In" button. The inspector generates a \`click()\` call.
 
-# View the HTML report
-npx playwright show-report`,
-      codeLanguage: "bash",
-      tip: "Run with --headed the first few times so you can watch the browser execute the test. It builds confidence and makes incorrect flows easier to spot."
-    }
-  ],
-  exercises: [
-    {
-      difficulty: 'beginner',
-      title: 'Fix the Selectors in a Recorded Test',
-      description: 'This raw codegen recording uses fragile CSS selectors. Replace each one with the correct data-testid selector. Don\'t change the test logic — just fix the selectors.',
-      narration: 'Start by scanning each locator call and asking yourself: "what is this actually targeting?" The CSS nth-child selectors here are position-dependent — if someone adds a field to the form, they break silently. You\'ll replace each one with getByTestId(), which ties the locator to an explicit attribute that can\'t drift. Notice that the test logic — filling, clicking, waiting for the URL — stays exactly the same; you\'re only changing how Playwright finds the elements, not what it does with them.',
-      starterCode: `import { test, expect } from '@playwright/test';
+**Step 5:** The page redirects to /dashboard. The recorder captures the navigation but doesn't assert that you arrived — it just records the next action you take on the dashboard.
 
-test('test', async ({ page }) => {
-  await page.goto('http://localhost:5173/login');
-  // FIX: Replace these fragile selectors with data-testid versions
-  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
-  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
-  await page.locator('#root > div > form > button').click();
-  await page.waitForURL('**/dashboard');
-});`,
-      solutionCode: `import { test, expect } from '@playwright/test';
+**Step 6:** Stop the recording. In VS Code, click "Stop" in the Test Explorer. In the terminal, close the inspector window.
+
+The entire interaction takes about 30 seconds. The generated code is a complete, runnable test file.`,
+      code: `// What the recorder generates (approximately):
+import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
   await page.goto('http://localhost:5173/login');
   await page.getByTestId('email-input').fill('user@test.com');
   await page.getByTestId('password-input').fill('Password123!');
   await page.getByTestId('login-button').click();
-  await page.waitForURL('**/dashboard');
 });`,
-      hints: [
-        'Replace input:nth-child(1) with getByTestId(\'email-input\')',
-        'Replace input:nth-child(2) with getByTestId(\'password-input\')',
-        'Replace the button selector with getByTestId(\'login-button\')',
-        'Use page.getByTestId() instead of page.locator() for data-testid selectors',
-      ],
+      codeLanguage: 'typescript',
+      tip: 'Record slowly and deliberately. Click each field individually, type the full value, then move to the next. Rushed interactions produce messy recordings with extra clicks and partial fills.',
     },
     {
-      difficulty: 'intermediate',
-      title: 'Write a Refinement Prompt',
-      description: 'This is raw recorded code from Playwright codegen. Write a Copilot Chat prompt that would refine it into a production-quality test.',
-      narration: 'The key insight here is that Copilot can only act on what you tell it — vague prompts produce vague improvements. You\'ll craft a prompt that names the specific problems: the fragile CSS selectors (and what to replace them with), the missing test name, and the absent assertions. Notice that you should mention the actual data-testid values like email-input and login-button by name, because Copilot can\'t inspect the HTML itself. A well-structured prompt reads like a code review checklist — each item is a concrete, actionable instruction.',
-      starterCode: `// Raw recorded test — needs refinement
-test('test', async ({ page }) => {
-  await page.goto('http://localhost:5173/login');
-  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
-  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
-  await page.locator('#root > div > form > button').click();
-  await page.waitForURL('**/dashboard');
-});
+      heading: 'What the Recording Gets Wrong',
+      content: `The recording above runs without errors. It even follows the right flow. But it has two problems that make it useless as a real test.
 
-// YOUR TASK: Write the Copilot Chat prompt you would use
-// to refine this into a maintainable, assertion-rich test.
-// Write your prompt as a comment below:
+**Problem 1: Fragile selectors.** The recorder sometimes picks CSS selectors based on position or class names instead of stable attributes. You might see \`page.locator('.form-group:nth-child(2) input')\` instead of \`page.getByTestId('password-input')\`. Position-based selectors break the moment someone adds a field above the password input. Class-based selectors break when a designer renames CSS classes.
 
-// PROMPT: "`,
-      solutionCode: `// Suggested Copilot Chat prompt:
+Playwright's recorder is generally good at choosing \`getByTestId\` when data-testid attributes exist. But when they don't, it falls back to whatever CSS path it can find — and those paths are fragile.
 
-// PROMPT: "Refine this recorded Playwright test:
-// 1. Replace CSS nth-child selectors with data-testid locators
-//    (email-input, password-input, login-button)
-// 2. Add a descriptive test name: 'successful login redirects to dashboard'
-// 3. Add assertions:
-//    - Login page loads (heading visible)
-//    - After login, dashboard URL is reached
-//    - Dashboard shows welcome heading
-// 4. Remove hardcoded URLs, use baseURL from config
-// 5. Add Arrange/Act/Assert comments"`,
-      hints: [
-        'Focus on replacing the fragile CSS selectors first — that\'s the biggest reliability win',
-        'Every click or navigation should have an assertion that verifies the expected outcome',
-        'Mention the specific data-testid names so Copilot uses them',
-      ],
+**Problem 2: Zero assertions.** The recorded test navigates to /login, fills fields, clicks the button — and then does nothing. It proves the login form didn't throw a JavaScript error. It doesn't prove the login worked, that the user arrived at the dashboard, or that the right content appeared.
+
+A test without assertions is a smoke detector with no alarm. It's in the room, but it won't tell you when something's on fire.
+
+Both problems have the same fix: the refine step. Replace fragile selectors with \`getByTestId\` calls using the practice app's data-testid attributes. Add assertions that check for the business outcomes you care about. We'll cover the refine workflow in detail in the next lesson.`,
+      warning: 'Never ship a recorded test without adding assertions. A test that always passes — regardless of whether the feature works — is worse than no test. It gives you false confidence that masks real bugs.',
     },
+  ],
+  quiz: {
+    question: 'What is the primary purpose of the refine step after recording?',
+    options: [
+      'Add parallelism so the test runs faster',
+      'Convert the test from TypeScript to JavaScript',
+      'Replace brittle selectors with resilient ones and add meaningful assertions',
+      'Minify the test code to reduce file size',
+    ],
+    correctIndex: 2,
+    explanation: 'Recordings produce working code with fragile selectors and no assertions. The refine step replaces position-based or class-based selectors with stable data-testid locators and adds assertions that verify actual business outcomes — turning a first draft into a reliable test.',
+    additionalQuestions: [
+      {
+        question: 'What is the biggest limitation of a recorded test?',
+        options: [
+          'It runs too slowly to be useful',
+          'It can only record in Chromium',
+          'It contains no assertions — it only proves the page didn\'t crash',
+          'It requires manual editing before it will compile',
+        ],
+        correctIndex: 2,
+        explanation: 'Recorded tests capture user interactions but add no assertions. They verify that the flow didn\'t throw errors, but they can\'t tell you whether the login actually succeeded, whether the right data appeared, or whether any business logic worked correctly.',
+      },
+    ],
+  },
+  exercises: [
     {
-      difficulty: 'advanced',
-      title: 'Full Refinement: Recording to Production Test',
-      description: 'Transform this raw codegen recording into a complete, production-quality test. Fix selectors, add a descriptive name, add assertions after every action, use baseURL, and structure with Arrange/Act/Assert.',
-      narration: 'Think of this as a full code review pass in one shot. Start with the test name — "test" tells no one anything, so rename it to describe the user scenario and expected outcome. Next, switch the hardcoded URL to a relative path like \'/login\' because baseURL in your config handles the host, making the test portable across environments. Add your first assertion right after goto() to confirm the login page actually loaded before you try to fill anything in — that assertion acts as an early-fail guard. Then wrap the form fill and submit in an Act section, and follow the redirect with Assert calls that verify both the URL and visible dashboard content, so you\'re proving the right page appeared, not just that navigation happened.',
+      title: 'Spot the Fragile Selectors',
+      description: 'This test was generated by the Playwright recorder. Identify which selectors are fragile and explain why each one would break.',
+      difficulty: 'beginner',
       starterCode: `import { test, expect } from '@playwright/test';
 
-// Raw codegen output — transform this into a production-quality test
-test('test', async ({ page }) => {
+test('login flow', async ({ page }) => {
   await page.goto('http://localhost:5173/login');
-  await page.locator('#root > div > form > input:nth-child(1)').fill('user@test.com');
-  await page.locator('#root > div > form > input:nth-child(2)').fill('Password123!');
-  await page.locator('#root > div > form > button').click();
-  await page.waitForURL('**/dashboard');
+
+  // Selector 1: Is this fragile or resilient? Why?
+  await page.locator('.form-group:nth-child(1) input').fill('user@test.com');
+
+  // Selector 2: Is this fragile or resilient? Why?
+  await page.locator('input[type="password"]').fill('Password123!');
+
+  // Selector 3: Is this fragile or resilient? Why?
+  await page.locator('button.btn.btn-primary.mt-4').click();
 });
 
-// YOUR TASK: Rewrite the test above as production-quality code:
-// 1. Descriptive test name explaining the user scenario
-// 2. Replace all CSS selectors with data-testid locators
-// 3. Use relative URL (baseURL handles the host)
-// 4. Add assertions: page loaded, form visible, redirect happened, dashboard content visible
-// 5. Structure with Arrange / Act / Assert comments`,
+// TODO: Add comments above each selector explaining:
+// 1. Whether it's fragile or resilient
+// 2. What specific change would break it
+// 3. What you'd replace it with`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('login flow', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+
+  // FRAGILE: nth-child(1) breaks if any element is added before this input.
+  // A new heading, help text, or field above it shifts the position.
+  // Replace with: page.getByTestId('email-input')
+  await page.locator('.form-group:nth-child(1) input').fill('user@test.com');
+
+  // MODERATE: type="password" works as long as there's only one password field.
+  // Breaks if a "confirm password" field is added (two matches, ambiguous).
+  // Replace with: page.getByTestId('password-input')
+  await page.locator('input[type="password"]').fill('Password123!');
+
+  // FRAGILE: CSS classes change during design updates. "mt-4" is a spacing
+  // utility — a designer changing margins breaks this selector.
+  // Replace with: page.getByTestId('login-button')
+  await page.locator('button.btn.btn-primary.mt-4').click();
+});`,
+      hints: [
+        'nth-child selectors depend on DOM order — what happens when a new element is inserted?',
+        'Type-based selectors work until a second element of the same type appears.',
+        'CSS utility classes like mt-4 are styling shortcuts that change during redesigns.',
+      ],
+    },
+    {
+      title: 'Replace Fragile Selectors with getByTestId',
+      description: 'Rewrite the recorded test to use the practice app\'s data-testid attributes instead of fragile CSS selectors. Reference: email-input, password-input, login-button.',
+      difficulty: 'intermediate',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+test('login flow', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+
+  // TODO: Replace these fragile selectors with getByTestId()
+  await page.locator('.form-group:nth-child(1) input').fill('user@test.com');
+  await page.locator('input[type="password"]').fill('Password123!');
+  await page.locator('button.btn.btn-primary.mt-4').click();
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('login flow', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+
+  // Resilient: data-testid selectors survive CSS and layout changes
+  await page.getByTestId('email-input').fill('user@test.com');
+  await page.getByTestId('password-input').fill('Password123!');
+  await page.getByTestId('login-button').click();
+});`,
+      hints: [
+        'page.getByTestId(\'email-input\') finds [data-testid="email-input"].',
+        'Replace all three selectors — email, password, and the login button.',
+        'getByTestId is Playwright\'s recommended approach when data-testid attributes are available.',
+      ],
+    },
+    {
+      title: 'Transform Recording to Production Quality',
+      description: 'Take this raw recording and transform it into a production-quality test: fix all selectors, add a descriptive test name, add meaningful assertions, use a relative URL, and structure it with Arrange-Act-Assert (AAA) comments.',
+      difficulty: 'advanced',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+// TODO: Transform this raw recording into a production-quality test
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/login');
+  await page.locator('.form-group:nth-child(1) input').fill('user@test.com');
+  await page.locator('input[type="password"]').fill('Password123!');
+  await page.locator('button.btn.btn-primary.mt-4').click();
+});
+
+// Requirements:
+// 1. Give the test a descriptive name
+// 2. Replace all selectors with getByTestId()
+// 3. Use a relative URL (not absolute)
+// 4. Add AAA comments (Arrange, Act, Assert)
+// 5. Add assertions: verify redirect to /dashboard and heading visible`,
       solutionCode: `import { test, expect } from '@playwright/test';
 
 test('successful login redirects to dashboard', async ({ page }) => {
-  // Arrange — navigate to login page
+  // Arrange: navigate to the login page
   await page.goto('/login');
-  await expect(page.getByRole('heading', { name: /log in/i })).toBeVisible();
 
-  // Act — fill credentials and submit
+  // Act: fill credentials and submit
   await page.getByTestId('email-input').fill('user@test.com');
   await page.getByTestId('password-input').fill('Password123!');
   await page.getByTestId('login-button').click();
 
-  // Assert — verify redirect and dashboard content
-  await page.waitForURL('/dashboard');
+  // Assert: verify successful login
+  await expect(page).toHaveURL(/\\/dashboard/);
   await expect(page.getByTestId('dashboard-heading')).toBeVisible();
 });`,
       hints: [
-        'Change the test name from \'test\' to something descriptive like \'successful login redirects to dashboard\'',
-        'Use relative URLs like \'/login\' instead of full URLs — baseURL in config handles the host',
-        'Add await expect() assertions after navigation and after clicking login',
-        'Use Arrange/Act/Assert comments to structure the test clearly',
+        'A descriptive name answers "what does this test verify?" — e.g., "successful login redirects to dashboard."',
+        'Relative URLs like \'/login\' work when baseURL is configured in playwright.config.ts.',
+        'AAA structure: Arrange sets up the page, Act performs the user action, Assert checks the result.',
+        'Two assertions give confidence: URL changed to /dashboard AND the dashboard heading is visible.',
       ],
     },
   ],
-  promptTemplates: [
-    {
-      label: "Refine Codegen Recording",
-      context: "Paste raw Playwright Codegen output and ask Copilot to refine it into a production-ready test.",
-      prompt: "Refine this Playwright Codegen recording into a production-quality test:\n\n[PASTE RECORDED CODE HERE]\n\nRefinements needed:\n1. Replace all auto-generated CSS/nth-child selectors with data-testid locators\n2. Add a descriptive test name that explains the user scenario\n3. Add expect() assertions after each meaningful action\n4. Remove any page.waitForTimeout() calls — rely on Playwright auto-wait\n5. Add Arrange/Act/Assert comments to structure the test\n6. Use baseURL from config instead of hardcoded URLs",
-    },
-    {
-      label: "Convert Manual Step to Assertion",
-      context: "Translate a plain-English verification step into a Playwright assertion.",
-      prompt: "Convert this verification step into a Playwright assertion:\n\nVerification step: \"[DESCRIBE WHAT YOU CHECK — e.g., 'I verify the success message says Thank you for your order']\"\n\nPage route: [URL_PATH]\nElement: [DESCRIBE THE ELEMENT — e.g., 'green banner at the top of the page']\n\nWrite the Playwright expect() assertion using data-testid or getByText selectors. Explain what the assertion does in plain English.",
-    },
-  ],
   practiceLink: {
-    url: "http://localhost:5173/checkout",
-    label: "Record a checkout flow with Codegen",
-    description: "Use Playwright Codegen to record a test on the multi-step checkout page.",
+    url: 'http://localhost:5173/login',
+    label: 'Open Login Page',
+    description: 'Run the recorder against this page: npx playwright codegen http://localhost:5173/login',
   },
-  quiz: {
-    question: "What is the primary purpose of the 'refine' step after recording with Codegen?",
-    options: [
-      "To make the test run faster",
-      "To replace brittle auto-generated selectors with resilient ones and add meaningful assertions",
-      "To convert JavaScript to TypeScript",
-      "To add comments for documentation",
+  narrationScript: {
+    intro: 'This is it — your first test. You\'re going to record a login flow, watch Playwright write the code, and then look honestly at what the recording gets right and wrong.',
+    steps: [
+      {
+        text: 'Start on the login page. The recorder is going to watch every click and keystroke, translating your interactions into Playwright code in real time.',
+        navigateTo: '/login',
+        duration: 20,
+      },
+      {
+        text: 'Click the email field. In the recorder\'s inspector panel, you\'d see a fill() call appear the moment you type. The recorder picks a selector automatically — sometimes getByTestId, sometimes a CSS path.',
+        highlight: 'email-input',
+        duration: 25,
+      },
+      {
+        text: 'Move to the password field. Same thing — another fill() call. Notice the recorder captures the exact value you typed. It doesn\'t mask passwords or redact data, so be careful with real credentials.',
+        highlight: 'password-input',
+        duration: 25,
+      },
+      {
+        text: 'Click the login button. The recorder generates a click() call. After the page redirects, it records the next page you interact with — but it doesn\'t add an assertion that you actually arrived at the dashboard.',
+        highlight: 'login-button',
+        duration: 25,
+      },
+      {
+        text: 'And there it is — you\'re on the dashboard. The recorder captured the entire flow: navigate, fill, fill, click. Four lines of code that took 30 seconds to generate. That\'s the speed of recording.',
+        navigateTo: '/dashboard',
+        duration: 20,
+      },
+      {
+        text: 'Look at the dashboard heading. A recorded test would never check for this element. It doesn\'t know the heading matters. It doesn\'t know that "landing on /dashboard" means "login worked." Assertions come from you, not the recorder.',
+        highlight: 'dashboard-heading',
+        duration: 25,
+      },
+      {
+        text: 'Now the honest part: what the recording gets wrong. Selectors might be fragile — CSS class names and positional paths that break when the UI changes. Every one of those needs to be replaced with a stable getByTestId locator.',
+        duration: 25,
+      },
+      {
+        text: 'And there are zero assertions. The test proves the login form accepted input without throwing an error. It doesn\'t prove the login succeeded, the right page loaded, or the correct user session started. A test without assertions always passes — even when the feature is broken.',
+        duration: 30,
+      },
+      {
+        text: 'The recording is a first draft. It gives you the structure, the flow, and the basic code. The refine step — fixing selectors and adding assertions — is what turns it into a test that actually catches bugs.',
+        duration: 25,
+      },
     ],
-    correctIndex: 1,
-    explanation: "Codegen captures user actions but generates fragile selectors and no assertions. The refine step replaces auto-generated selectors with role-based or test-id locators, adds expect() assertions, and structures the test for maintainability.",
+    outro: 'You\'ve recorded your first test. It runs, it follows the right flow, and it took 30 seconds. In the next lesson, we\'ll refine it — replace the fragile selectors, add assertions that test real business logic, and make it production-ready.',
   },
 };

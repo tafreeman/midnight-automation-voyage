@@ -71,7 +71,31 @@ await expect(results.first()).toContainText('Widget Pro');
       "Auto-generated selectors from the recorder"
     ],
     correctIndex: 2,
-    explanation: "data-testid attributes are the recommended default because they are immune to CSS refactors, content text changes, and layout restructuring. They exist solely for testing and won't break when designers restyle the UI."
+    explanation: "data-testid attributes are the recommended default because they are immune to CSS refactors, content text changes, and layout restructuring. They exist solely for testing and won't break when designers restyle the UI.",
+    additionalQuestions: [
+      {
+        question: "In the Arrange-Act-Assert pattern, what belongs in the 'Arrange' step?",
+        options: [
+          "Clicking buttons and filling forms",
+          "Checking that elements have the correct text or state",
+          "Setting up the starting state, such as navigating to a page or seeding data",
+          "Importing test utilities and page objects",
+        ],
+        correctIndex: 2,
+        explanation: "Arrange sets up the preconditions for the test — navigating to the correct page, ensuring test data exists, or establishing the right application state. Act performs the user interaction being tested, and Assert verifies the expected outcome. Keeping these phases distinct makes tests easier to read and review.",
+      },
+      {
+        question: "When reviewing a Copilot-generated test, what is the #1 thing to flag if missing?",
+        options: [
+          "TypeScript type annotations on variables",
+          "Comments explaining each line of code",
+          "expect() assertions that verify expected outcomes",
+          "A test.describe() wrapper grouping related tests",
+        ],
+        correctIndex: 2,
+        explanation: "A test without assertions only proves the app does not crash — it does not verify correct behavior. When reviewing Copilot output, the most critical check is whether meaningful expect() assertions are present after each significant action. Missing assertions are the most common and most dangerous gap in generated tests.",
+      },
+    ],
   },
   practiceLink: {
     url: "http://localhost:5173/products",

@@ -131,6 +131,30 @@ docker run --rm -v $(pwd):/work -w /work \\
     correctIndex: 1,
     explanation:
       "Dynamic content like timestamps, animations, and user-specific data (avatars, names) changes every run and creates false failures. Masking these areas lets you focus on the stable visual elements that matter for regression detection.",
+    additionalQuestions: [
+      {
+        question: "Why are element-level screenshots generally preferred over full-page screenshots for visual regression?",
+        options: [
+          "Element screenshots are smaller files and save disk space",
+          "Element screenshots are isolated to one component, making tests more stable and failures easier to diagnose",
+          "Full-page screenshots are not supported in CI environments",
+          "Element screenshots automatically mask dynamic content",
+        ],
+        correctIndex: 1,
+        explanation: "Full-page screenshots break when anything on the page changes — navigation, footer, sidebar, or unrelated components. Element-level screenshots isolate the component under test, so changes elsewhere on the page do not cause false failures. When a test does fail, you know exactly which component regressed.",
+      },
+      {
+        question: "What is the correct command to update visual regression baselines after an intentional UI redesign?",
+        options: [
+          "npx playwright test --reset-snapshots",
+          "npx playwright test --update-snapshots",
+          "Delete the snapshots folder and re-run tests",
+          "Set maxDiffPixelRatio to 1.0 to accept all changes",
+        ],
+        correctIndex: 1,
+        explanation: "Running 'npx playwright test --update-snapshots' regenerates baseline images from the current UI state. This is the official way to accept intentional visual changes. Deleting snapshots or raising thresholds are workarounds that bypass proper review. Baseline updates should be done in a dedicated PR so visual changes get the same review scrutiny as code changes.",
+      },
+    ],
   },
   exercises: [
     {

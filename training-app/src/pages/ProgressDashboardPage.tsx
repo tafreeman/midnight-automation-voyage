@@ -55,7 +55,7 @@ export function ProgressDashboardPage({
   }
 
   return (
-    <div className="dashboard-page space-y-8">
+    <div className="dashboard-page space-y-10">
       <section
         className="page-hero dashboard-hero overflow-hidden rounded-2xl border"
         style={{
@@ -65,7 +65,7 @@ export function ProgressDashboardPage({
           boxShadow: "var(--shadow-elevation)",
         }}
       >
-        <div className="p-6 md:p-8">
+        <div className="p-8 md:p-10">
           <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.28em]" style={{ color: "var(--text-muted)" }}>
             <span>Course Overview</span>
             <span>•</span>
@@ -80,13 +80,13 @@ export function ProgressDashboardPage({
             Track your learning journey, resume where you left off, and open the next lesson with one click.
           </p>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             <StatCard label="Course Completion" value={`${courseCompletion}%`} icon={<Award size={18} />} accent="var(--accent-action)" />
             <StatCard label="Lessons Completed" value={`${completedLessonCount} / ${totalLessons}`} icon={<CheckCircle2 size={18} />} accent="var(--accent-info)" />
             <StatCard label="Modules Complete" value={`${modules.filter((module) => getModuleCompletion(module.id, module.lessons.length) === 100).length} / ${modules.length}`} icon={<BookOpen size={18} />} accent="var(--accent-special)" />
           </div>
 
-          <div className="mt-6 h-2 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-subtle)" }}>
+          <div className="mt-8 h-2 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-subtle)" }}>
             <div
               className="h-full rounded-full"
               style={{
@@ -133,7 +133,7 @@ export function ProgressDashboardPage({
           </span>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {modules.map((module) => {
             const completion = getModuleCompletion(module.id, module.lessons.length);
             const moduleComplete = completion === 100;
@@ -142,7 +142,7 @@ export function ProgressDashboardPage({
                 key={module.id}
                 type="button"
                 onClick={() => onSelectModule(module.id)}
-                className="rounded-2xl border p-4 text-left transition-colors"
+                className="rounded-2xl border p-5 text-left transition-colors"
                 style={{
                   borderColor: moduleComplete ? "var(--accent-action)" : "var(--border-subtle)",
                   backgroundColor: "var(--surface-elevated)",
@@ -205,7 +205,7 @@ function StatCard({
 }) {
   return (
     <div
-      className="page-card stat-card rounded-2xl border p-4"
+      className="page-card stat-card rounded-2xl border p-5"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-code)",
@@ -239,7 +239,7 @@ function ActionCard({
 }) {
   return (
     <section
-      className="page-card action-card rounded-2xl border p-5 md:p-6"
+      className="page-card action-card rounded-2xl border p-6 md:p-8"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-elevated)",

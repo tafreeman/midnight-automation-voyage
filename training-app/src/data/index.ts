@@ -7,14 +7,18 @@
  */
 
 export type { Lesson, Quiz, CodeExercise, PromptTemplate } from "./types";
+export { courses } from "./curriculum";
+export { firstPlaywrightTestsCourse } from "./courses/first-playwright-tests";
 
 import { lesson as orientation } from "./modules/01-orientation";
 import { lesson as mindsetShifts } from "./modules/02-mindset-shifts";
 import { lesson as whatToAutomate } from "./modules/03-what-to-automate";
+import { lesson as selectorsLocators } from "./modules/04-selectors-locators";
 import { lesson as whyPlaywrightCopilot } from "./modules/04-why-playwright-copilot";
 import { lesson as environmentSetup } from "./modules/05-environment-setup";
 import { lesson as copilotPromptEng } from "./modules/06-copilot-prompt-engineering";
 import { lesson as recordRefine } from "./modules/07-record-refine-workflow";
+import { lesson as refineRecording } from "./modules/08-refine-recording";
 import { lesson as writingTests } from "./modules/08-writing-tests";
 import { lesson as pageObjectModel } from "./modules/09-page-object-model";
 import { lesson as apiTesting } from "./modules/10-api-testing";
@@ -46,10 +50,12 @@ export const lessons: Lesson[] = [
   orientation,
   mindsetShifts,
   whatToAutomate,
+  selectorsLocators,
   whyPlaywrightCopilot,
   environmentSetup,
   copilotPromptEng,
   recordRefine,
+  refineRecording,
   writingTests,
   pageObjectModel,
   apiTesting,

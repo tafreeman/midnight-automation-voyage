@@ -30,7 +30,7 @@ export function ModuleOverviewPage({
   }, [applyModuleTheme, module.number]);
 
   return (
-    <div className="module-overview-page space-y-8">
+    <div className="module-overview-page space-y-10">
       <section
         className="page-hero module-hero overflow-hidden rounded-2xl border"
         style={{
@@ -40,7 +40,7 @@ export function ModuleOverviewPage({
           boxShadow: "var(--shadow-elevation)",
         }}
       >
-        <div className="p-6 md:p-8">
+        <div className="p-8 md:p-10">
           <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.28em]" style={{ color: "var(--text-muted)" }}>
             <span>Module {String(module.number).padStart(2, "0")}</span>
             <span>•</span>
@@ -65,13 +65,12 @@ export function ModuleOverviewPage({
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             <HeroStat icon={<BookOpen size={18} />} label="Lessons" value={String(module.lessons.length)} />
             <HeroStat icon={<Clock3 size={18} />} label="Estimated" value={`${module.estimatedMinutes} min`} />
-            <HeroStat icon={<Layers3 size={18} />} label="Active Theme" value={currentTheme} />
           </div>
 
-          <div className="mt-6 h-2 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-subtle)" }}>
+          <div className="mt-8 h-2 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-subtle)" }}>
             <div
               className="h-full rounded-full"
               style={{
@@ -89,11 +88,11 @@ export function ModuleOverviewPage({
           <Sparkles size={14} />
           Learning Objectives
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {module.learningObjectives.map((objective) => (
             <div
               key={objective}
-              className="rounded-xl border p-4 text-sm leading-7"
+              className="rounded-xl border p-5 text-sm leading-8"
               style={{
                 borderColor: "var(--border-subtle)",
                 backgroundColor: "var(--surface-elevated)",
@@ -116,7 +115,7 @@ export function ModuleOverviewPage({
           </span>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {module.lessons.map((lesson, index) => (
             <LessonCard
               key={lesson.id}
@@ -147,7 +146,7 @@ function LessonCard({
     <button
       type="button"
       onClick={onOpen}
-      className="page-card lesson-card w-full rounded-2xl border p-4 text-left transition-colors"
+      className="page-card lesson-card w-full rounded-2xl border p-5 text-left transition-colors"
       style={{
         borderColor: completed ? "var(--accent-action)" : "var(--border-subtle)",
         backgroundColor: "var(--surface-elevated)",
@@ -205,7 +204,7 @@ function HeroStat({
 }) {
   return (
     <div
-      className="page-card hero-stat rounded-xl border p-4"
+      className="page-card hero-stat rounded-xl border p-5"
       style={{
         borderColor: "var(--border-subtle)",
         backgroundColor: "var(--surface-code)",

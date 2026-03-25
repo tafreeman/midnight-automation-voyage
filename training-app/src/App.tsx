@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  curriculum,
+  courses,
   findLesson,
   findModule,
+  findCourseForModule,
   flattenLessons,
 } from "./data/curriculum";
 import { ProgressProvider, useProgress } from "./contexts/ProgressContext";
@@ -14,12 +15,13 @@ import {
   ModuleNav,
   TopBar,
 } from "./components/navigation";
-import { SupportRail } from "./components/layout";
+import { NotesDrawer } from "./components/NotesDrawer";
 import { LessonDetailPage } from "./pages/LessonDetailPage";
-import { ModuleOverviewPage } from "./pages/ModuleOverviewPage";
 import { ProgressDashboardPage } from "./pages/ProgressDashboardPage";
+import { CourseSelectPage } from "./pages/CourseSelectPage";
 
 type ViewState =
+  | { kind: "courses" }
   | { kind: "dashboard" }
   | { kind: "module"; moduleId: string }
   | { kind: "lesson"; moduleId: string; lessonId: string };
@@ -27,6 +29,7 @@ type ViewState =
 function parseHash(hash: string): ViewState | null {
   const value = hash.replace(/^#/, "");
   if (!value) return null;
+  if (value === "courses") return { kind: "courses" };
   if (value === "dashboard") return { kind: "dashboard" };
 
   const lessonMatch = value.match(/^lesson\/([^/]+)\/([^/]+)$/);
@@ -47,14 +50,13 @@ function parseHash(hash: string): ViewState | null {
 }
 
 function hashForView(view: ViewState) {
+  if (view.kind === "courses") return "#courses";
   if (view.kind === "dashboard") return "#dashboard";
   if (view.kind === "module") return `#module/${view.moduleId}`;
   return `#lesson/${view.moduleId}/${view.lessonId}`;
 }
 
 function AppContent() {
-  const modules = curriculum;
-  const flatLessons = useMemo(() => flattenLessons(modules), [modules]);
   const {
     progress,
     currentModuleId,
@@ -70,27 +72,30 @@ function AppContent() {
   const [leftOpen, setLeftOpen] = useState(
     () => typeof window !== "undefined" && window.innerWidth >= 1024
   );
-  const [rightOpen, setRightOpen] = useState(
-    () => typeof window !== "undefined" && window.innerWidth >= 1280
-  );
+  const [notesOpen, setNotesOpen] = useState(false);
   const [view, setView] = useState<ViewState>(() => {
     const fromHash =
       typeof window !== "undefined" ? parseHash(window.location.hash) : null;
     return (
-      fromHash ?? {
-        kind: "lesson",
-        moduleId: currentModuleId,
-        lessonId: currentLessonId,
-      }
+      fromHash ?? { kind: "courses" }
     );
   });
+
+  const activeCourse = useMemo(
+    () =>
+      findCourseForModule(
+        view.kind === "lesson" || view.kind === "module" ? view.moduleId : currentModuleId
+      ) ?? courses[0],
+    [view, currentModuleId]
+  );
+  const modules = activeCourse.modules;
+  const flatLessons = useMemo(() => flattenLessons(modules), [modules]);
 
   useEffect(() => {
     const onResize = () => {
       const width = window.innerWidth;
       setIsMobile(width < 1024);
       setLeftOpen(width >= 1024);
-      setRightOpen(width >= 1280);
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
@@ -118,7 +123,7 @@ function AppContent() {
   }, [navigateTo]);
 
   const activeModuleId =
-    view.kind === "dashboard" ? currentModuleId : view.moduleId;
+    view.kind === "dashboard" || view.kind === "courses" ? currentModuleId : view.moduleId;
   const activeModule = findModule(activeModuleId);
   const activeLesson =
     view.kind === "lesson"
@@ -142,37 +147,32 @@ function AppContent() {
   );
 
   const openDashboard = () => setView({ kind: "dashboard" });
-  const openModuleOverview = (moduleId: string) =>
-    setView({ kind: "module", moduleId });
   const openLesson = (moduleId: string, lessonId: string) => {
     navigateTo(moduleId, lessonId);
     setView({ kind: "lesson", moduleId, lessonId });
     if (isMobile) setLeftOpen(false);
   };
+  const openModuleOverview = (moduleId: string) => {
+    const mod = findModule(moduleId);
+    openLesson(moduleId, mod.lessons[0].id);
+  };
 
   const titleBar = (
     <TopBar
       module={activeModule}
-      lesson={view.kind === "lesson" ? activeLesson : undefined}
+      lesson={view.kind === "lesson" || view.kind === "module" ? activeLesson : undefined}
       leftOpen={leftOpen}
-      rightOpen={rightOpen}
       onToggleLeft={() => setLeftOpen((current) => !current)}
-      onToggleRight={() => setRightOpen((current) => !current)}
       onOpenDashboard={openDashboard}
       onOpenModuleOverview={openModuleOverview}
+      onOpenNotes={view.kind === "lesson" || view.kind === "module" ? () => setNotesOpen(true) : undefined}
     />
   );
 
+  const isLessonView = view.kind === "lesson" || view.kind === "module";
   const footerBar =
-    view.kind === "lesson" ? (
+    isLessonView ? (
       <BottomBar
-        currentModule={activeModule}
-        currentLesson={activeLesson}
-        lessonIndex={activeModule.lessons.findIndex(
-          (lesson) => lesson.id === activeLesson.id
-        )}
-        totalLessons={activeModule.lessons.length}
-        progressPercent={coursePercent}
         onPrev={
           prevEntry
             ? () => openLesson(prevEntry.module.id, prevEntry.lesson.id)
@@ -210,32 +210,42 @@ function AppContent() {
           onOpenLesson={openLesson}
         />
       }
-      rightRail={<SupportRail module={activeModule} lesson={activeLesson} />}
       isMobile={isMobile}
       leftOpen={leftOpen}
-      rightOpen={rightOpen}
       onToggleLeft={() => setLeftOpen((current) => !current)}
-      onToggleRight={() => setRightOpen((current) => !current)}
     >
-      {view.kind === "dashboard" ? (
+      {view.kind === "courses" ? (
+        <CourseSelectPage
+          courses={courses}
+          onSelectCourse={(courseId) => {
+            const course = courses.find((c) => c.id === courseId);
+            if (course && course.modules.length > 0) {
+              const mod = course.modules[0];
+              openLesson(mod.id, mod.lessons[0].id);
+            }
+          }}
+          onResume={() => {
+            openLesson(currentModuleId, currentLessonId);
+          }}
+        />
+      ) : view.kind === "dashboard" ? (
         <ProgressDashboardPage
           modules={modules}
           onSelectModule={openModuleOverview}
           onSelectLesson={openLesson}
         />
-      ) : view.kind === "module" ? (
-        <ModuleOverviewPage
-          module={activeModule}
-          onSelectLesson={(lessonId) => openLesson(activeModule.id, lessonId)}
-        />
       ) : (
         <LessonDetailPage
           module={activeModule}
           lesson={activeLesson}
-          lessonIndex={activeModule.lessons.findIndex(
-            (lesson) => lesson.id === activeLesson.id
-          )}
           onQuizAttempt={() => saveQuizScore(activeModule.id, activeLesson.id, 1)}
+        />
+      )}
+      {notesOpen && (
+        <NotesDrawer
+          moduleId={activeModule.id}
+          lessonId={activeLesson.id}
+          onClose={() => setNotesOpen(false)}
         />
       )}
     </AppShell>
@@ -243,7 +253,7 @@ function AppContent() {
 }
 
 export default function App() {
-  const firstModule = curriculum[0];
+  const firstModule = courses[0].modules[0];
   const firstLesson = firstModule.lessons[0];
 
   return (

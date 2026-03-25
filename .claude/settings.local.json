@@ -10,7 +10,9 @@
       "Bash(grep -E \"promptTemplates|practiceLink\" src/data/modules/*.ts)",
       "Bash(grep -l \"promptTemplates:\" src/data/modules/*.ts)",
       "Bash(grep -l \"practiceLink:\" src/data/modules/*.ts)",
-      "Bash(grep -E \"^\\\\s+quiz:\" src/data/modules/*.ts)"
+      "Bash(grep -E \"^\\\\s+quiz:\" src/data/modules/*.ts)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(grep -rn \"^\\\\s*id:\" C:/Users/tandf/source/repos/midnight-automation-voyage/training-app/src/data/modules/*.ts)"
     ]
   }
 }

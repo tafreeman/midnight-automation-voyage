@@ -154,6 +154,30 @@ npx playwright show-trace test-results/login-test/trace.zip
     correctIndex: 1,
     explanation:
       "The 'on-first-retry' strategy captures traces only when a test fails and Playwright retries it. This balances diagnostic value (you get traces for failing tests) with performance and storage cost (passing tests don't generate traces). It's the recommended default for CI pipelines.",
+    additionalQuestions: [
+      {
+        question: "When a locator fails in a trace, which panel should you check first to understand why?",
+        options: [
+          "The Console panel to look for JavaScript errors",
+          "The Network panel to check for failed API calls",
+          "The Action Snapshots panel to see the actual DOM state before and after the failed action",
+          "The Timeline panel to measure total test duration",
+        ],
+        correctIndex: 2,
+        explanation: "Action Snapshots show the exact DOM state at the moment each action executed. When a locator fails, the 'Before' snapshot reveals what the page actually looked like — the element might have different text, a different attribute, or be in a different position than expected. This is the fastest way to diagnose why a locator did not match.",
+      },
+      {
+        question: "Why must CI artifact uploads use 'if: always()' when uploading Playwright traces?",
+        options: [
+          "To ensure artifacts are uploaded even when the test job is cancelled",
+          "Because without it, artifacts are skipped when tests fail — which is exactly when traces are needed",
+          "To upload artifacts from all parallel test shards",
+          "Because 'if: always()' compresses the artifacts for faster upload",
+        ],
+        correctIndex: 1,
+        explanation: "By default, GitHub Actions steps only run when previous steps succeed. Since trace files are generated when tests fail, the upload step would be skipped precisely when you need the traces most. Adding 'if: always()' ensures the upload runs regardless of test outcome, making failure artifacts available for download and analysis.",
+      },
+    ],
   },
   exercises: [
     {

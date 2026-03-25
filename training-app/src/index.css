@@ -51,7 +51,6 @@ body {
 .shell-footer,
 .page-hero,
 .page-card,
-.module-nav-panel,
 .module-nav-dashboard {
   position: relative;
 }
@@ -62,7 +61,6 @@ body {
 .shell-main-inner,
 .page-hero,
 .page-card,
-.module-nav-panel,
 .module-nav-dashboard {
   isolation: isolate;
 }
@@ -131,7 +129,6 @@ body {
 [data-theme="zine-pop"] .shell-rail-left,
 [data-theme="zine-pop"] .page-hero,
 [data-theme="zine-pop"] .page-card,
-[data-theme="zine-pop"] .module-nav-panel,
 [data-theme="zine-pop"] .module-nav-dashboard {
   overflow: hidden;
 }
@@ -289,7 +286,6 @@ body {
 [data-theme="handbook-notes"] .shell-main-inner,
 [data-theme="handbook-notes"] .page-hero,
 [data-theme="handbook-notes"] .page-card,
-[data-theme="handbook-notes"] .module-nav-panel,
 [data-theme="handbook-notes"] .module-nav-dashboard {
   overflow: hidden;
 }
@@ -297,7 +293,6 @@ body {
 [data-theme="handbook-notes"] .page-hero::before,
 [data-theme="handbook-notes"] .action-card::before,
 [data-theme="handbook-notes"] .lesson-card::before,
-[data-theme="handbook-notes"] .module-nav-panel::before,
 [data-theme="handbook-notes"] .module-nav-dashboard::before {
   content: "";
   position: absolute;
@@ -442,4 +437,9 @@ body {
 /* Code block styling */
 pre code {
   font-family: var(--font-mono);
+}
+
+/* GuidedExercise spinner */
+@keyframes guided-spin {
+  to { transform: rotate(360deg); }
 }

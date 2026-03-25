@@ -163,7 +163,7 @@ test('create order with unique data', async ({ page, workerNamespace }) => {
     explanation:
       "When multiple parallel test workers all log in as user@test.com simultaneously, they compete for the same session. One worker's login can invalidate another's session. Five failed attempts from different workers trigger account lockout. The fix is to give each test its own unique user via a data factory.",
   },
-  exercise: {
+  exercises: [{
     title: "Refactor Hardcoded Login to Data Factory",
     description:
       "The starter code uses hardcoded credentials that will fail in parallel execution. Refactor it to use a data factory that generates unique test users.",
@@ -217,7 +217,7 @@ test('user can view orders', async ({ page, testUser }) => {
       "Use Math.random() or crypto.randomUUID() to generate unique identifiers",
       "Extend the base test with a fixture that calls the factory and provides the user to each test",
     ],
-  },
+  }],
   promptTemplates: [
     {
       label: "Generate Test Data Factory",

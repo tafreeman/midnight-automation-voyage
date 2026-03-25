@@ -168,7 +168,7 @@ test('settings page meets WCAG 2.1 AA', async ({ page }) => {
     explanation:
       "axe-core can detect whether an alt attribute EXISTS, but it cannot judge whether the text is actually meaningful. An image with alt='image123.jpg' technically passes the automated check but fails the spirit of WCAG. Human review is required to assess content quality.",
   },
-  exercise: {
+  exercises: [{
     title: "Accessibility Scan for Settings Page",
     description:
       "Write an axe-core scan for the Settings page that targets WCAG 2.1 AA and asserts zero critical violations. The Settings page has 3 intentional violations for you to discover.",
@@ -211,7 +211,7 @@ test('settings page accessibility scan', async ({ page }) => {
       "Use .withTags() to target specific WCAG levels — pass an array of tag strings",
       "The Settings page has 3 intentional violations: missing label, low contrast, incorrect focus",
     ],
-  },
+  }],
   promptTemplates: [
     {
       label: "Generate A11y Scan",

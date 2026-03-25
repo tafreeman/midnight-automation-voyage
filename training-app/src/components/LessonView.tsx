@@ -206,6 +206,20 @@ function DiffCodeBlock({ starter, solution, revealed }: { starter: string; solut
   );
 }
 
+// Wait for voices to load (Chrome fires voiceschanged async)
+function useVoicesReady() {
+  const [ready, setReady] = useState(() => speechSynthesis.getVoices().length > 0);
+  React.useEffect(() => {
+    if (ready) return;
+    const handler = () => { if (speechSynthesis.getVoices().length > 0) setReady(true); };
+    speechSynthesis.addEventListener("voiceschanged", handler);
+    // Also poll once in case event already fired
+    handler();
+    return () => speechSynthesis.removeEventListener("voiceschanged", handler);
+  }, [ready]);
+  return ready;
+}
+
 // Rank voices: neural/online > named quality voices > any English voice
 function pickBestVoice(): SpeechSynthesisVoice | undefined {
   const voices = speechSynthesis.getVoices();
@@ -266,6 +280,7 @@ function useNarrationAudio(exerciseKey: string) {
 
 function useNarrationSpeech(text: string) {
   const [speaking, setSpeaking] = useState(false);
+  const voicesReady = useVoicesReady();
 
   const toggle = React.useCallback(() => {
     if (speaking) {
@@ -273,16 +288,21 @@ function useNarrationSpeech(text: string) {
       setSpeaking(false);
       return;
     }
+    if (!voicesReady) {
+      // Force a voice load attempt, then retry
+      speechSynthesis.getVoices();
+    }
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 0.95;
     utterance.pitch = 1;
+    utterance.lang = "en-US";
     const voice = pickBestVoice();
     if (voice) utterance.voice = voice;
     utterance.onend = () => setSpeaking(false);
     utterance.onerror = () => setSpeaking(false);
     setSpeaking(true);
     speechSynthesis.speak(utterance);
-  }, [text, speaking]);
+  }, [text, speaking, voicesReady]);
 
   React.useEffect(() => {
     return () => { speechSynthesis.cancel(); };

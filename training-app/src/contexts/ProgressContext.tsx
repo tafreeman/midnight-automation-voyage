@@ -14,7 +14,7 @@ import type {
   ModuleProgress,
 } from "../types/curriculum";
 
-const PROGRESS_KEY = "mav-progress-v3";
+const DEFAULT_PROGRESS_KEY = "mav-progress-v3";
 
 interface ProgressContextValue {
   progress: CourseProgress;
@@ -25,7 +25,8 @@ interface ProgressContextValue {
   markLessonComplete: (moduleId: string, lessonId: string) => void;
   isLessonCompleted: (moduleId: string, lessonId: string) => boolean;
   saveQuizScore: (moduleId: string, lessonId: string, score: number) => void;
-  markExerciseComplete: (moduleId: string, lessonId: string) => void;
+  markExerciseComplete: (moduleId: string, lessonId: string, exerciseTitle?: string) => void;
+  isExerciseCompleted: (moduleId: string, lessonId: string, exerciseTitle?: string) => boolean;
   saveNote: (moduleId: string, lessonId: string, note: string) => void;
   getNote: (moduleId: string, lessonId: string) => string;
   saveScrollPosition: (lessonId: string, scrollY: number) => void;
@@ -41,8 +42,11 @@ function createDefaultProgress(
   initialLessonId: string
 ): CourseProgress {
   return {
+    currentCourseId: "course-get-testing",
     currentModuleId: initialModuleId,
     currentLessonId: initialLessonId,
+    currentSectionIndex: 0,
+    currentTab: "sections",
     modules: {},
     scrollPositions: {},
     lastAccessedAt: new Date().toISOString(),
@@ -51,12 +55,13 @@ function createDefaultProgress(
 
 function loadProgress(
   initialModuleId: string,
-  initialLessonId: string
+  initialLessonId: string,
+  storageKey: string,
 ): CourseProgress {
   const fallback = createDefaultProgress(initialModuleId, initialLessonId);
   if (typeof window === "undefined") return fallback;
   try {
-    const raw = window.localStorage.getItem(PROGRESS_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return fallback;
     const parsed = JSON.parse(raw) as Partial<CourseProgress>;
     return {
@@ -89,28 +94,32 @@ export function ProgressProvider({
   children,
   initialModuleId,
   initialLessonId,
+  storageKey = DEFAULT_PROGRESS_KEY,
 }: {
   children: ReactNode;
   initialModuleId: string;
   initialLessonId: string;
+  storageKey?: string;
 }) {
   const [progress, setProgress] = useState<CourseProgress>(() =>
-    loadProgress(initialModuleId, initialLessonId)
+    loadProgress(initialModuleId, initialLessonId, storageKey)
   );
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+      window.localStorage.setItem(storageKey, JSON.stringify(progress));
     } catch {
       // ignore storage failures
     }
-  }, [progress]);
+  }, [progress, storageKey]);
 
   const navigateTo = useCallback((moduleId: string, lessonId: string) => {
     setProgress((prev) => ({
       ...prev,
       currentModuleId: moduleId,
       currentLessonId: lessonId,
+      currentSectionIndex: 0,
+      currentTab: "sections",
       lastAccessedAt: new Date().toISOString(),
       modules: {
         ...prev.modules,
@@ -165,7 +174,8 @@ export function ProgressProvider({
   );
 
   const markExerciseComplete = useCallback(
-    (moduleId: string, lessonId: string) => {
+    (moduleId: string, lessonId: string, exerciseTitle?: string) => {
+      const key = exerciseTitle ? `${lessonId}:${exerciseTitle}` : lessonId;
       setProgress((prev) => {
         const current = getModuleProgress(prev, moduleId);
         return {
@@ -176,7 +186,7 @@ export function ProgressProvider({
               ...current,
               exerciseCompleted: {
                 ...current.exerciseCompleted,
-                [lessonId]: true,
+                [key]: true,
               },
             },
           },
@@ -184,6 +194,14 @@ export function ProgressProvider({
       });
     },
     []
+  );
+
+  const isExerciseCompleted = useCallback(
+    (moduleId: string, lessonId: string, exerciseTitle?: string) => {
+      const key = exerciseTitle ? `${lessonId}:${exerciseTitle}` : lessonId;
+      return getModuleProgress(progress, moduleId).exerciseCompleted[key] === true;
+    },
+    [progress]
   );
 
   const saveNote = useCallback(
@@ -267,6 +285,7 @@ export function ProgressProvider({
       isLessonCompleted,
       saveQuizScore,
       markExerciseComplete,
+      isExerciseCompleted,
       saveNote,
       getNote,
       saveScrollPosition,
@@ -282,6 +301,7 @@ export function ProgressProvider({
       isLessonCompleted,
       saveQuizScore,
       markExerciseComplete,
+      isExerciseCompleted,
       saveNote,
       getNote,
       saveScrollPosition,

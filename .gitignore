@@ -7,3 +7,6 @@ dist/
 !.env.example
 *.tsbuildinfo
 *.zip
+standalone-dist/
+dist-first-playwright-tests/
+test-results/

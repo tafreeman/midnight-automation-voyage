@@ -4,26 +4,20 @@ interface AppShellProps {
   titleBar: ReactNode;
   footerBar: ReactNode;
   leftRail: ReactNode;
-  rightRail: ReactNode;
   children: ReactNode;
   isMobile: boolean;
   leftOpen: boolean;
-  rightOpen: boolean;
   onToggleLeft: () => void;
-  onToggleRight: () => void;
 }
 
 export function AppShell({
   titleBar,
   footerBar,
   leftRail,
-  rightRail,
   children,
   isMobile,
   leftOpen,
-  rightOpen,
   onToggleLeft,
-  onToggleRight,
 }: AppShellProps) {
   return (
     <div
@@ -68,29 +62,9 @@ export function AppShell({
                 </>
               )}
 
-              {rightOpen && (
-                <>
-                  <button
-                    type="button"
-                    aria-label="Close support rail"
-                    className="absolute inset-0 z-30 bg-black/40"
-                    onClick={onToggleRight}
-                  />
-                  <aside
-                    className="shell-rail shell-rail-right absolute inset-y-0 right-0 z-40 w-[19rem] overflow-y-auto border-l"
-                    style={{
-                      backgroundColor: "var(--surface-elevated)",
-                      borderColor: "var(--border-subtle)",
-                    }}
-                  >
-                    {rightRail}
-                  </aside>
-                </>
-              )}
-
               <main className="shell-main h-full overflow-y-auto">
                 <div
-                  className="shell-main-inner w-full px-4 py-5"
+                  className="shell-main-inner w-full px-5 py-6"
                 >
                   {children}
                 </div>
@@ -112,23 +86,11 @@ export function AppShell({
 
               <main className="shell-main min-w-0 flex-1 overflow-y-auto">
                 <div
-                  className="shell-main-inner w-full px-5 py-6 md:px-8 md:py-8"
+                  className="shell-main-inner mx-auto w-full max-w-4xl px-6 py-8 md:px-10 md:py-10"
                 >
                   {children}
                 </div>
               </main>
-
-              {rightOpen && (
-                <aside
-                  className="shell-rail shell-rail-right h-full w-[var(--rail-right-width)] overflow-y-auto border-l"
-                  style={{
-                    backgroundColor: "var(--surface-elevated)",
-                    borderColor: "var(--border-subtle)",
-                  }}
-                >
-                  {rightRail}
-                </aside>
-              )}
             </div>
           )}
         </div>

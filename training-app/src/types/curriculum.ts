@@ -39,11 +39,35 @@ export type Section =
   | CalloutSection
   | TableSection;
 
-export interface Quiz {
+export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
   explanation: string;
+}
+
+export interface Quiz {
+  questions: QuizQuestion[];
+}
+
+export interface NarrationStep {
+  text: string;
+  highlight?: string;       // data-testid to highlight in practice app
+  navigateTo?: string;      // URL path to navigate iframe to
+  duration?: number;         // Estimated seconds for this step
+}
+
+export interface NarrationScript {
+  intro: string;
+  steps: NarrationStep[];
+  outro: string;
+}
+
+export interface ExerciseLab {
+  workspaceRoot: string;
+  targetFile: string;
+  runCommand: string;
+  successCriteria: string[];
 }
 
 export interface CodeExercise {
@@ -52,6 +76,10 @@ export interface CodeExercise {
   starterCode: string;
   solutionCode: string;
   hints: string[];
+  difficulty?: "beginner" | "intermediate" | "advanced";
+  narration?: string;
+  narrationSteps?: NarrationStep[];
+  lab?: ExerciseLab;
 }
 
 export interface PromptTemplate {
@@ -74,8 +102,10 @@ export interface Lesson {
   sections: Section[];
   quiz?: Quiz;
   exercise?: CodeExercise;
+  exercises?: CodeExercise[];
   promptTemplates?: PromptTemplate[];
   practiceLink?: PracticeLink;
+  narrationScript?: NarrationScript;
 }
 
 export interface Module {
@@ -91,6 +121,16 @@ export interface Module {
   lessons: Lesson[];
 }
 
+export interface Course {
+  id: string;
+  title: string;
+  subtitle: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  icon: string;
+  estimatedHours: number;
+  modules: Module[];
+}
+
 export interface ModuleProgress {
   started: boolean;
   completedLessons: string[];
@@ -100,9 +140,16 @@ export interface ModuleProgress {
 }
 
 export interface CourseProgress {
+  currentCourseId: string;
   currentModuleId: string;
   currentLessonId: string;
+  currentSectionIndex: number;
+  currentTab: string;
   modules: Record<string, ModuleProgress>;
   scrollPositions: Record<string, number>;
   lastAccessedAt: string;
+  voicePreference?: {
+    voice: string;
+    speed: number;
+  };
 }

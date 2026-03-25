@@ -1,7 +1,7 @@
 import type { Lesson } from "../types";
 
 export const lesson: Lesson = {
-  id: 11,
+  id: 13,
   title: "Test Authoring Guide",
   subtitle: "Practical habits for turning product knowledge into reliable automation",
   icon: "🎯",
@@ -166,4 +166,42 @@ test('contact form submits successfully with valid data', async ({ page }) => {
       prompt: "Explain this Playwright test in plain English. For each line, tell me what it does, why it is there, and what the equivalent exploratory or verification step would be. Do not use jargon.",
     },
   ],
+  narrationScript: {
+    intro: "At this point you have recorded flows, refined them with Copilot, read test results, and applied the HITL checklist. This lesson is about taking that workflow back to your desk and making it stick — the daily rhythm, the common gotchas, and how to work with your team on test contributions.",
+    steps: [
+      {
+        text: "Here's your daily workflow. Five steps, five minutes per test flow once you're comfortable. Step one: read the ticket and pull out the acceptance criteria. Step two: open the recorder and click through the app like you normally would. Step three: paste the recorded code into Copilot with the refine prompt template. Step four: tell Copilot what to assert, based on those acceptance criteria. Step five: run it. Green means commit. Red means diagnose or ask for help.",
+        duration: 30
+      },
+      {
+        text: "Let's talk about that 'ask for help' part, because it's really important. You do not need to solve every problem in one pass. If a test fails because a selector changed, try the debug prompt template. If you're still stuck after five minutes, stop. Inspect the page. Ask a teammate. Five minutes of spinning your wheels is fine. Thirty minutes is not.",
+        duration: 22
+      },
+      {
+        text: "Reading error messages is a skill, and it's one that gets better fast. When a test fails, Playwright gives you a lot of information. The key parts to look for: which test failed, which line it failed on, and what the expected versus actual values were. Most of the time, a failed test means either the app changed, the selector drifted, or your assertion is checking the wrong element. Start with those three possibilities and you'll solve most failures.",
+        duration: 28
+      },
+      {
+        text: "When should you escalate? Here's a simple rule. If Copilot generates code you don't understand even after using the 'explain this' prompt, don't merge it. If you need to mock an API response or set up authentication fixtures, that might be a good time to pair with a developer. If a test passes but something feels off about the assertions, trust that instinct. Your testing judgment is exactly what prevents false confidence from creeping into the suite.",
+        duration: 25
+      },
+      {
+        text: "Let's talk about working with your team. When you submit a test for review, include a note saying which acceptance criteria it covers. That makes the reviewer's job much easier and shows traceability. When you review someone else's test, use the HITL checklist from last lesson. Every time. It takes two minutes and catches the majority of common problems.",
+        duration: 22
+      },
+      {
+        text: "Here are the gotchas that trip up almost everyone in the first week. Forgetting to start the app before running tests, so everything fails with 'connection refused.' Editing the wrong file, so your changes don't show up. Trusting Copilot's assertions without comparing them to the ticket. Not pulling the latest code, so tests fail because the app changed under you. And recording against the wrong environment so URLs get baked in. All of these are easy to avoid once you know to watch for them.",
+        duration: 28
+      },
+      {
+        text: "Your first week plan. Monday: make sure your environment works and run the example tests. Tuesday: record three simple flows, like login, search, and navigation. Wednesday: refine those recordings using the Copilot prompt templates. Thursday: add assertions and submit your first test as a merge request. Friday: review someone else's test using the HITL checklist. By Friday, you've contributed real tests and reviewed someone else's work. That's a full-stack contribution in your first week.",
+        duration: 30
+      },
+      {
+        text: "One more thing. Keep the vocabulary cheat sheet handy. Terms like assertion, locator, fixture, page object, flaky test, headless, trace, and CI pipeline come up constantly in stand-ups and pull request reviews. You don't need to memorize definitions. You need to recognize them when they fly by in conversation so you can follow along and ask the right follow-up questions.",
+        duration: 22
+      }
+    ],
+    outro: "That wraps up Course 1: Foundations. You have a working workflow — record, refine, review — and a checklist to keep quality high on every merge request. Course 2 covers page objects, API testing, auth fixtures, and CI pipelines. Start with Monday's plan: run the example tests, then record your first three flows against the practice app."
+  }
 };

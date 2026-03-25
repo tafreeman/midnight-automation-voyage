@@ -1,149 +1,190 @@
-import type { Lesson } from "../types";
+import type { Lesson } from '../types';
 
 export const lesson: Lesson = {
-  id: 2,
-  title: "Environment Setup",
-  subtitle: "Getting your local dev environment ready",
-  icon: "⚙️",
+  id: 4,
+  title: 'Setting Up Your Environment',
+  subtitle: 'Install the tools, run the example tests, and confirm everything works',
+  icon: '⚙️',
   sections: [
     {
-      heading: "Prerequisites",
-      content: "You need Node.js 18+, VS Code, and three extensions. If local setup is new to you, follow the install once carefully and capture the steps in your project README. After the initial setup, most day-to-day interaction can happen through the VS Code Playwright tooling.",
-      code: `# Check your Node version (must be 18+)
-node --version
-
-# Create Playwright project in your repo
-npm init playwright@latest
-
-# When prompted, select:
-#   Language: TypeScript
-#   Test folder: e2e/
-#   GitHub Actions: Yes
-#   Install browsers: Yes`,
-      codeLanguage: "bash",
-      tip: "Treat setup as a reusable project asset, not tribal knowledge. Good setup notes pay off every time the environment needs to be recreated."
+      heading: 'What You\'ll Install',
+      content: `Three tools get you from zero to running tests. Each one has a specific job:\n\n**Node.js** is the runtime that executes JavaScript and TypeScript outside a browser. Playwright is built on it. Install the LTS (Long Term Support) version from nodejs.org.\n\n**VS Code** is the editor where you'll write, run, and debug tests. It has a built-in terminal and extensions that integrate directly with Playwright.\n\n**Playwright** is the test framework. It launches browsers, interacts with pages, and checks results — all from code you write in TypeScript.`,
+      table: {
+        headers: ['Tool', 'What It Does', 'Where to Get It'],
+        rows: [
+          ['Node.js (LTS)', 'Runs JavaScript/TypeScript outside the browser', 'nodejs.org — download the LTS version'],
+          ['VS Code', 'Code editor with built-in terminal and extensions', 'code.visualstudio.com'],
+          ['Playwright', 'Test framework that automates browsers', 'Installed via npm (next section)'],
+          ['GitHub Copilot (optional)', 'AI assistant that suggests test code as you type', 'VS Code extension marketplace'],
+        ],
+      },
+      tip: 'Verify Node.js installed correctly by opening a terminal and running: node --version. You should see v18 or higher.',
     },
     {
-      heading: "VS Code Extensions",
-      content: "Install these three extensions from the VS Code marketplace. The Playwright extension gives you a sidebar with a 'Record new' button, which is a fast onramp for capturing real flows before refining them.",
-      code: `# Search in VS Code Extensions panel (Ctrl+Shift+X):
-ms-playwright.playwright        # Playwright Test for VS Code
-GitHub.copilot                   # GitHub Copilot
-GitHub.copilot-chat              # GitHub Copilot Chat`,
-      codeLanguage: "text",
+      heading: 'The Terminal — A Quick Orientation',
+      content: `Open the terminal inside VS Code with **Ctrl+\`** (backtick). This is where you'll run every Playwright command.\n\nThe pattern is always the same: type a command, press Enter, read the output. Three commands cover 90% of what you'll do:`,
+      table: {
+        headers: ['Command', 'What It Does'],
+        rows: [
+          ['npx playwright test', 'Runs all your tests (headless by default — no visible browser)'],
+          ['npx playwright show-report', 'Opens the HTML test report in your browser'],
+          ['npx playwright codegen', 'Opens a browser and records your actions as test code'],
+        ],
+      },
+      tip: 'Error messages are helpful, not scary. When a command fails, the output tells you what went wrong. Read the last few lines first — that\'s where the actual problem is described.',
+      code: `# Open the VS Code terminal: Ctrl+\`\n# Then try these commands:\n\nnode --version          # Should print v18 or higher\nnpm --version           # Should print a version number\nnpx playwright --help   # Shows available Playwright commands`,
+      codeLanguage: 'bash',
     },
     {
-      heading: "Project Configuration",
-      content: "The playwright.config.ts file controls which browsers to test, where your app runs, and how failures are recorded. You may not edit this file every day, but understanding what it does helps everyone read failures, reason about retries, and spot environment drift.",
-      code: `// playwright.config.ts
-import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-testDir: './e2e',
-fullyParallel: true,
-forbidOnly: !!process.env.CI,
-retries: process.env.CI ? 2 : 0,
-reporter: [['html'], ['junit', { outputFile: 'results.xml' }]],
-use: {
-  baseURL: process.env.BASE_URL || 'http://localhost:3000',
-  trace: 'on-first-retry',
-  screenshot: 'only-on-failure',
-},
-projects: [
-  { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-  { name: 'firefox',  use: { ...devices['Desktop Firefox'] } },
-  { name: 'webkit',   use: { ...devices['Desktop Safari'] } },
-],
-});`,
-      codeLanguage: "typescript",
+      heading: 'Install Playwright',
+      content: `Run this command in your terminal to scaffold a new Playwright project:\n\n\`npm init playwright@latest\`\n\nThe installer asks a few questions. Accept the defaults — they're sensible starting points. When it finishes, your project has three new things:`,
+      table: {
+        headers: ['Created', 'Purpose'],
+        rows: [
+          ['playwright.config.ts', 'Settings file — which browsers, where your app runs, how to report results'],
+          ['tests/ folder', 'Where your test files live (each file ends in .spec.ts)'],
+          ['tests/example.spec.ts', 'A working example test you can run immediately'],
+        ],
+      },
+      code: `# Scaffold a new Playwright project\nnpm init playwright@latest\n\n# When prompted:\n#   Language: TypeScript\n#   Test folder: tests/\n#   GitHub Actions: Yes (adds CI config)\n#   Install browsers: Yes\n\n# After installation, install the VS Code extension:\n# Open Extensions (Ctrl+Shift+X) → search \"Playwright Test for VS Code\" → Install`,
+      codeLanguage: 'bash',
+      callout: 'The installer downloads browser binaries for Chromium, Firefox, and WebKit. This takes a minute or two depending on your connection. If the download fails behind a corporate proxy, run: npx playwright install --with-deps',
     },
     {
-      heading: "Repository Copilot Instructions",
-      content: "This is the highest-leverage Copilot investment. A `.github/copilot-instructions.md` file in your repo root teaches Copilot the testing conventions for that codebase so suggestions stay consistent automatically.",
-      code: `<!-- .github/copilot-instructions.md -->
-# Testing Conventions
-- Use Playwright Test (@playwright/test) for all E2E tests
-- Follow Page Object Model pattern (see e2e/pages/)
-- Use data-testid attributes for selectors, not CSS classes
-- Include at least one assertion per user action
-- Never use page.waitForTimeout() — rely on auto-wait
-- Tests must be independent — no shared state between tests
-- Use test fixtures for authentication setup`,
-      codeLanguage: "markdown",
-      tip: "This file shapes every Copilot suggestion project-wide. A 10-minute investment that pays off on every test written afterward."
-    }
-  ],
-  exercise: {
-    title: "Spot the Config Issue",
-    description: "This config has a common mistake. Can you identify and fix it?",
-    starterCode: `import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-testDir: './e2e',
-use: {
-  baseURL: 'http://localhost:3000',
-  trace: 'on-first-retry',
-},
-projects: [
-  {
-    name: 'chromium',
-    use: { ...devices['Desktop Chrome'] },
-  },
-],
-// Problem: tests depend on dev server but it's not configured
-// How do you tell Playwright to start the server automatically?
-});`,
-    solutionCode: `import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-testDir: './e2e',
-use: {
-  baseURL: 'http://localhost:3000',
-  trace: 'on-first-retry',
-},
-projects: [
-  {
-    name: 'chromium',
-    use: { ...devices['Desktop Chrome'] },
-  },
-],
-webServer: {
-  command: 'npm run dev',
-  port: 3000,
-  reuseExistingServer: !process.env.CI,
-},
-});`,
-    hints: [
-      "The webServer config object tells Playwright how to start your app",
-      "You need command (how to start), port (where to find it), and reuseExistingServer"
-    ]
-  },
-  promptTemplates: [
-    {
-      label: "Troubleshoot Playwright Setup",
-      context: "Use when Playwright installation or browser download fails and you need to diagnose the error.",
-      prompt: "Context: I am setting up Playwright for test automation and ran into an error during installation. My environment is [OPERATING_SYSTEM] with Node.js [VERSION]. I installed Playwright using npm init playwright@latest.\n\nAction: Diagnose the following error message and provide step-by-step instructions to resolve it. Also list the 5 most common Playwright setup failures and their fixes so I can check for related issues.\n\nRules:\n- Cover these common failure categories: browser binary download failures, missing OS-level dependencies (especially on Linux), permission errors on Windows/macOS, proxy/firewall blocking downloads, and Node.js version incompatibility\n- For each diagnosis, provide the exact terminal command to fix the issue\n- If the error suggests a dependency is missing, show how to install it for the user's OS\n- Include a verification command to confirm the fix worked (e.g., npx playwright install --dry-run, npx playwright doctor)\n\nData — Error message:\n[PASTE YOUR ERROR OUTPUT HERE]",
-    },
-    {
-      label: "Generate playwright.config.ts",
-      context: "Use when starting a new project and you need a complete, well-commented Playwright configuration file.",
-      prompt: "Context: I am setting up Playwright for a [FRAMEWORK — e.g., React/Next.js/Vue] project. The dev server runs on [PORT] using the command [DEV_COMMAND — e.g., npm run dev]. Tests will live in the [TEST_DIR — e.g., e2e/] directory.\n\nAction: Generate a complete playwright.config.ts file with detailed comments explaining every option.\n\nRules:\n- Include projects for Chromium, Firefox, and WebKit using Playwright's built-in device descriptors\n- Configure baseURL to read from an environment variable with a localhost fallback\n- Set up the HTML reporter plus a JUnit reporter for CI integration\n- Configure trace capture on first retry so failures are debuggable\n- Add screenshot capture on failure only\n- Include a webServer block that starts the dev server automatically and reuses an existing server outside CI\n- Set fullyParallel to true and configure 2 retries in CI, 0 locally\n- Use forbidOnly in CI to prevent accidental .only commits\n- Add a comment block at the top explaining how to run tests (npx playwright test, --headed, --ui flags)\n\nData:\n- Framework: [YOUR_FRAMEWORK]\n- Dev server command: [YOUR_DEV_COMMAND]\n- Dev server port: [YOUR_PORT]\n- Test directory: [YOUR_TEST_DIR]",
+      heading: 'Run the Example Tests',
+      content: `Playwright ships with a working example test. Run it to confirm your environment is set up correctly.\n\n\`npx playwright test\` runs all tests headlessly (no visible browser window). To see the browser while tests run, add the \`--headed\` flag.\n\nAfter tests finish, open the HTML report with \`npx playwright show-report\`. This report shows every test, its status, duration, and — for failures — screenshots and traces.\n\n**Checkpoint:** If you see green results in the report, your environment works. If something failed, read the error message — it usually points to a missing browser binary or a Node.js version issue.`,
+      code: `# Run all tests (headless — fast, no visible browser)\nnpx playwright test\n\n# Run with a visible browser window\nnpx playwright test --headed\n\n# Open the HTML report after tests finish\nnpx playwright show-report\n\n# Run a specific test file\nnpx playwright test tests/example.spec.ts`,
+      codeLanguage: 'bash',
+      tip: 'The --headed flag is useful for debugging. You\'ll watch the browser open, navigate, and interact — exactly like a user would. Use it when a test fails and you want to see what\'s happening.',
     },
   ],
   quiz: {
-    question: "Which command installs Playwright browsers after adding Playwright to your project?",
+    question: 'What command runs Playwright tests with a visible browser window?',
     options: [
-      "npm install browsers",
-      "npx playwright install",
-      "playwright setup --browsers",
-      "npm run playwright:browsers",
+      'npx playwright test --browser',
+      'npx playwright test --headed',
+      'npx playwright test --visible',
+      'npx playwright test --show',
     ],
     correctIndex: 1,
-    explanation: "After installing @playwright/test, you must run 'npx playwright install' to download the actual browser binaries (Chromium, Firefox, WebKit). Without this step, tests will fail because the browsers aren't available on your machine.",
+    explanation: 'The --headed flag tells Playwright to show the browser window while tests run. Without it, tests run headlessly (no visible window), which is faster but harder to debug visually.',
   },
+  exercises: [
+    {
+      title: 'Run the Example Test and Read the Report',
+      description: 'Run the built-in example test, open the HTML report, and answer: How many tests ran? How many passed? This confirms your environment is working.',
+      difficulty: 'beginner',
+      starterCode: `// Step 1: Open your terminal (Ctrl+\` in VS Code)
+// Step 2: Run the example test
+//   npx playwright test
+
+// Step 3: Open the HTML report
+//   npx playwright show-report
+
+// Step 4: Answer these questions:
+// - How many tests ran?
+// - How many passed?
+// - Which browsers were they tested in?
+
+// If all tests passed: your environment is ready.
+// If any failed: read the error message and fix the issue.`,
+      solutionCode: `// Expected results after running: npx playwright test
+//
+// The example.spec.ts file contains 2 tests:
+//   1. "has title" — verifies the page title
+//   2. "get started link" — clicks a link and checks navigation
+//
+// With the default config, these run in 3 browsers:
+//   Chromium, Firefox, WebKit = 6 total test runs
+//
+// After running: npx playwright show-report
+// You should see all 6 results with green checkmarks.
+//
+// If something failed, common fixes:
+//   npx playwright install          # reinstall browsers
+//   node --version                  # verify Node.js 18+`,
+      hints: [
+        'Open the terminal in VS Code with Ctrl+` (backtick key)',
+        'The command is: npx playwright test',
+        'After tests finish, run: npx playwright show-report',
+        'The report opens in your browser and shows pass/fail for each test',
+      ],
+    },
+    {
+      title: 'Navigate to the Practice App',
+      description: 'Modify the example test to navigate to the practice app login page instead of the default URL. Run it with --headed to watch the browser open your login page.',
+      difficulty: 'intermediate',
+      starterCode: `import { test, expect } from '@playwright/test';
+
+// This is the default example test.
+// Change it to navigate to the practice app login page
+// and verify the page loaded.
+
+test('navigate to practice app', async ({ page }) => {
+  // TODO: Navigate to http://localhost:5173/login
+  // TODO: Verify the page has loaded (check for a heading or input)
+});`,
+      solutionCode: `import { test, expect } from '@playwright/test';
+
+test('navigate to practice app', async ({ page }) => {
+  // Arrange: navigate to the login page
+  await page.goto('http://localhost:5173/login');
+
+  // Assert: verify the page loaded by checking for the email input
+  await expect(page.getByTestId('email-input')).toBeVisible();
+});
+
+// Run with: npx playwright test --headed
+// You should see the browser open and navigate to the login page.`,
+      hints: [
+        'Use page.goto() to navigate to a URL',
+        'The practice app login page is at http://localhost:5173/login',
+        'Use page.getByTestId(\'email-input\') to find the email field',
+        'Wrap visibility checks in expect(...).toBeVisible()',
+      ],
+    },
+  ],
   practiceLink: {
-    url: "http://localhost:5173/login",
-    label: "Use the Practice App login page to verify your Playwright setup is working",
-    description: "Once your environment is set up, the login page is perfect for testing your first automated interactions",
-  }
+    url: 'http://localhost:5173/login',
+    label: 'Open Practice App Login',
+    description: 'Make sure the practice app is running (cd practice-app && pnpm dev) so your tests have something to test against.',
+  },
+  narrationScript: {
+    intro: 'Before you write any tests, you need three tools installed. The whole setup takes about five minutes.',
+    steps: [
+      {
+        text: 'First, Node.js. This is the runtime that makes everything else work. Download the LTS version from nodejs.org and install it. After installation, open a terminal and run "node --version" to confirm it\'s v18 or higher.',
+        duration: 25,
+      },
+      {
+        text: 'Second, VS Code. This is your editor. Download it from code.visualstudio.com. The key feature for us is the built-in terminal — open it with Ctrl+backtick. Every Playwright command runs here.',
+        duration: 20,
+      },
+      {
+        text: 'Third, Playwright itself. Run "npm init playwright@latest" in your terminal. Accept the defaults when prompted. This creates your config file, a tests folder, and a working example test.',
+        duration: 25,
+      },
+      {
+        text: 'The installer also downloads browser binaries — Chromium, Firefox, and WebKit. This takes a minute. If it fails behind a proxy, run "npx playwright install --with-deps" afterward.',
+        duration: 20,
+      },
+      {
+        text: 'Install the Playwright extension for VS Code. Open Extensions with Ctrl+Shift+X, search for "Playwright Test for VS Code", and install it. This gives you a sidebar for running tests and a "Record new" button for codegen.',
+        duration: 25,
+      },
+      {
+        text: 'Now let\'s confirm everything works. Run "npx playwright test" in your terminal. This runs the example test across all three browsers.',
+        duration: 20,
+      },
+      {
+        text: 'After the tests finish, run "npx playwright show-report" to open the HTML report. You should see green results for every test. If you do, your environment is ready.',
+        duration: 20,
+      },
+      {
+        text: 'Try running with the --headed flag: "npx playwright test --headed". Now you\'ll see the browser open, navigate, and interact. This is useful when you need to watch what a test is doing.',
+        duration: 25,
+      },
+    ],
+    outro: 'Your environment is set up. You\'ve got Node.js, VS Code, and Playwright installed, and you\'ve confirmed everything works by running the example test. Next, let\'s look at how tests are structured.',
+  },
 };

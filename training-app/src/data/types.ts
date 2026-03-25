@@ -3,6 +3,12 @@ export interface Quiz {
   options: string[];
   correctIndex: number;
   explanation: string;
+  additionalQuestions?: {
+    question: string;
+    options: string[];
+    correctIndex: number;
+    explanation: string;
+  }[];
 }
 
 export interface CodeExercise {
@@ -19,6 +25,19 @@ export interface PromptTemplate {
   label: string;
   prompt: string;
   context: string;
+}
+
+export interface NarrationStep {
+  text: string;
+  highlight?: string;
+  navigateTo?: string;
+  duration?: number;
+}
+
+export interface NarrationScript {
+  intro: string;
+  steps: NarrationStep[];
+  outro: string;
 }
 
 export interface Lesson {
@@ -46,4 +65,5 @@ export interface Lesson {
     label: string;
     description: string;
   };
+  narrationScript?: NarrationScript;
 }

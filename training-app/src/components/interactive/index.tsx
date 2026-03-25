@@ -26,10 +26,12 @@ interface PracticeLinkCardProps {
 }
 
 export function QuizSection({ quiz, onAttempt }: QuizSectionProps) {
+  const q = quiz.questions[0];
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  const isCorrect = selectedIndex === quiz.correctIndex;
+  if (!q) return null;
+  const isCorrect = selectedIndex === q.correctIndex;
 
   const handleSubmit = () => {
     if (selectedIndex === null) return;
@@ -41,17 +43,17 @@ export function QuizSection({ quiz, onAttempt }: QuizSectionProps) {
     <section className="rounded-xl border p-5" style={panelStyle}>
       <div className="mb-4">
         <p className="text-xs uppercase tracking-[0.18em]" style={mutedTextStyle}>
-          Knowledge Check
+          Knowledge Check ({quiz.questions.length} question{quiz.questions.length > 1 ? "s" : ""})
         </p>
         <h3 className="mt-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-          {quiz.question}
+          {q.question}
         </h3>
       </div>
 
       <div className="space-y-2">
-        {quiz.options.map((option, index) => {
+        {q.options.map((option, index) => {
           const active = selectedIndex === index;
-          const correct = submitted && index === quiz.correctIndex;
+          const correct = submitted && index === q.correctIndex;
           const wrong = submitted && active && !isCorrect;
 
           return (
@@ -109,7 +111,7 @@ export function QuizSection({ quiz, onAttempt }: QuizSectionProps) {
           >
             <p className="font-semibold">{isCorrect ? "Correct" : "Not quite"}</p>
             <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
-              {quiz.explanation}
+              {q.explanation}
             </p>
           </div>
         )}

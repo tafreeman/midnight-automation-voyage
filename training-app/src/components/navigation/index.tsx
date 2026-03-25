@@ -1,11 +1,10 @@
 import {
   ChevronRight,
-  Grid2X2,
   Home,
   Menu,
   MoonStar,
+  NotebookPen,
   PanelLeftOpen,
-  PanelRightOpen,
   SunMedium,
 } from "lucide-react";
 import type { Module, Lesson, ThemeName } from "../../types/curriculum";
@@ -15,22 +14,20 @@ interface TopBarProps {
   module?: Module;
   lesson?: Lesson;
   leftOpen: boolean;
-  rightOpen: boolean;
   onToggleLeft: () => void;
-  onToggleRight: () => void;
   onOpenDashboard: () => void;
   onOpenModuleOverview?: (moduleId: string) => void;
+  onOpenNotes?: () => void;
 }
 
 export function TopBar({
   module,
   lesson,
   leftOpen,
-  rightOpen,
   onToggleLeft,
-  onToggleRight,
   onOpenDashboard,
   onOpenModuleOverview,
+  onOpenNotes,
 }: TopBarProps) {
   return (
     <div className="flex items-center justify-between gap-3">
@@ -48,14 +45,11 @@ export function TopBar({
         <button
           type="button"
           onClick={onOpenDashboard}
-          className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
-          style={{
-            borderColor: "var(--border-subtle)",
-            color: "var(--text-secondary)",
-          }}
+          className="rounded-md p-2 transition-colors"
+          style={{ color: "var(--text-secondary)" }}
+          aria-label="Home"
         >
-          <Home size={14} />
-          Training App
+          <Home size={16} />
         </button>
 
         {module && (
@@ -80,16 +74,18 @@ export function TopBar({
       </div>
 
       <div className="flex items-center gap-2">
+        {onOpenNotes && (
+          <button
+            type="button"
+            onClick={onOpenNotes}
+            className="rounded-md p-2 transition-colors"
+            style={{ color: "var(--text-secondary)" }}
+            aria-label="Open notes"
+          >
+            <NotebookPen size={16} />
+          </button>
+        )}
         <ThemeSelector />
-        <button
-          type="button"
-          onClick={onToggleRight}
-          className="rounded-md p-2 transition-colors"
-          style={{ color: "var(--text-secondary)" }}
-          aria-label={rightOpen ? "Close support rail" : "Open support rail"}
-        >
-          {rightOpen ? <PanelRightOpen size={16} /> : <Grid2X2 size={16} />}
-        </button>
       </div>
     </div>
   );
@@ -151,71 +147,58 @@ export function ModuleNav({
   onOpenLesson,
 }: ModuleNavProps) {
   return (
-    <nav className="module-nav h-full overflow-y-auto p-4 md:p-5">
-      <div className="space-y-3">
-        <button
-          type="button"
-          onClick={onOpenDashboard}
-          className="module-nav-dashboard flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors"
-          style={{
-            backgroundColor: "var(--surface-primary)",
-            borderColor: "var(--border-subtle)",
-            color: "var(--text-primary)",
-          }}
-        >
-          <Home size={16} style={{ color: "var(--accent-info)" }} />
-          <span className="text-sm font-medium">Progress Dashboard</span>
-        </button>
+    <nav className="module-nav h-full overflow-y-auto px-3 py-4">
+      <button
+        type="button"
+        onClick={onOpenDashboard}
+        className="mb-4 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors"
+        style={{ color: "var(--text-primary)" }}
+      >
+        <Home size={14} style={{ color: "var(--accent-info)" }} />
+        Progress
+      </button>
 
+      <div className="space-y-0.5">
         {modules.map((module) => {
-          const activeModule = module.id === currentModuleId;
+          const isActive = module.id === currentModuleId;
           return (
-            <div
-              key={module.id}
-              className="module-nav-panel rounded-2xl border p-3"
-              style={{
-                backgroundColor: activeModule ? "var(--surface-primary)" : "var(--surface-elevated)",
-                borderColor: activeModule ? "var(--accent-info)" : "var(--border-subtle)",
-              }}
-            >
+            <div key={module.id}>
               <button
                 type="button"
                 onClick={() => onOpenModuleOverview(module.id)}
-                className="flex w-full items-center justify-between gap-3 text-left"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors"
+                style={{
+                  backgroundColor: isActive ? "var(--surface-hover)" : "transparent",
+                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                }}
               >
-                <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
-                    Module {String(module.number).padStart(2, "0")}
-                  </p>
-                  <p className="truncate text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-                    {module.title}
-                  </p>
-                </div>
-                <span className="rounded-full border px-2 py-1 text-[10px] uppercase tracking-wider" style={{ borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}>
-                  {module.lessons.length} lessons
+                <span className="shrink-0 font-mono text-[11px]" style={{ color: "var(--text-muted)" }}>
+                  {String(module.number).padStart(2, "0")}
                 </span>
+                <span className="min-w-0 truncate">{module.title}</span>
               </button>
 
-              <div className="mt-3 space-y-1">
-                {module.lessons.map((lesson) => {
-                  const activeLesson = activeModule && lesson.id === currentLessonId;
-                  return (
-                    <button
-                      key={lesson.id}
-                      type="button"
-                      onClick={() => onOpenLesson(module.id, lesson.id)}
-                      className="module-nav-lesson flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors"
-                      style={{
-                        backgroundColor: activeLesson ? "var(--surface-hover)" : "transparent",
-                        color: activeLesson ? "var(--text-primary)" : "var(--text-secondary)",
-                      }}
-                    >
-                      <span className="truncate">{lesson.title}</span>
-                      <ChevronRight size={14} style={{ color: "var(--text-muted)" }} />
-                    </button>
-                  );
-                })}
-              </div>
+              {isActive && (
+                <div className="ml-7 space-y-0.5 py-1">
+                  {module.lessons.map((lesson) => {
+                    const isActiveLesson = lesson.id === currentLessonId;
+                    return (
+                      <button
+                        key={lesson.id}
+                        type="button"
+                        onClick={() => onOpenLesson(module.id, lesson.id)}
+                        className="flex w-full items-center rounded-md px-3 py-1.5 text-left text-[13px] transition-colors"
+                        style={{
+                          backgroundColor: isActiveLesson ? "color-mix(in srgb, var(--accent-action) 12%, transparent)" : "transparent",
+                          color: isActiveLesson ? "var(--accent-action)" : "var(--text-secondary)",
+                        }}
+                      >
+                        <span className="truncate">{lesson.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           );
         })}
@@ -225,11 +208,6 @@ export function ModuleNav({
 }
 
 interface BottomBarProps {
-  currentModule?: Module;
-  currentLesson?: Lesson;
-  lessonIndex?: number;
-  totalLessons?: number;
-  progressPercent?: number;
   onPrev?: () => void;
   onNext?: () => void;
   onComplete?: () => void;
@@ -239,11 +217,6 @@ interface BottomBarProps {
 }
 
 export function BottomBar({
-  currentModule,
-  currentLesson,
-  lessonIndex,
-  totalLessons,
-  progressPercent,
   onPrev,
   onNext,
   onComplete,
@@ -251,55 +224,37 @@ export function BottomBar({
   canGoNext = true,
   isCompleted = false,
 }: BottomBarProps) {
-  const progressLabel =
-    typeof progressPercent === "number"
-      ? `${progressPercent}%`
-      : currentModule && typeof lessonIndex === "number" && typeof totalLessons === "number"
-      ? `${Math.round(((lessonIndex + 1) / totalLessons) * 100)}%`
-      : "0%";
-
   return (
-    <div className="flex items-center justify-between gap-3 text-xs">
-      <div className="min-w-0">
-        <p className="font-medium" style={{ color: "var(--text-primary)" }}>
-          {currentModule?.title ?? "Training App"}
-        </p>
-        <p className="truncate" style={{ color: "var(--text-secondary)" }}>
-          {currentLesson?.title ?? "Open a lesson to continue"} {currentModule ? `• ${progressLabel}` : ""}
-        </p>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onPrev}
-          disabled={!canGoPrev}
-          className="rounded-full border px-3 py-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ borderColor: "var(--border-subtle)", color: "var(--text-primary)" }}
-        >
-          Prev
-        </button>
-        <button
-          type="button"
-          onClick={onComplete}
-          className="rounded-full border px-3 py-1.5 transition-colors"
-          style={{
-            borderColor: "var(--accent-action)",
-            color: "var(--accent-action)",
-          }}
-        >
-          {isCompleted ? "Completed" : "Mark Complete"}
-        </button>
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={!canGoNext}
-          className="rounded-full border px-3 py-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ borderColor: "var(--border-subtle)", color: "var(--text-primary)" }}
-        >
-          Next
-        </button>
-      </div>
+    <div className="flex items-center justify-end gap-2 text-xs">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={!canGoPrev}
+        className="rounded-full border px-3 py-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        style={{ borderColor: "var(--border-subtle)", color: "var(--text-primary)" }}
+      >
+        Prev
+      </button>
+      <button
+        type="button"
+        onClick={onComplete}
+        className="rounded-full border px-3 py-1.5 transition-colors"
+        style={{
+          borderColor: "var(--accent-action)",
+          color: "var(--accent-action)",
+        }}
+      >
+        {isCompleted ? "Completed" : "Mark Complete"}
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={!canGoNext}
+        className="rounded-full border px-3 py-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        style={{ borderColor: "var(--border-subtle)", color: "var(--text-primary)" }}
+      >
+        Next
+      </button>
     </div>
   );
 }
