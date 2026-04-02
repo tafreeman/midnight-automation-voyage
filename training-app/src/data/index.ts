@@ -9,6 +9,7 @@
 export type { Lesson, Quiz, CodeExercise, PromptTemplate } from "./types";
 export { courses } from "./curriculum";
 export { firstPlaywrightTestsCourse } from "./courses/first-playwright-tests";
+export { copilotFirstTestingCourse } from "./courses/copilot-first-testing";
 
 import { lesson as orientation } from "./modules/01-orientation";
 import { lesson as mindsetShifts } from "./modules/02-mindset-shifts";

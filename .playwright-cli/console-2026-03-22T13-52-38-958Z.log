@@ -1,0 +1,32 @@
+[  118743ms] ReferenceError: currentTheme is not defined
+    at LessonHero (http://127.0.0.1:4173/src/pages/LessonDetailPage.tsx?t=1774187676878:205:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:12867:12)
+    at renderWithHooks (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:4212:19)
+    at updateFunctionComponent (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:5568:16)
+    at beginWork (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:6139:20)
+    at runWithFiberInDEV (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:850:66)
+    at performUnitOfWork (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8428:92)
+    at workLoopSync (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8324:37)
+    at renderRootSync (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8308:6)
+    at performWorkOnRoot (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:7993:27)
+[  118741ms] [WARNING] %s
+
+%s
+ An error occurred in the <LessonHero> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:5256
+[  118859ms] ReferenceError: currentTheme is not defined
+    at LessonHero (http://127.0.0.1:4173/src/pages/LessonDetailPage.tsx?t=1774187676878:205:18)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:12867:12)
+    at renderWithHooks (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:4212:19)
+    at updateFunctionComponent (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:5568:16)
+    at beginWork (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:6139:20)
+    at runWithFiberInDEV (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:850:66)
+    at performUnitOfWork (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8428:92)
+    at workLoopSync (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8324:37)
+    at renderRootSync (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:8308:6)
+    at performWorkOnRoot (http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:7993:27)
+[  118857ms] [WARNING] %s
+
+%s
+ An error occurred in the <LessonHero> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c0c118e9:5256

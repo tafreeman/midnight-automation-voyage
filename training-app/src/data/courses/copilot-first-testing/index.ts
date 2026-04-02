@@ -1,0 +1,1 @@
+export { copilotFirstTestingCourse } from "./course";

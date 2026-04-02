@@ -1,5 +1,6 @@
 import { lessons as legacyLessons } from "./index";
 import { firstPlaywrightTestsCourse } from "./courses/first-playwright-tests/course";
+import { copilotFirstTestingCourse } from "./courses/copilot-first-testing/course";
 import type { Lesson as LegacyLesson } from "./types";
 import type {
   Course,
@@ -482,6 +483,7 @@ function buildCourse(
 
 export const courses: Course[] = [
   firstPlaywrightTestsCourse,
+  copilotFirstTestingCourse,
   buildCourse(
     "course-get-testing",
     "GET TESTING",
