@@ -5,6 +5,7 @@ dist/
 .env
 .env.*
 !.env.example
+CLAUDE.local.md
 *.tsbuildinfo
 *.zip
 standalone-dist/
