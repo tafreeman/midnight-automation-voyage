@@ -17,5 +17,29 @@
       "Bash(python -c \"import sys; print\\(sys.platform\\); print\\(sys.prefix\\); print\\(sys.base_prefix\\)\")",
       "Bash(python -c \"import pathlib; p=pathlib.Path.home\\(\\)/''.config''/''llm-maestro''; print\\(f''Config dir: {p}''\\); import os; print\\(f''APPDATA: {os.environ.get\\(\"\"APPDATA\"\",\"\"n/a\"\"\\)}''\\); print\\(f''XDG_CONFIG_HOME: {os.environ.get\\(\"\"XDG_CONFIG_HOME\"\",\"\"n/a\"\"\\)}''\\)\")"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/env-protection-hook.js"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/typescript-checker-hook.js"
+          }
+        ]
+      }
+    ]
   }
 }

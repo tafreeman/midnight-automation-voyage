@@ -26,7 +26,7 @@ export const seeATestDoRealWorkModule = createSingleLessonModule({
         type: "code",
         heading: "One Small Passing Test",
         language: "typescript",
-        code: `import { test, expect } from "@playwright/test";
+        code: String.raw`import { test, expect } from "@playwright/test";
 import { gotoRoute, credentials } from "../support/practice";
 
 test("editor can sign in and reach the dashboard", async ({ page }) => {
@@ -35,9 +35,26 @@ test("editor can sign in and reach the dashboard", async ({ page }) => {
   await page.getByTestId("password-input").fill(credentials.editor.password);
   await page.getByTestId("login-button").click();
 
-  await expect(page).toHaveURL(/#\\/dashboard$/);
+  await expect(page).toHaveURL(/#\/dashboard$/);
   await expect(page.getByTestId("dashboard-heading")).toContainText("Welcome, Test User");
 });`,
+      },
+      {
+        type: "code",
+        heading: "Try It — Run This Test",
+        language: "bash",
+        code: `cd practice-app
+pnpm exec playwright test e2e/first-playwright-tests/lesson-01-login.spec.ts --project=chromium --headed
+
+# Slow it down so you can follow each step (1 second between actions)
+pnpm exec playwright test e2e/first-playwright-tests/lesson-01-login.spec.ts --project=chromium --headed --slow-mo=1000`,
+      },
+      {
+        type: "callout",
+        variant: "tip",
+        heading: "First Time Here?",
+        content:
+          "If the command fails with a missing package or browser error, skip ahead to Lesson 3 (Set Up the Workbench) for the full install steps, then come back and run this.",
       },
       {
         type: "table",

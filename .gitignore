@@ -11,3 +11,4 @@ CLAUDE.local.md
 standalone-dist/
 dist-first-playwright-tests/
 test-results/
+practice-app/playwright-report/index.html
