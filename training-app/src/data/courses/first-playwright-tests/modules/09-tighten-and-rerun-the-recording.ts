@@ -137,7 +137,6 @@ test("editor login reaches the dashboard", async ({ page }) => {
       lab: createExerciseLab(
         "e2e/first-playwright-tests/lesson-09-refine-recording.spec.ts",
         "pnpm exec playwright test e2e/first-playwright-tests/lesson-09-refine-recording.spec.ts --project=chromium && pnpm exec playwright show-report",
-        "npx playwright test e2e/first-playwright-tests/lesson-09-refine-recording.spec.ts --project=chromium && npx playwright show-report",
         [
           "The refined test passes without test.skip.",
           "The spec proves both the route change and the dashboard content.",

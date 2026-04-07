@@ -4,7 +4,6 @@ import {
   BookOpen,
   CheckCircle2,
   Clock3,
-  Layers3,
   Sparkles,
 } from "lucide-react";
 
@@ -22,7 +21,7 @@ export function ModuleOverviewPage({
   onSelectLesson,
 }: ModuleOverviewPageProps) {
   const { isLessonCompleted, getModuleCompletion } = useProgress();
-  const { applyModuleTheme, currentTheme } = useTheme();
+  const { applyModuleTheme } = useTheme();
   const completion = getModuleCompletion(module.id, module.lessons.length);
 
   useEffect(() => {

@@ -1,0 +1,10 @@
+{
+  "name": "midnight-automation-voyage",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "dev:training": "pnpm --filter playwright-learning-app dev",
+    "dev:practice": "pnpm --filter practice-app dev"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@mav/shared-config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./tsconfig.base": "./tsconfig.base.json",
+    "./postcss": "./postcss.config.js",
+    "./tailwind": "./tailwind.config.js"
+  }
+}

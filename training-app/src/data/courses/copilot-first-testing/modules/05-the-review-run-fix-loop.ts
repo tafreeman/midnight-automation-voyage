@@ -3,7 +3,6 @@ import {
   createPracticeLink,
   createExerciseLab,
   routes,
-  credentials,
 } from "../shared";
 
 export const theReviewRunFixLoopModule = createSingleLessonModule({
