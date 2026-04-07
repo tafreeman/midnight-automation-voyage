@@ -1,0 +1,4 @@
+packages:
+  - "training-app"
+  - "practice-app"
+  - "packages/*"
