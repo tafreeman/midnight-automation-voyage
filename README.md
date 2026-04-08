@@ -1,6 +1,6 @@
 # Midnight Automation Voyage
 
-Playwright + GitHub Copilot training platform. Four courses, 40 modules, ~9 hours of interactive content teaching manual testers to write automated tests.
+Playwright + GitHub Copilot training platform. Two standalone courses plus legacy curriculum modules, ~9 hours of interactive content teaching manual testers to write automated tests.
 
 ## Quick Start
 
@@ -24,22 +24,33 @@ Open <http://localhost:5174> and pick a course.
 midnight-automation-voyage/
 ├── training-app/           ← Interactive learning platform (React + Vite)
 │   └── src/data/
-│       ├── courses/        ← New course structure (standalone modules)
-│       └── modules/        ← Legacy module library (31 modules)
-├── practice-app/           ← Test target app (9 pages with intentional bugs)
-├── test-cases/             ← Reference Playwright specs (33 tests)
-├── scripts/                ← Tooling and audit prompts
-└── docs/                   ← Content audit reports
+│       ├── courses/        ← Standalone course modules (2 courses, 22 modules)
+│       └── modules/        ← Legacy module library (33 modules)
+├── practice-app/           ← Test target app (9 pages, 12 routes, intentional bugs)
+├── packages/shared-config/ ← Shared TypeScript, PostCSS, Tailwind config
+├── test-cases/             ← Reference Playwright specs (10 files, 59 tests)
+├── scripts/                ← Utility scripts (packaging, prompt runner)
+├── docs/                   ← Course plans, audit reports, reference material
+├── _analysis/              ← Documentation audit and coordination files
+└── ADR-*.md                ← Architecture Decision Records
 ```
 
 ## Courses
 
-| Course | Level | Modules | Hours | Status |
-| --- | --- | --- | --- | --- |
-| **First Playwright Tests** | Beginner | 10 | ~2 | Complete (narration, quizzes, exercises) |
-| **Get Testing** | Beginner | 10 | ~2.5 | Complete |
-| **Build Skills** | Intermediate | 10 | ~2.3 | Partial (missing narration on most) |
-| **Go Pro** | Advanced | 10 | ~2.3 | Partial (some stub modules) |
+### Standalone Courses (recommended)
+
+| Course | Modules | Level | Status |
+| --- | --- | --- | --- |
+| **First Playwright Tests** | 12 | Beginner | Complete (narration, quizzes, exercises) |
+| **Copilot-First Testing** | 10 | Intermediate | Complete |
+
+### Legacy Curriculum (33 modules across 4 tiers)
+
+| Tier | Modules | Level | Status |
+| --- | --- | --- | --- |
+| **Get Testing** (Foundation + Core) | 01-10 | Beginner | Complete |
+| **Build Skills** (Review + Enterprise) | 11-21 | Intermediate | Partial (missing narration on some) |
+| **Go Pro** (Scale + Advanced) | 22-33 | Advanced | Partial (some stub modules) |
 
 ### Course 1: First Playwright Tests (recommended start)
 
@@ -72,7 +83,7 @@ Visual regression, accessibility, mobile/responsive, parallel execution, multi-b
 
 ## Practice App
 
-All exercises target this app. Nine pages with `data-testid` attributes and intentional bugs.
+All exercises target this app. Nine pages (12 routes) with `data-testid` attributes and intentional bugs.
 
 | Page | URL | What Learners Test |
 |------|-----|--------------------|
@@ -135,4 +146,26 @@ pnpm build         # Production build
 pnpm lint          # ESLint
 ```
 
+From the repo root:
+
+```bash
+pnpm build              # Build all workspace packages
+pnpm lint               # Lint all workspace packages
+pnpm dev:training       # Start training-app dev server (port 5174)
+pnpm dev:practice       # Start practice-app dev server (port 5173)
+```
+
 Uses pnpm with `pnpm-lock.yaml`. Practice app on `:5173`, training app on `:5174`.
+
+## Further Reading
+
+| Document | Description |
+|----------|-------------|
+| [ROADMAP.md](ROADMAP.md) | Implementation status and backlog |
+| [REPO-ANALYSIS.md](REPO-ANALYSIS.md) | Detailed repository analysis and scorecard |
+| [AGENTS.md](AGENTS.md) | AI agent configuration guide |
+| [docs/](docs/README.md) | Course plans, audits, and reference material |
+| [ADR-01](ADR-01-Standalone.md) | Standalone zero-installation architecture |
+| [ADR-02](ADR-02-Platform-Architecture.md) | Platform architecture & navigation |
+| [ADR-03](ADR-03-Enterprise-Curriculum.md) | Enterprise testing curriculum expansion |
+| [ADR-04](ADR-04-Assessment-Certification.md) | Assessment & certification layer |

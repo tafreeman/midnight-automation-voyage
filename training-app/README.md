@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# Training App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive learning platform for the Midnight Automation Voyage curriculum. Built with React + TypeScript + Vite + Tailwind CSS.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The training app delivers Playwright + GitHub Copilot courses through an interactive browser-based interface. Learners progress through modules with quizzes, code exercises, and prompt templates.
 
-## React Compiler
+### Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **33 training modules** organised in 6 tiers (Foundation → Advanced)
+- **2 standalone courses** with their own module sets (First Playwright Tests, Copilot-First Testing)
+- **Hash-based routing** — `#dashboard`, `#module/{id}`, `#lesson/{moduleId}/{lessonId}`
+- **Progress persistence** — localStorage with `ProgressContext`
+- **6 themes** via custom `ThemeContext` and CSS custom properties (`data-theme` attribute)
+- **Assessment system** — quizzes with gated completion, exercises with starter/solution code, prompt templates
+- **Responsive layout** — 3-column AppShell with collapsible sidebar (desktop) / overlay (mobile)
+- **Keyboard navigation** — arrow keys for lesson traversal
+- **43 shadcn/Radix UI components** for accessible UI primitives
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install   # Install dependencies
+pnpm dev       # Start dev server on http://localhost:5174
+pnpm build     # Production build (tsc + vite)
+pnpm lint      # ESLint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Or from the repo root: `pnpm dev:training`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/    # UI components (AppShell, Quiz, CodeExercise, DiffCodeBlock, etc.)
+├── contexts/      # React contexts (Progress, Theme, Navigation)
+├── data/
+│   ├── modules/   # Legacy module library (33 modules, used by 3 of 5 course views)
+│   ├── courses/   # Standalone course definitions (first-playwright-tests, copilot-first-testing)
+│   ├── types.ts   # Lesson, Quiz, CodeExercise, PromptTemplate types
+│   └── curriculum.ts  # Adapter mapping legacy modules into course structures
+├── hooks/         # Custom hooks
+├── layouts/       # Page layout components
+├── pages/         # Route-level page components
+├── themes/        # Theme tokens (tokens.css) and definitions
+└── types/         # Shared TypeScript type definitions
+```
+
+### Dual Data System
+
+The app has two content systems:
+
+1. **Legacy modules** (`data/modules/`) — 33 flat lesson files imported in `data/index.ts`. These feed 3 of 5 course views via the `curriculum.ts` adapter.
+2. **Standalone courses** (`data/courses/`) — Self-contained course definitions with their own module sets. Currently: First Playwright Tests (12 modules) and Copilot-First Testing (10 modules).
+
+Legacy modules cannot be removed yet — they are still consumed by active courses.
+
+## Standalone Build
+
+Build Course 1 as a single HTML file (no server needed):
+
+```bash
+pnpm build --config vite.first-playwright-tests.config.ts
+# Output: dist-first-playwright-tests/first-playwright-tests.html
+```
+
+## Related
+
+- [Practice App](../practice-app/) — The test target app that exercises run against
+- [Test Cases](../test-cases/) — Reference Playwright specs
+- [Root README](../README.md) — Project overview and quick start
