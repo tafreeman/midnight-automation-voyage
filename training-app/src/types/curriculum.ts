@@ -74,7 +74,7 @@ export interface CodeExercise {
   title: string;
   description: string;
   starterCode: string;
-  solutionCode: string;
+  solutionCode?: string;
   hints: string[];
   difficulty?: "beginner" | "intermediate" | "advanced";
   narration?: string;
