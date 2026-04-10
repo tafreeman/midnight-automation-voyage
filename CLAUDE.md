@@ -4,10 +4,12 @@ Playwright + GitHub Copilot training platform teaching manual testers to write a
 
 ## Project Structure
 
-- `training-app/` - Interactive learning app (React + TypeScript + Vite + Tailwind, 27 modules)
-- `practice-app/` - Test target app (login, dashboard, products, contact, orders, checkout, settings, admin, activity)
-- `test-cases/` - Test mapping reference and example Playwright specs
-- `playwright-copilot-learning.html` - Self-contained learning resource
+- `training-app/` - Interactive learning app (React + TypeScript + Vite + Tailwind, 33 legacy modules + 2 standalone courses)
+- `practice-app/` - Test target app with intentional bugs (9 pages, 12 routes, 3 context providers)
+- `test-cases/` - Reference Playwright specs (10 spec files, 59 tests) and lesson starter/solution files
+- `packages/shared-config/` - Shared TypeScript, PostCSS, and Tailwind configuration
+- `docs/` - Course plans, audit reports, and reference material
+- `scripts/` - Utility scripts (standalone packaging, prompt runner)
 
 ## Prerequisites
 
@@ -40,16 +42,24 @@ pnpm build        # Production build
 pnpm lint         # ESLint
 ```
 
+From the repo root:
+
+```bash
+pnpm build              # Build all workspace packages
+pnpm lint               # Lint all workspace packages
+pnpm dev:training       # Start training-app dev server (port 5174)
+pnpm dev:practice       # Start practice-app dev server (port 5173)
+```
+
 ## Gotchas
 
 - Uses pnpm (lockfiles are `pnpm-lock.yaml`) — not npm/yarn
 - practice-app runs on :5173, training-app on :5174
 - On Windows mounted drives or VMs, pnpm may fail with EPERM — use npm as fallback
 - Always check `node_modules` exists before running build/dev/lint commands
+- practice-app pages are intentionally buggy — do NOT fix lint errors in page components
+- training-app has a dual data system: legacy modules in `data/modules/` and standalone courses in `data/courses/`
 
-## Completed Roadmap Items
+## Agent Configuration
 
-- **Workstream A (Platform UX):** All 13 design audit fixes implemented (typography, a11y, responsive, keyboard nav)
-- **Workstream B (Assessment Backfill):** 27/27 quizzes, 24/27 exercises (modules 01-03 intentionally conceptual)
-- **Workstream C (Content Expansion):** 12 new modules (16-27) covering auth fixtures, visual regression, a11y testing, flaky tests, test data, certification, trace viewer, mobile, parallel execution, multi-browser, test tagging, GitHub Actions
-- **Workstream D (Practice App Features):** 5 new pages (settings, admin, activity, payment, review) + AuthContext, CheckoutContext, ToastContext
+See [AGENTS.md](AGENTS.md) for a complete guide to the AI agent setup in this repo.
