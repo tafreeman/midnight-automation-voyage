@@ -1,0 +1,48 @@
+<!--
+  404.html — SPA routing guard for GitHub Pages.
+  
+  VitePress generates static HTML for all routes, but direct URL access
+  to clean URLs (without .html) can 404 on GitHub Pages. This redirect
+  script preserves the path and redirects to the root with a query param,
+  which the index page then resolves via History API.
+  
+  See: https://github.com/rafgraph/spa-github-pages
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <script>
+      /**
+       * Single Page App redirect for GitHub Pages.
+       * Converts the path into a query string so the SPA can route correctly.
+       * segmentCount = 1 because the site lives at /midnight-automation-voyage/
+       */
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join("/") +
+          "/?/" +
+          l.pathname
+            .slice(1)
+            .split("/")
+            .slice(pathSegmentsToKeep)
+            .join("/")
+            .replace(/&/g, "~and~") +
+          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          l.hash
+      );
+    </script>
+  </head>
+  <body>
+    <p>Redirecting&hellip;</p>
+  </body>
+</html>
