@@ -18,6 +18,9 @@ export default defineConfig({
   /* Clean URLs remove the trailing .html from routes */
   cleanUrls: true,
 
+  /* Ignore localhost links — these are for the local dev environment */
+  ignoreDeadLinks: [/localhost/],
+
   head: [
     /* Outfit — display/body font (DEV_REFERENCE design system) */
     [
