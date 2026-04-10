@@ -1,6 +1,8 @@
 # Midnight Automation Voyage
 
-Playwright + GitHub Copilot training platform. Two standalone courses plus legacy curriculum modules, ~9 hours of interactive content teaching manual testers to write automated tests.
+> **Playwright + GitHub Copilot training platform** — Interactive courses teaching manual testers to write automated tests. Two standalone courses plus legacy curriculum modules with ~9 hours of content.
+
+📖 **Documentation & Guides:** <https://tafreeman.github.io/midnight-automation-voyage/>
 
 ## Quick Start
 
