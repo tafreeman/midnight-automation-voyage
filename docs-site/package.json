@@ -1,0 +1,17 @@
+{
+  "name": "midnight-automation-voyage-docs",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "deploy": "gh-pages -d .vitepress/dist"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3",
+    "vue": "^3.5.13",
+    "gh-pages": "^6.3.0"
+  }
+}

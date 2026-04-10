@@ -1,4 +1,5 @@
 packages:
   - "training-app"
   - "practice-app"
+  - "docs-site"
   - "packages/*"

@@ -1,0 +1,325 @@
+/**
+ * Custom CSS for Midnight Automation Voyage docs site.
+ *
+ * Design system: DEV_REFERENCE archetype
+ * - Light theme default
+ * - Outfit (display/body) + Cascadia Code (mono)
+ * - Midnight navy brand accent (#1e3a5f) — derived from repo name
+ *
+ * All color tokens use CSS custom properties for easy theming.
+ * No Inter, Roboto, Arial, or system-ui fonts (per design rules).
+ * No purple gradient on white backgrounds.
+ */
+
+/* ─── VitePress color overrides via CSS custom properties ─── */
+:root {
+  /* Brand accent — midnight navy with teal undertone */
+  --vp-c-brand-1: #1e3a5f;
+  --vp-c-brand-2: #245073;
+  --vp-c-brand-3: #2d6187;
+  --vp-c-brand-soft: rgba(30, 58, 95, 0.12);
+
+  /* Tip accent — teal (matches training-app arctic-steel theme) */
+  --vp-c-tip-1: #0f766e;
+  --vp-c-tip-2: #0d9488;
+  --vp-c-tip-3: #14b8a6;
+  --vp-c-tip-soft: rgba(15, 118, 110, 0.12);
+
+  /* Warning accent — warm amber */
+  --vp-c-warning-1: #b45309;
+  --vp-c-warning-2: #d97706;
+  --vp-c-warning-3: #f59e0b;
+  --vp-c-warning-soft: rgba(180, 83, 9, 0.12);
+
+  /* Typography — Outfit (sans) + Cascadia Code (mono) */
+  --vp-font-family-base: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --vp-font-family-mono: "Cascadia Code", "Fira Code", "JetBrains Mono",
+    monospace;
+
+  /* Layout refinements */
+  --vp-nav-height: 64px;
+  --vp-sidebar-width: 272px;
+
+  /* Custom tokens for components */
+  --mav-accent-midnight: #1e3a5f;
+  --mav-accent-teal: #0f766e;
+  --mav-accent-amber: #b45309;
+  --mav-surface-warm: #faf8f5;
+  --mav-surface-code: #f1f5f9;
+  --mav-text-heading: #0f172a;
+  --mav-text-body: #334155;
+  --mav-text-muted: #64748b;
+  --mav-border-light: #e2e8f0;
+  --mav-border-medium: #cbd5e1;
+  --mav-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --mav-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --mav-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.1);
+}
+
+/* ─── Dark mode overrides ─── */
+.dark {
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #93c5fd;
+  --vp-c-brand-3: #bfdbfe;
+  --vp-c-brand-soft: rgba(96, 165, 250, 0.16);
+
+  --mav-accent-midnight: #93c5fd;
+  --mav-accent-teal: #5eead4;
+  --mav-accent-amber: #fbbf24;
+  --mav-surface-warm: #0f172a;
+  --mav-surface-code: #1e293b;
+  --mav-text-heading: #f1f5f9;
+  --mav-text-body: #cbd5e1;
+  --mav-text-muted: #94a3b8;
+  --mav-border-light: #1e293b;
+  --mav-border-medium: #334155;
+  --mav-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --mav-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --mav-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Typography refinements ─── */
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4 {
+  color: var(--mav-text-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.vp-doc h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+}
+
+/* Inline code styling */
+.vp-doc :not(pre) > code {
+  background: var(--mav-surface-code);
+  border: 1px solid var(--mav-border-light);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.875em;
+}
+
+/* ─── Code block enhancements ─── */
+.vp-doc div[class*="language-"] {
+  border: 1px solid var(--mav-border-light);
+  border-radius: 8px;
+  box-shadow: var(--mav-shadow-sm);
+}
+
+/* ─── Home page hero override ─── */
+.VPHero .name {
+  background: linear-gradient(135deg, var(--mav-accent-midnight), var(--mav-accent-teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHero .tagline {
+  color: var(--mav-text-body);
+  font-weight: 400;
+  max-width: 560px;
+}
+
+/* ─── Feature cards on home page ─── */
+.VPFeature {
+  border: 1px solid var(--mav-border-light) !important;
+  border-radius: 12px !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.VPFeature:hover {
+  box-shadow: var(--mav-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─── Custom component: CourseCard ─── */
+.course-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--mav-border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.course-card:hover {
+  box-shadow: var(--mav-shadow-md);
+  transform: translateY(-2px);
+}
+
+.course-card .course-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mav-text-heading);
+  margin-bottom: 0.5rem;
+}
+
+.course-card .course-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.course-card .course-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.course-card .badge-beginner {
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--mav-accent-teal);
+}
+
+.course-card .badge-intermediate {
+  background: rgba(30, 58, 95, 0.1);
+  color: var(--mav-accent-midnight);
+}
+
+.course-card .badge-advanced {
+  background: rgba(180, 83, 9, 0.1);
+  color: var(--mav-accent-amber);
+}
+
+.course-card .course-description {
+  color: var(--mav-text-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.course-card .course-modules {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mav-border-light);
+}
+
+.course-card .module-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 1rem;
+}
+
+.course-card .module-list li {
+  font-size: 0.8125rem;
+  color: var(--mav-text-muted);
+  padding: 0.125rem 0;
+}
+
+.course-card .module-list li::before {
+  content: "→ ";
+  color: var(--mav-accent-teal);
+}
+
+/* ─── Custom component: FeatureGrid ─── */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.feature-grid .feature-item {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--mav-border-light);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.feature-grid .feature-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-grid .feature-title {
+  font-weight: 600;
+  color: var(--mav-text-heading);
+  margin-bottom: 0.25rem;
+}
+
+.feature-grid .feature-desc {
+  font-size: 0.875rem;
+  color: var(--mav-text-muted);
+  line-height: 1.5;
+}
+
+/* ─── CodeSwitcher tabs ─── */
+.code-switcher {
+  margin: 1rem 0;
+}
+
+.code-switcher .tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--mav-border-light);
+  margin-bottom: -1px;
+}
+
+.code-switcher .tab-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--mav-text-muted);
+  cursor: pointer;
+  font-family: var(--vp-font-family-base);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.code-switcher .tab-btn:hover {
+  color: var(--mav-text-body);
+}
+
+.code-switcher .tab-btn.active {
+  color: var(--vp-c-brand-1);
+  border-bottom-color: var(--vp-c-brand-1);
+}
+
+/* ─── Responsive adjustments ─── */
+@media (max-width: 768px) {
+  .course-card .module-list {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Table enhancements ─── */
+.vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid var(--mav-border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vp-doc th {
+  background: var(--mav-surface-code);
+  font-weight: 600;
+  text-align: left;
+}
+
+.vp-doc th,
+.vp-doc td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--mav-border-light);
+}
+
+.vp-doc tr:nth-child(even) {
+  background: var(--vp-c-bg-soft);
+}
