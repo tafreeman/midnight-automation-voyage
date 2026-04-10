@@ -1,73 +1,89 @@
-# React + TypeScript + Vite
+# Practice App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Test target application for the Midnight Automation Voyage curriculum. Built with React + TypeScript + Vite + Tailwind CSS + React Router.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The practice app provides realistic web pages with `data-testid` attributes and **intentional bugs** for learners to write Playwright tests against. It is the hands-on companion to the training app's lessons.
 
-## React Compiler
+> **Important:** Pages are intentionally hand-built with bugs — these are the curriculum's test surface. Do not "fix" lint errors or replace components with polished libraries.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Pages
 
-## Expanding the ESLint configuration
+| Page | Route | What Learners Test |
+|------|-------|--------------------|
+| Login | `/login` | Form validation, auth errors, account lockout after 5 failures |
+| Dashboard | `/dashboard` | Post-login landing, visual regression target |
+| Products | `/products` | Search, filter, empty state |
+| Contact | `/contact` | Required/optional fields, format validation |
+| Orders | `/orders` | Sort, pagination, status filter |
+| Checkout | `/checkout/shipping` → `/checkout/payment` → `/checkout/review` → `/checkout/confirmation` | Multi-step wizard, back navigation, data preservation |
+| Settings | `/settings` | Tabs, profile updates, **3 intentional WCAG a11y violations** |
+| Admin | `/admin` | Role-gated access, bulk actions, **stale state bugs** |
+| Activity | `/activity` | Filters, detail views, mock modes (error/timeout/stale-cache) |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Total:** 9 user-facing pages, 12 routes (checkout has 4 steps).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Test Credentials
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Email | Password | Role |
+|-------|----------|------|
+| `user@test.com` | `Password123!` | Editor |
+| `admin@test.com` | `AdminPass1!` | Admin |
+| `locktest@test.com` | `LockPass123!` | Viewer (lockout testing) |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Intentional Defects
+
+These bugs exist by design as Playwright test targets:
+
+- **SettingsPage:** Missing label, low contrast, bad focus order (WCAG violations)
+- **AdminPage:** Stale state bugs, duplicate validation
+- **ActivityPage:** Mock modes for error/timeout/stale-cache
+- **ToastContext:** 3 documented race conditions
+- **LoginPage:** Account lockout after 5 failed attempts
+
+## Context Providers
+
+| Provider | Purpose |
+|----------|---------|
+| `AuthContext` | Role-based authentication (admin/editor/viewer) |
+| `CheckoutContext` | Multi-step checkout wizard state |
+| `ToastContext` | Notifications with intentional race conditions |
+
+## Development
+
+```bash
+pnpm install   # Install dependencies
+pnpm dev       # Start dev server on http://localhost:5173
+pnpm build     # Production build (tsc + vite)
+pnpm lint      # ESLint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Or from the repo root: `pnpm dev:practice`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## E2E Tests
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Playwright tests live in `e2e/`:
+
+```bash
+npx playwright test                    # Run all tests
+npx playwright test --ui               # Interactive UI mode
+npx playwright test e2e/first-playwright-tests/  # Run lesson tests only
 ```
+
+```
+e2e/
+├── first-playwright-tests/           # Lesson starter test files (learner exercises)
+├── first-playwright-tests-solutions/ # Reference solutions
+└── support/                          # Test helpers and fixtures
+```
+
+## Deployment
+
+Deployed to GitHub Pages via `.github/workflows/deploy-practice-app.yml` on push to `main`.
+
+## Related
+
+- [Training App](../training-app/) — The interactive learning platform
+- [Test Cases](../test-cases/) — Additional reference Playwright specs
+- [Root README](../README.md) — Project overview and quick start
