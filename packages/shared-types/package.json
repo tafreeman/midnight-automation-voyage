@@ -1,0 +1,12 @@
+{
+  "name": "@mav/shared-types",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./narrator": "./src/narrator.ts",
+    "./routes": "./src/routes.ts",
+    "./credentials": "./src/credentials.ts"
+  }
+}

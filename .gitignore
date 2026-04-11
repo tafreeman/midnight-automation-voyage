@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .vite/
+.turbo
 *.local
 .env
 .env.*
@@ -10,5 +11,8 @@ CLAUDE.local.md
 *.zip
 standalone-dist/
 dist-first-playwright-tests/
+dist-diagrams-deck/
 test-results/
 practice-app/playwright-report/index.html
+.vs/
+.generated/

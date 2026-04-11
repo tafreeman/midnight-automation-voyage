@@ -1,0 +1,32 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "package.json",
+        "tsconfig.json",
+        "tsconfig.*.json",
+        "vite.config.ts",
+        "vite.*.config.ts",
+        "tailwind.config.js",
+        "postcss.config.js"
+      ],
+      "outputs": ["dist/**", "dist-first-playwright-tests/**", "dist-diagrams-deck/**"]
+    },
+    "lint": {
+      "inputs": ["src/**", "eslint.config.js", "tsconfig.json"],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json", "tsconfig.*.json"],
+      "outputs": []
+    }
+  }
+}

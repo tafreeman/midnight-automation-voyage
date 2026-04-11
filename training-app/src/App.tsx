@@ -19,6 +19,7 @@ import { NotesDrawer } from "./components/NotesDrawer";
 import { LessonDetailPage } from "./pages/LessonDetailPage";
 import { ProgressDashboardPage } from "./pages/ProgressDashboardPage";
 import { CourseSelectPage } from "./pages/CourseSelectPage";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 type ViewState =
   | { kind: "courses" }
@@ -235,11 +236,13 @@ function AppContent() {
           onSelectLesson={openLesson}
         />
       ) : (
-        <LessonDetailPage
-          module={activeModule}
-          lesson={activeLesson}
-          onQuizAttempt={() => saveQuizScore(activeModule.id, activeLesson.id, 1)}
-        />
+        <ErrorBoundary>
+          <LessonDetailPage
+            module={activeModule}
+            lesson={activeLesson}
+            onQuizAttempt={() => saveQuizScore(activeModule.id, activeLesson.id, 1)}
+          />
+        </ErrorBoundary>
       )}
       {notesOpen && (
         <NotesDrawer
@@ -262,7 +265,9 @@ export default function App() {
         initialModuleId={firstModule.id}
         initialLessonId={firstLesson.id}
       >
-        <AppContent />
+        <ErrorBoundary>
+          <AppContent />
+        </ErrorBoundary>
       </ProgressProvider>
     </ThemeProvider>
   );

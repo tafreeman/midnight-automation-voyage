@@ -332,6 +332,7 @@ export function CourseSelectPage({
   }, [courses, progress]);
 
   // Find active resume target across all courses
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const resumeTarget = useMemo(() => {
     for (const { course, hasStarted, completion } of courseData) {
       if (!hasStarted || completion === 100) continue;

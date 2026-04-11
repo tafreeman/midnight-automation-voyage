@@ -46,7 +46,7 @@ export const lesson: Lesson = {
           ['tests/example.spec.ts', 'A working example test you can run immediately'],
         ],
       },
-      code: `# Scaffold a new Playwright project\nnpm init playwright@latest\n\n# When prompted:\n#   Language: TypeScript\n#   Test folder: tests/\n#   GitHub Actions: Yes (adds CI config)\n#   Install browsers: Yes\n\n# After installation, install the VS Code extension:\n# Open Extensions (Ctrl+Shift+X) → search \"Playwright Test for VS Code\" → Install`,
+      code: `# Scaffold a new Playwright project\nnpm init playwright@latest\n\n# When prompted:\n#   Language: TypeScript\n#   Test folder: tests/\n#   GitHub Actions: Yes (adds CI config)\n#   Install browsers: Yes\n\n# After installation, install the VS Code extension:\n# Open Extensions (Ctrl+Shift+X) → search "Playwright Test for VS Code" → Install`,
       codeLanguage: 'bash',
       callout: 'The installer downloads browser binaries for Chromium, Firefox, and WebKit. This takes a minute or two depending on your connection. If the download fails behind a corporate proxy, run: npx playwright install --with-deps',
     },

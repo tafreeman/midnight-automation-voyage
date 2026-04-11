@@ -84,9 +84,18 @@ runPnpm(["build", "--config", "vite.first-playwright-tests.config.ts"], training
   VITE_PRACTICE_URL: "../practice/index.html",
 });
 
+runPnpm(["build", "--config", "vite.diagrams-deck.config.ts"], trainingAppDir, {
+  ...process.env,
+  VITE_PRACTICE_URL: "../practice/index.html",
+});
+
 copyDist(practiceAppDir, "practice");
 copyDist(trainingAppDir, "training");
 copyFile(
   path.join(trainingAppDir, "dist-first-playwright-tests", "first-playwright-tests.html"),
   path.join(outputDir, "training", "first-playwright-tests.html"),
+);
+copyFile(
+  path.join(trainingAppDir, "dist-diagrams-deck", "diagrams-deck.html"),
+  path.join(outputDir, "training", "diagrams-deck.html"),
 );

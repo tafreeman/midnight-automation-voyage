@@ -152,7 +152,7 @@ function mergeExercises(...legacies: LegacyLesson[]) {
 }
 
 function narrationScriptFromLegacy(legacy: LegacyLesson): Lesson["narrationScript"] {
-  return (legacy as any).narrationScript ?? undefined;
+  return legacy.narrationScript ?? undefined;
 }
 
 function lessonFromLegacy(legacy: LegacyLesson, moduleNumber: number): Lesson {
