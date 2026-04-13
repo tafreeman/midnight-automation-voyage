@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-04-11-diagrams-deck-extension-design.md - Print</title>
+    <style>
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: #333;
+            background: #fff;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+            page-break-after: avoid;
+        }
+
+        h1 { 
+            font-size: 2em;
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 0.3em; 
+        }
+        h2 { 
+            font-size: 1.5em;
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 0.3em; 
+        }
+        h3 { font-size: 1.25em; }
+
+        p {
+            margin: 0 0 16px 0;
+            orphans: 3;
+            widows: 3;
+        }
+
+        /* Code blocks */
+        code {
+            background: #f6f8fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 85%;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        /* Tables */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 0;
+            padding-left: 2em;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid #ddd;
+            padding-left: 16px;
+            margin-left: 0;
+            color: #666;
+        }
+
+        /* Images */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* C4X Diagram Styles */
+        .c4x-diagram {
+            margin: 24px 0;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .c4x-diagram svg {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .c4x-error {
+            margin: 20px 0;
+            padding: 16px;
+            background: #fee;
+            border: 2px solid #dc2626;
+            border-radius: 8px;
+            color: #dc2626;
+            page-break-inside: avoid;
+        }
+
+        .c4x-error-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .c4x-error-message {
+            margin: 0;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #fca5a5;
+            border-radius: 4px;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .c4x-diagram {
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+            }
+
+            .c4x-diagram svg {
+                max-width: 100% !important;
+            }
+
+            a {
+                color: #000;
+            }
+
+            /* Avoid orphaned headers */
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid;
+            }
+
+            /* Keep diagrams together */
+            .c4x-diagram, pre, table, blockquote {
+                page-break-inside: avoid;
+            }
+
+            /* Hide print instructions banner */
+            .print-instructions {
+                display: none !important;
+            }
+        }
+
+        /* Screen-only print instructions */
+        @media screen {
+            .print-instructions {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #08427B 0%, #1168BD 100%);
+                color: white;
+                padding: 12px 20px;
+                text-align: center;
+                font-size: 14px;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+            
+            .print-instructions kbd {
+                background: rgba(255,255,255,0.2);
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-family: monospace;
+            }
+            
+            body {
+                padding-top: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-instructions">
+        📄 Press <kbd>Ctrl+P</kbd> to open Print dialog → Select <strong>"Save as PDF"</strong> as destination
+    </div>
+<h1>Diagrams Deck Extension — Design Spec</h1>
+<p><strong>Date:</strong> 2026-04-11
+<strong>Status:</strong> Draft
+<strong>Audience:</strong> Development team (internal reference)</p>
+<h2>Problem</h2>
+<p>The existing <code>standalone-diagrams-deck.tsx</code> catalogs visual primitives (layouts, components, lists, shapes, recipes) but does not diagram the actual component architecture, data flow, navigation state machine, or data model of the training platform. The dev team needs these as architectural reference material, rendered inside the same deck for consistency.</p>
+<h2>Decision Summary</h2>
+<ul>
+<li><strong>Approach:</strong> Mermaid.js for structural diagrams + hand-built JSX for data flow (Approach A)</li>
+<li><strong>Scope:</strong> Add 4 new sections to the existing 5 (total: 9 sections)</li>
+<li><strong>Rendering:</strong> Mermaid <code>graph TD</code>, <code>stateDiagram-v2</code>, <code>classDiagram</code> themed via CSS custom properties; hand-built JSX reusing existing card/connector vocabulary</li>
+<li><strong>Bundle:</strong> Mermaid inlined via <code>viteSingleFile</code>, ~150KB addition to the standalone HTML</li>
+</ul>
+<h2>Deck Structure</h2>
+<h3>Existing Sections (unchanged)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>ID</th>
+<th>Title</th>
+<th>Icon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>layouts</code></td>
+<td>Layouts</td>
+<td><code>LayoutGrid</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>components</code></td>
+<td>Components</td>
+<td><code>Component</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>lists</code></td>
+<td>Lists &amp; Flows</td>
+<td><code>CheckSquare</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>shapes</code></td>
+<td>Shapes &amp; Connectors</td>
+<td><code>Shapes</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>recipes</code></td>
+<td>Deck Recipes</td>
+<td><code>Library</code></td>
+</tr>
+</tbody>
+</table>
+<h3>New Sections</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>ID</th>
+<th>Title</th>
+<th>Subtitle</th>
+<th>Icon</th>
+<th>Rendering</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td><code>architecture</code></td>
+<td>Architecture</td>
+<td>Component hierarchy and slot composition</td>
+<td><code>Layers3</code></td>
+<td>Mermaid</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>dataflow</code></td>
+<td>Data Flow</td>
+<td>Context providers, state ownership, prop threading</td>
+<td><code>Spline</code></td>
+<td>Hand-built JSX</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>navigation</code></td>
+<td>Navigation</td>
+<td>Route state machine and lesson sequencing</td>
+<td><code>Milestone</code></td>
+<td>Mermaid</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>datamodel</code></td>
+<td>Data Model</td>
+<td>Type relationships and legacy adapters</td>
+<td><code>Diamond</code></td>
+<td>Mermaid</td>
+</tr>
+</tbody>
+</table>
+<p>All four Lucide icons (<code>Layers3</code>, <code>Spline</code>, <code>Milestone</code>, <code>Diamond</code>) are already imported in the file.</p>
+<h2>Mermaid.js Integration</h2>
+<h3>Installation</h3>
+<ul>
+<li>Add <code>mermaid</code> as a dev dependency in <code>training-app/package.json</code></li>
+<li><code>viteSingleFile</code> inlines it into the standalone HTML (~150KB gzipped addition)</li>
+</ul>
+<h3>Initialization</h3>
+<p>Import mermaid in <code>standalone-diagrams-deck.tsx</code> and call <code>mermaid.initialize()</code> once at module scope with <code>theme: 'base'</code> and variable overrides mapped from the deck’s CSS custom properties.</p>
+<h3>MermaidDiagram Component</h3>
+<p>A small wrapper component:</p>
+<pre><code class="language-tsx">function MermaidDiagram({ definition, id }: { definition: string; id: string }) {
+  const ref = useRef&lt;HTMLDivElement&gt;(null);
+
+  useEffect(() =&gt; {
+    if (ref.current) {
+      mermaid.render(id, definition).then(({ svg }) =&gt; {
+        ref.current!.innerHTML = svg;
+      });
+    }
+  }, [definition, id]);
+
+  return &lt;div ref={ref} className=&quot;mermaid-diagram&quot; /&gt;;
+}
+</code></pre>
+<h3>Theme Mapping</h3>
+<p>Mermaid <code>theme: 'base'</code> accepts <code>themeVariables</code>. Map from the deck’s existing CSS tokens:</p>
+<table>
+<thead>
+<tr>
+<th>Deck Token</th>
+<th>Mermaid Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--text-primary</code></td>
+<td><code>primaryTextColor</code></td>
+<td>Node labels</td>
+</tr>
+<tr>
+<td><code>--surface-code</code></td>
+<td><code>primaryColor</code></td>
+<td>Node backgrounds</td>
+</tr>
+<tr>
+<td><code>--surface-elevated</code></td>
+<td><code>mainBkg</code></td>
+<td>Diagram background</td>
+</tr>
+<tr>
+<td><code>--border-subtle</code></td>
+<td><code>lineColor</code></td>
+<td>Edges and borders</td>
+</tr>
+<tr>
+<td><code>--accent-info</code></td>
+<td><code>primaryBorderColor</code></td>
+<td>Highlighted node borders</td>
+</tr>
+<tr>
+<td><code>--accent-action</code></td>
+<td><code>activeTaskBorderColor</code></td>
+<td>Active/current states</td>
+</tr>
+<tr>
+<td><code>--text-secondary</code></td>
+<td><code>secondaryTextColor</code></td>
+<td>Secondary labels</td>
+</tr>
+<tr>
+<td><code>--text-muted</code></td>
+<td><code>tertiaryTextColor</code></td>
+<td>Annotations</td>
+</tr>
+</tbody>
+</table>
+<p>Diagrams automatically adapt when the user switches deck themes.</p>
+<h2>Section Designs</h2>
+<h3>6. Architecture Section</h3>
+<p><strong>Diagram 6a — Provider &amp; Shell Nesting</strong> (Mermaid <code>graph TD</code>)</p>
+<p>Shows the full component hierarchy from providers down to leaf components:</p>
+<pre><code class="language-mermaid">graph TD
+    TP[ThemeProvider] --&gt; PP[ProgressProvider]
+    PP --&gt; EB[ErrorBoundary]
+    EB --&gt; AS[AppShell]
+    AS --&gt;|titleBar| TB[TopBar]
+    TB --&gt; TS[ThemeSelector]
+    AS --&gt;|leftRail| MN[ModuleNav]
+    AS --&gt;|footerBar| BB[BottomBar]
+    AS --&gt;|children| PC[Page Content]
+    PC --&gt; CSP[CourseSelectPage]
+    PC --&gt; PDP[ProgressDashboardPage]
+    PC --&gt; LDP[LessonDetailPage]
+</code></pre>
+<p><strong>Diagram 6b — Slot Composition Variants</strong> (Mermaid <code>graph TD</code> with subgraphs)</p>
+<p>Three subgraphs showing how AppShell slots are filled differently in:</p>
+<ol>
+<li><strong>Main App</strong> — Full routing: TopBar + ModuleNav + BottomBar + routed page content</li>
+<li><strong>Standalone Course</strong> — Scoped to single course: TopBar + ModuleNav (filtered) + BottomBar + StandaloneDashboardPage or LessonDetailPage</li>
+<li><strong>Diagrams Deck</strong> — No ProgressProvider, no ModuleNav: TopBar + custom DiagramNav + BottomBar + DiagramsDeckPage</li>
+</ol>
+<p>Each subgraph highlights which slots are filled and which are absent/replaced.</p>
+<h3>7. Data Flow Section</h3>
+<p><strong>Diagram 7a — Context Provider Flow</strong> (Hand-built JSX)</p>
+<p>Visual tree using the deck’s existing card shapes showing:</p>
+<ul>
+<li><strong>ThemeContext card</strong> providing: <code>theme</code>, <code>preference</code>, <code>setPreference</code>, <code>getModuleTheme()</code>
+<ul>
+<li>Arrows to consumers: <code>TopBar</code> (ThemeSelector), <code>AppShell</code> (data-theme), <code>ModuleNav</code> (active highlight)</li>
+</ul>
+</li>
+<li><strong>ProgressContext card</strong> providing: <code>currentModuleId</code>, <code>currentLessonId</code>, <code>completedLessons</code>, <code>markLessonComplete()</code>, <code>quizScores</code>, <code>notes</code>, <code>getNote()</code>, <code>saveNote()</code>
+<ul>
+<li>Arrows to consumers: <code>ModuleNav</code> (completion badges), <code>BottomBar</code> (mark complete), <code>NotesDrawer</code> (get/save note), <code>LessonDetailPage</code> (quiz scores)</li>
+</ul>
+</li>
+</ul>
+<p>Uses the existing connector/arrow shapes from the Shapes &amp; Connectors section. Provider cards styled with <code>--accent-special</code> border; consumer cards with <code>--accent-info</code> border.</p>
+<p><strong>Diagram 7b — State Ownership</strong> (Hand-built JSX)</p>
+<p>Grid of cards, one per stateful component, showing:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns (local state)</th>
+<th>Receives (props/context)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>App</code></td>
+<td><code>viewState</code>, hash sync</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>AppShell</code></td>
+<td><code>leftOpen</code>, <code>isMobile</code></td>
+<td><code>titleBar</code>, <code>leftRail</code>, <code>footerBar</code>, <code>children</code></td>
+</tr>
+<tr>
+<td><code>TopBar</code></td>
+<td><code>notesOpen</code></td>
+<td><code>module</code>, <code>lesson</code>, <code>leftOpen</code>, callbacks</td>
+</tr>
+<tr>
+<td><code>ModuleNav</code></td>
+<td>—</td>
+<td><code>modules</code>, <code>activeModuleId</code>, <code>activeLessonId</code>, <code>completedLessons</code></td>
+</tr>
+<tr>
+<td><code>BottomBar</code></td>
+<td>—</td>
+<td><code>onPrev</code>, <code>onNext</code>, <code>canGoPrev</code>, <code>canGoNext</code>, <code>isCompleted</code></td>
+</tr>
+<tr>
+<td><code>LessonDetailPage</code></td>
+<td><code>activeSectionIndex</code>, scroll position</td>
+<td><code>module</code>, <code>lesson</code>, progress context</td>
+</tr>
+</tbody>
+</table>
+<p>Rendered as styled cards using the deck’s existing card vocabulary, with “owns” items in <code>--accent-action</code> and “receives” items in <code>--accent-info</code>.</p>
+<h3>8. Navigation Section</h3>
+<p><strong>Diagram 8a — Route State Machine</strong> (Mermaid <code>stateDiagram-v2</code>)</p>
+<pre><code class="language-mermaid">stateDiagram-v2
+    dashboard
+    dashboard --&gt; courses 
+ 
+ course --&gt; lessons
+
+    lesson --&gt; [*]
+</code></pre>
+<p>Each state annotated with its hash pattern:</p>
+<ul>
+<li><code>courses</code> → <code>#courses</code></li>
+<li><code>dashboard</code> → <code>#dashboard</code></li>
+<li><code>lesson</code> → <code>#lesson/{moduleId}/{lessonId}</code></li>
+</ul>
+<p><strong>Diagram 8b — Lesson Navigation Sequence</strong> (Mermaid <code>graph LR</code>)</p>
+<p>Shows <code>flattenLessons()</code> producing a linear chain across modules:</p>
+<pre><code>Module 1         Module 2         Module 3
+[L1] → [L2] → | [L3] → [L4] → | [L5] → [L6]
+         ↑ prev    next ↑
+         └── BottomBar ──┘
+</code></pre>
+<p>Prev/Next step through the flat list. <code>markLessonComplete()</code> toggles completion state per lesson. Module boundaries shown as vertical dividers.</p>
+<h3>9. Data Model Section</h3>
+<p><strong>Diagram 9a — Core Types</strong> (Mermaid <code>classDiagram</code>)</p>
+<pre><code class="language-mermaid">classDiagram
+    Course &quot;1&quot; --&gt; &quot;*&quot; Module
+    Module &quot;1&quot; --&gt; &quot;*&quot; Lesson
+    Lesson &quot;1&quot; --&gt; &quot;*&quot; Section
+    Lesson &quot;0..1&quot; --&gt; &quot;0..1&quot; Quiz
+    Lesson &quot;0..1&quot; --&gt; &quot;*&quot; Exercise
+    Lesson &quot;0..1&quot; --&gt; &quot;*&quot; PromptTemplate
+
+    class Course {
+        +string id
+        +string title
+        +string subtitle
+        +Difficulty difficulty
+        +number estimatedHours
+        +Module[] modules
+    }
+
+    class Module {
+        +string id
+        +number number
+        +string title
+        +ThemeName theme
+        +Difficulty difficulty
+        +string[] learningObjectives
+        +Lesson[] lessons
+    }
+
+    class Lesson {
+        +string id
+        +string title
+        +number estimatedMinutes
+        +Section[] sections
+    }
+
+    class Section {
+        &lt;&lt;union&gt;&gt;
+        TextSection
+        CodeSection
+        CalloutSection
+        TableSection
+    }
+</code></pre>
+<p><strong>Diagram 9b — Legacy Adapter Pattern</strong> (Mermaid <code>graph LR</code>)</p>
+<p>Shows the transformation pipeline:</p>
+<pre><code>Legacy flat lessons (modules/*.ts)
+    ↓ moduleFromLegacy()
+Single-lesson Module
+    ↓ mergedModule()
+Multi-lesson Module (combined)
+    ↓ splitModuleFirstHalf() / splitModuleSecondHalf()
+Half-modules (split for pacing)
+    ↓ curriculum.ts courses[]
+Course (GET TESTING / BUILD SKILLS / GO PRO)
+</code></pre>
+<p>Contrasted with the native course path:</p>
+<pre><code>courses/first-playwright-tests/modules/*.ts
+    → firstPlaywrightTestsCourse (direct)
+</code></pre>
+<h2>Files Changed</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>training-app/package.json</code></td>
+<td>Add <code>mermaid</code> dev dependency</td>
+</tr>
+<tr>
+<td><code>training-app/src/standalone-diagrams-deck.tsx</code></td>
+<td>Add 4 sections to array, import mermaid, add <code>MermaidDiagram</code> component, add <code>ArchitectureSection</code>, <code>DataFlowSection</code>, <code>NavigationSection</code>, <code>DataModelSection</code> components</td>
+</tr>
+</tbody>
+</table>
+<p>No new files needed — all changes are within the existing standalone entry point.</p>
+<h2>Out of Scope</h2>
+<ul>
+<li>Standalone build pipeline diagrams (explicitly excluded)</li>
+<li>Changes to the 5 existing sections</li>
+<li>New standalone entry points or vite configs</li>
+<li>Interactive/draggable diagrams (D3/React Flow — rejected in approach selection)</li>
+</ul>
+<h2>Success Criteria</h2>
+<ul>
+<li>All 9 sections render in the diagrams deck</li>
+<li>Mermaid diagrams adapt to all 6 deck themes</li>
+<li><code>pnpm build:diagrams-deck</code> produces a working single-file HTML</li>
+<li>Diagrams accurately reflect the current codebase architecture</li>
+<li>No regressions in existing 5 sections</li>
+</ul>
+
+</body>
+</html>
