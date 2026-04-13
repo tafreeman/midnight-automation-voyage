@@ -67,8 +67,8 @@ async function compileCurriculumSources() {
 
   const compilerOptions = {
     target: ts.ScriptTarget.ES2022,
-    module: ts.ModuleKind.CommonJS,
-    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    module: ts.ModuleKind.NodeNext,
+    moduleResolution: ts.ModuleResolutionKind.NodeNext,
     rootDir: trainingAppSrc,
     outDir: tempRoot,
     esModuleInterop: true,
@@ -399,8 +399,7 @@ function renderModule(module, options = {}) {
 }
 
 async function importCompiledModule(filePath) {
-  const imported = await import(pathToFileURL(filePath).href);
-  return imported.default ?? imported;
+  return import(pathToFileURL(filePath).href);
 }
 
 async function buildLegacyModuleEntries() {
@@ -465,11 +464,6 @@ function renderCourseSummaries(courses) {
 
 async function main() {
   await ensureCleanDirectory(tempRoot);
-  await fs.writeFile(
-    path.join(tempRoot, "package.json"),
-    JSON.stringify({ type: "commonjs" }, null, 2),
-    "utf8",
-  );
   await compileCurriculumSources();
 
   const [{ courses }, { firstPlaywrightTestsCourse }, { copilotFirstTestingCourse }] = await Promise.all([
@@ -641,7 +635,9 @@ async function main() {
   console.log("Standalone courses exported: 2");
 }
 
-main().catch((error) => {
+try {
+  await main();
+} catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;
-});
+}
