@@ -21,11 +21,12 @@ export default defineConfig({
   /* Ignore localhost links — these are for the local dev environment */
   ignoreDeadLinks: [/localhost/],
 
-  /* Enable Mermaid diagrams */
+  /* Enable Mermaid diagram support */
+  mermaid: {},
+
+  /* Markdown configuration */
   markdown: {
-    config: (md) => {
-      // Mermaid support is built into VitePress 1.0+
-    },
+    lineNumbers: false,
   },
 
   head: [
