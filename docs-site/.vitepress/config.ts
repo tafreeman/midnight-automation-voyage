@@ -21,6 +21,13 @@ export default defineConfig({
   /* Ignore localhost links — these are for the local dev environment */
   ignoreDeadLinks: [/localhost/],
 
+  /* Enable Mermaid diagrams */
+  markdown: {
+    config: (md) => {
+      // Mermaid support is built into VitePress 1.0+
+    },
+  },
+
   head: [
     /* Outfit — display/body font (DEV_REFERENCE design system) */
     [
@@ -92,6 +99,13 @@ export default defineConfig({
             { text: "Architecture", link: "/reference/architecture" },
             { text: "Test Cases", link: "/reference/test-cases" },
             { text: "Changelog", link: "/reference/changelog" },
+          ],
+        },
+        {
+          text: "Contributing",
+          items: [
+            { text: "Contributing Guide", link: "/reference/contributing" },
+            { text: "Security Policy", link: "/reference/security" },
           ],
         },
       ],
