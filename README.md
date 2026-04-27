@@ -1,8 +1,19 @@
+<div align="center">
+
 # Midnight Automation Voyage
 
-> **Playwright + GitHub Copilot training platform** — Interactive courses teaching manual testers to write automated tests. Two standalone courses plus legacy curriculum modules with ~9 hours of content.
+**Playwright + GitHub Copilot training platform** — Interactive courses teaching manual testers to write automated tests. Built for QA engineers who know how to test but are new to code.
 
-📖 **Documentation & Guides:** <https://tafreeman.github.io/midnight-automation-voyage/>
+[![Documentation](https://img.shields.io/badge/docs-live-brightgreen)](https://tafreeman.github.io/midnight-automation-voyage/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](https://nodejs.org/)
+[![Playwright](https://img.shields.io/badge/playwright-1.58%2B-45ba4b.svg)](https://playwright.dev/)
+
+[**Documentation**](https://tafreeman.github.io/midnight-automation-voyage/) • [**Getting Started**](https://tafreeman.github.io/midnight-automation-voyage/guide/getting-started) • [**Courses**](https://tafreeman.github.io/midnight-automation-voyage/courses/) • [**Contributing**](https://tafreeman.github.io/midnight-automation-voyage/reference/contributing)
+
+</div>
+
+---
 
 ## Quick Start
 
@@ -37,75 +48,67 @@ midnight-automation-voyage/
 └── ADR-*.md                ← Architecture Decision Records
 ```
 
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎭 **Real Playwright Tests** | 59 reference tests included — no mock data, no external dependencies |
+| 🤖 **Copilot-First Workflow** | Master AI-assisted testing from day one with prompt templates |
+| 📚 **55+ Interactive Modules** | Two standalone courses (22 modules) + legacy curriculum (33 modules) |
+| 🧪 **Practice App Included** | 9 pages with intentional bugs, `data-testid` attributes throughout |
+| 🎯 **Quizzes & Exercises** | Knowledge checks and hands-on coding in every module |
+| 🚀 **Zero to CI/CD** | From first locator to GitHub Actions with parallel sharding |
+
 ## Courses
 
-### Standalone Courses (recommended)
+### Standalone Courses (Recommended Start)
 
-| Course | Modules | Level | Status |
-| --- | --- | --- | --- |
-| **First Playwright Tests** | 12 | Beginner | Complete (narration, quizzes, exercises) |
-| **Copilot-First Testing** | 10 | Intermediate | Complete |
+| Course | Modules | Level | Time | Status |
+| --- | --- | --- | --- | --- |
+| [**First Playwright Tests**](https://tafreeman.github.io/midnight-automation-voyage/courses/first-playwright-tests) | 12 | Beginner | ~3 hrs | ✅ Complete |
+| [**Copilot-First Testing**](https://tafreeman.github.io/midnight-automation-voyage/courses/copilot-first-testing) | 10 | Intermediate | ~3 hrs | ✅ Complete |
 
-### Legacy Curriculum (33 modules across 4 tiers)
+### Legacy Curriculum (4 Tiers, 33 Modules)
 
-| Tier | Modules | Level | Status |
-| --- | --- | --- | --- |
-| **Get Testing** (Foundation + Core) | 01-10 | Beginner | Complete |
-| **Build Skills** (Review + Enterprise) | 11-21 | Intermediate | Partial (missing narration on some) |
-| **Go Pro** (Scale + Advanced) | 22-33 | Advanced | Partial (some stub modules) |
+| Tier | Modules | Level | Time | Status |
+| --- | --- | --- | --- | --- |
+| [**Get Testing**](https://tafreeman.github.io/midnight-automation-voyage/courses/) | 01-10 | Beginner | ~2 hrs | ✅ Complete |
+| [**Build Skills**](https://tafreeman.github.io/midnight-automation-voyage/courses/build-skills) | 11-21 | Intermediate | ~2 hrs | ⚡ Partial narration |
+| [**Go Pro**](https://tafreeman.github.io/midnight-automation-voyage/courses/go-pro) | 22-33 | Advanced | ~2 hrs | ⚡ Partial |
 
-### Course 1: First Playwright Tests (recommended start)
+## Learning Path
 
-The standalone beginner onramp. Each lesson builds on the previous:
+```
+First Playwright Tests → Copilot-First Testing → Build Skills → Go Pro
+     (Beginner)              (Intermediate)        (Intermediate)  (Advanced)
+```
 
-1. See a Test Do Real Work
-2. Just Enough TypeScript and Tooling
-3. Set Up the Workbench
-4. Run Tests from VS Code and Terminal
-5. Read a Test Like Evidence
-6. Find the Right Element
-7. Ask Copilot for a Useful Draft
-8. Record a Login Flow in VS Code
-9. Tighten and Re-Run the Recording
-10. Build Your First Test Pack
+**What you'll learn:**
 
-### Course 2: Get Testing
-
-Research-aligned lesson order teaching concepts before tools:
-
-1. How Automation Works → 2. Environment Setup → 3. Test Structure → 4. Selectors → 5. What to Automate → 6. Your Toolkit → 7. Record → 8. Refine → 9. Read Results → 10. Review Checklist
-
-### Course 3: Build Skills
-
-Page objects, API testing, auth fixtures, test data, network mocking, flaky test diagnosis, trace viewer, prompt templates, certification.
-
-### Course 4: Go Pro
-
-Visual regression, accessibility, mobile/responsive, parallel execution, multi-browser, test tagging, GitHub Actions CI/CD, component testing, performance, custom reporters.
+- **Beginner** → Record, refine, and run your first tests with Copilot
+- **Intermediate** → Master selectors, page objects, API testing, and CI/CD
+- **Advanced** → Trace viewer, accessibility, visual regression, performance testing
 
 ## Practice App
 
-All exercises target this app. Nine pages (12 routes) with `data-testid` attributes and intentional bugs.
+All exercises target this app. **9 pages, 12 routes, intentional bugs** — designed specifically for learning automation.
 
-| Page | URL | What Learners Test |
-|------|-----|--------------------|
-| Login | `/login` | Form validation, auth errors, lockout |
-| Dashboard | `/dashboard` | Post-login landing |
-| Products | `/products` | Search, filter, empty state |
-| Contact | `/contact` | Required/optional fields, format validation |
-| Orders | `/orders` | Sort, pagination, status filter |
-| Checkout | `/checkout/*` | Multi-step wizard, back nav, data preservation |
-| Settings | `/settings` | Tabs, profile updates, notifications |
-| Admin | `/admin` | User management, bulk actions |
-| Activity | `/activity` | Filters, detail views, async content |
+**Key Features:**
+- ✅ `data-testid` attributes on all interactive elements
+- ✅ Intentional bugs for test discovery (Settings: 3 a11y violations, Admin: stale state, Toast: race conditions)
+- ✅ Multi-step wizard (Checkout: 4 steps)
+- ✅ Role-based access (Admin panel requires admin credentials)
+- ✅ 59 reference Playwright tests included in `test-cases/examples/`
 
-**Test credentials:**
+**Test Credentials:**
 
-| Email | Password | Role |
-|-------|----------|------|
-| user@test.com | Password123! | Editor |
-| admin@test.com | AdminPass1! | Admin |
-| locktest@test.com | LockPass123! | Viewer (lockout testing) |
+| Email | Password | Role | Access |
+|-------|----------|------|--------|
+| `user@test.com` | `Password123!` | Editor | Standard pages |
+| `admin@test.com` | `AdminPass1!` | Admin | Admin panel |
+| `locktest@test.com` | `LockPass123!` | Viewer | Lockout testing |
+
+[**Full Practice App Reference →**](https://tafreeman.github.io/midnight-automation-voyage/guide/practice-app)
 
 ## Standalone Build
 
@@ -159,15 +162,40 @@ pnpm dev:practice       # Start practice-app dev server (port 5173)
 
 Uses pnpm with `pnpm-lock.yaml`. Practice app on `:5173`, training app on `:5174`.
 
-## Further Reading
+## Documentation
+
+📖 **Full documentation:** <https://tafreeman.github.io/midnight-automation-voyage/>
+
+| Resource | Description |
+|----------|-------------|
+| [**Getting Started**](https://tafreeman.github.io/midnight-automation-voyage/guide/getting-started) | Installation and setup guide |
+| [**Course Catalog**](https://tafreeman.github.io/midnight-automation-voyage/courses/) | Browse all courses and modules |
+| [**Practice App Reference**](https://tafreeman.github.io/midnight-automation-voyage/guide/practice-app) | Detailed page-by-page guide with test IDs |
+| [**Architecture**](https://tafreeman.github.io/midnight-automation-voyage/reference/architecture) | Technical architecture and ADRs |
+| [**Test Cases Reference**](https://tafreeman.github.io/midnight-automation-voyage/reference/test-cases) | 59 reference tests explained |
+| [**Contributing**](https://tafreeman.github.io/midnight-automation-voyage/reference/contributing) | How to contribute |
+| [**Changelog**](https://tafreeman.github.io/midnight-automation-voyage/reference/changelog) | Version history and roadmap |
+
+### Repository Documentation
 
 | Document | Description |
 |----------|-------------|
 | [ROADMAP.md](ROADMAP.md) | Implementation status and backlog |
-| [REPO-ANALYSIS.md](REPO-ANALYSIS.md) | Detailed repository analysis and scorecard |
 | [AGENTS.md](AGENTS.md) | AI agent configuration guide |
-| [docs/](docs/README.md) | Course plans, audits, and reference material |
 | [ADR-01](ADR-01-Standalone.md) | Standalone zero-installation architecture |
 | [ADR-02](ADR-02-Platform-Architecture.md) | Platform architecture & navigation |
 | [ADR-03](ADR-03-Enterprise-Curriculum.md) | Enterprise testing curriculum expansion |
 | [ADR-04](ADR-04-Assessment-Certification.md) | Assessment & certification layer |
+
+## Contributing
+
+We welcome contributions! See our [Contributing Guide](https://tafreeman.github.io/midnight-automation-voyage/reference/contributing) for:
+
+- How to report bugs and suggest features
+- Development setup instructions
+- Code style guidelines
+- Pull request process
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.

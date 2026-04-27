@@ -5,6 +5,7 @@
  * - Outfit + Cascadia Code font pairing (DEV_REFERENCE archetype)
  * - Midnight navy accent via CSS custom properties
  * - Custom Vue components for course cards and feature grids
+ * - Mermaid diagram support
  */
 import DefaultTheme from "vitepress/theme";
 import type { Theme } from "vitepress";
