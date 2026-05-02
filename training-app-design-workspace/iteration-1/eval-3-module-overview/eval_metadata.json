@@ -1,6 +1,0 @@
-{
-  "eval_id": 3,
-  "eval_name": "module-overview-page",
-  "prompt": "Design the Module 14 overview page for 'Page Object Model.' This is an even-numbered module so it should use a light theme. Show the 6 lessons in this module with completion state, estimated times, prerequisites (must complete Module 13 first), and a preview of what they'll build. The learner has completed 13 of 30 modules. The left nav should show their position in the full course.\n\nPhase it: explore existing module overview code first, then design the layout spec, then build it, then audit with /design-framework.",
-  "assertions": []
-}

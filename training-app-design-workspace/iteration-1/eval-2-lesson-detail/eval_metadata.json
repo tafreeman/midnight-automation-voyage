@@ -1,6 +1,0 @@
-{
-  "eval_id": 2,
-  "eval_name": "lesson-detail-page",
-  "prompt": "Build the lesson page for Module 7 Lesson 3: 'Writing Your First Playwright Test.' It should explain page.goto() and page.click(), show code examples in a notebook-style scroll, then have an exercise where the learner writes a test against the practice-app's login page. Show a diff when they check their answer. This is an odd-numbered module so use a dark theme. Include progress tracking showing they're on lesson 3 of 8 in this module and module 7 of 30 overall.\n\nBreak it into steps: first explore what lesson page patterns exist, then design the layout, then build the content components and lesson shell in parallel using subagents, then assemble and audit.",
-  "assertions": []
-}

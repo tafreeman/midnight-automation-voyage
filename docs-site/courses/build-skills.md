@@ -44,9 +44,6 @@ Root causes of test flakiness — timing, shared state, network dependencies. Sy
 ### 20. Test Data Strategies
 Managing test data — factories, fixtures, API seeding, and cleanup. Avoiding test coupling through data isolation.
 
-### 21. Assessment and Certification
-Competency framework for test automation. Bronze/Silver/Gold tiers, capstone project rubric, and self-assessment checklist.
-
 ## Skills Matrix
 
 | Module | Category | Difficulty |
@@ -55,7 +52,6 @@ Competency framework for test automation. Bronze/Silver/Gold tiers, capstone pro
 | 14–15 | Team & CI/CD | ⭐⭐ |
 | 16–18 | Testing Patterns | ⭐⭐⭐ |
 | 19–20 | Reliability | ⭐⭐⭐ |
-| 21 | Assessment | ⭐⭐ |
 
 ## Next Steps
 

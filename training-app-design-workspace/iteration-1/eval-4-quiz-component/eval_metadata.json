@@ -1,6 +1,0 @@
-{
-  "eval_id": 4,
-  "eval_name": "quiz-code-diff-component",
-  "prompt": "Create a quiz component that asks the learner to write a Playwright locator for a login button. It should accept their code input, compare it to the expected answer with a visual diff, and give gentle feedback like 'Almost — here's what's different' instead of marking it wrong. The quiz is embedded in a lesson scroll, not a separate page. Use whatever theme the current module uses.\n\nFirst step: explore existing quiz components in the codebase so you don't duplicate what's there. Second step: design the component API. Third step: build it with /frontend-design. Fourth step: audit with /design-framework.",
-  "assertions": []
-}

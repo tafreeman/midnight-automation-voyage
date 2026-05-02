@@ -437,7 +437,6 @@ const course2Modules: Module[] = [
   moduleFromLegacy(legacyLessons[20], 15, { difficulty: "intermediate" }), // 19-flaky-test-diagnosis
   moduleFromLegacy(legacyLessons[23], 16, { difficulty: "intermediate" }), // 22-trace-viewer
   moduleFromLegacy(legacyLessons[12], 17, { difficulty: "intermediate" }), // 11-prompt-templates
-  moduleFromLegacy(legacyLessons[22], 18, { difficulty: "intermediate" }), // 21-assessment-certification
 ];
 
 // ---------------------------------------------------------------------------

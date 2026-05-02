@@ -43,11 +43,6 @@ Single-file builds via `vite-plugin-singlefile` for zero-installation distributi
 
 31-module curriculum across 4 tiers (Foundation → Core → Enterprise → Advanced). All modules authored with quizzes and exercises.
 
-### ADR-04: Assessment and Certification Layer
-**Status:** Partially implemented
-
-Bronze/Silver/Gold certification tiers, quiz gating, competency matrix. Progress dashboard and certificate generation still in backlog.
-
 ## Data Architecture
 
 ### Dual Data System

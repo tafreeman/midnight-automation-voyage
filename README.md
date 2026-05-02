@@ -1,5 +1,3 @@
-<div align="center">
-
 # Midnight Automation Voyage
 
 **Playwright + GitHub Copilot training platform** — Interactive courses teaching manual testers to write automated tests. Built for QA engineers who know how to test but are new to code.
@@ -8,10 +6,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](https://nodejs.org/)
 [![Playwright](https://img.shields.io/badge/playwright-1.58%2B-45ba4b.svg)](https://playwright.dev/)
+[![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-blue.svg)](packages/shared-config)
+[![Modules](https://img.shields.io/badge/modules-55%2B-purple.svg)](https://tafreeman.github.io/midnight-automation-voyage/courses/)
 
 [**Documentation**](https://tafreeman.github.io/midnight-automation-voyage/) • [**Getting Started**](https://tafreeman.github.io/midnight-automation-voyage/guide/getting-started) • [**Courses**](https://tafreeman.github.io/midnight-automation-voyage/courses/) • [**Contributing**](https://tafreeman.github.io/midnight-automation-voyage/reference/contributing)
 
-</div>
+---
+
+## Why This Matters
+
+Manual testing skill doesn't automatically transfer to automated testing — the barrier is the code layer, not the testing knowledge. Midnight Automation Voyage bridges that gap by pairing every concept with a purpose-built practice app, a reference Playwright spec that shows what a good test looks like, and Copilot prompt templates that lower the code barrier. The platform treats the test target's bugs as curriculum surface: learners discover them through testing rather than being told what to find.
 
 ---
 
@@ -44,7 +48,7 @@ midnight-automation-voyage/
 ├── test-cases/             ← Reference Playwright specs (10 files, 59 tests)
 ├── scripts/                ← Utility scripts (packaging, prompt runner)
 ├── docs/                   ← Course plans, audit reports, reference material
-├── _analysis/              ← Documentation audit and coordination files
+
 └── ADR-*.md                ← Architecture Decision Records
 ```
 
@@ -94,6 +98,7 @@ First Playwright Tests → Copilot-First Testing → Build Skills → Go Pro
 All exercises target this app. **9 pages, 12 routes, intentional bugs** — designed specifically for learning automation.
 
 **Key Features:**
+
 - ✅ `data-testid` attributes on all interactive elements
 - ✅ Intentional bugs for test discovery (Settings: 3 a11y violations, Admin: stale state, Toast: race conditions)
 - ✅ Multi-step wizard (Checkout: 4 steps)
@@ -185,7 +190,24 @@ Uses pnpm with `pnpm-lock.yaml`. Practice app on `:5173`, training app on `:5174
 | [ADR-01](ADR-01-Standalone.md) | Standalone zero-installation architecture |
 | [ADR-02](ADR-02-Platform-Architecture.md) | Platform architecture & navigation |
 | [ADR-03](ADR-03-Enterprise-Curriculum.md) | Enterprise testing curriculum expansion |
-| [ADR-04](ADR-04-Assessment-Certification.md) | Assessment & certification layer |
+
+## Architecture Decisions
+
+| ADR | Decision | Status |
+|-----|----------|--------|
+| [ADR-01](ADR-01-Standalone.md) | Hash routing + `vite-plugin-singlefile` so the training app runs from a local `file://` URL with no server required | Accepted (partially implemented) |
+| [ADR-02](ADR-02-Platform-Architecture.md) | Custom `parseHash`/`hashForView` router, `localStorage` progress persistence, and persistent sidebar rail — all without React Router or a state library | Implemented |
+| [ADR-03](ADR-03-Enterprise-Curriculum.md) | Expanded curriculum from 15 to 31 modules across three enterprise tiers, with intentional practice-app bugs as dedicated test targets | Implemented |
+
+## Roadmap
+
+Honest status of what's next — see [ROADMAP.md](ROADMAP.md) for the full backlog.
+
+| Item | Priority | Description |
+|------|----------|-------------|
+| Standalone single-file build | Medium | Complete `vite-plugin-singlefile` integration for zero-install distribution (ADR-01) |
+| Platform automated tests | Medium | Unit/integration tests for the training app itself — currently minimal |
+| Tier-gated progression | Medium | Optional enforcement: Bronze required before Silver content unlocks |
 
 ## Contributing
 

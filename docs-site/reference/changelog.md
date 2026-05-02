@@ -29,8 +29,6 @@ All 13 design audit items implemented per [ADR-02](architecture#adr-02-platform-
 
 ### Assessment Backfill — 95% Complete ✅
 
-Per [ADR-04](architecture#adr-04-assessment-and-certification-layer):
-
 - Quizzes: 30/31 modules (Module 08 missing)
 - Exercises: 28/31 modules (Modules 01–03 intentionally conceptual)
 - Prompt templates: 29/31 modules
@@ -45,7 +43,7 @@ Per [ADR-03](architecture#adr-03-enterprise-testing-curriculum-expansion):
 | Foundation (01–05) | Orientation, Mindset, What to Automate, Why Playwright, Setup | Done |
 | Core Skills (06–10) | Prompt Engineering, Record & Refine, Writing Tests, POM, API | Done |
 | Review & Process (11–15) | Templates, Results, HITL, Collaboration, CI/CD | Done |
-| Enterprise (16–21) | Auth, Visual, A11y, Flaky, Data, Certification | Done |
+| Enterprise (16–20) | Auth, Visual, A11y, Flaky, Test Data | Done |
 | Scale (22–27) | Trace, Mobile, Parallel, Multi-Browser, Tagging, Actions | Done |
 | Advanced (28–31) | MCP/AI, Components, Performance, Reporters | Done |
 
@@ -70,7 +68,6 @@ Per [ADR-03](architecture#adr-03-enterprise-testing-curriculum-expansion):
 
 | Item | Effort | Description |
 |------|--------|-------------|
-| Certification progress dashboard | Medium | UI showing Bronze/Silver/Gold status |
 | Module 08 quiz | Small | Only module missing a quiz |
 
 ### Medium Priority
@@ -78,7 +75,6 @@ Per [ADR-03](architecture#adr-03-enterprise-testing-curriculum-expansion):
 | Item | Effort | Description |
 |------|--------|-------------|
 | Standalone single-file build | Medium | Zero-install distribution via `vite-plugin-singlefile` |
-| Tier-gated progression | Medium | Optional: Bronze required before Silver |
 | File Upload practice page | Small | Drag-and-drop/file input testing target |
 | Platform automated tests | Large | Unit/integration/E2E tests for training app |
 

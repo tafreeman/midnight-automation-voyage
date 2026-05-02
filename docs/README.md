@@ -29,25 +29,14 @@ Comprehensive reference for the Copilot-first testing approach:
 |----------|-------------|
 | [copilot-playwright-knowledge-base.md](copilot-playwright-knowledge-base.md) | Playwright + Copilot knowledge base |
 
-## Content Audits & Plans
+## Analysis
 
 | Document | Description |
 |----------|-------------|
-| [content-audit-report.md](content-audit-report.md) | Content coverage audit results |
-| [content-audit-fix-plan.md](content-audit-fix-plan.md) | Plan to address audit findings |
-| [phase-5-content-gap-analysis.md](phase-5-content-gap-analysis.md) | Gap analysis for content expansion |
-| [phase-5-content-expansions.md](phase-5-content-expansions.md) | Expansion content specifications |
-
-## Architecture & Migration
-
-| Document | Description |
-|----------|-------------|
-| [phase-3-v2-module-format-spec.md](phase-3-v2-module-format-spec.md) | V2 module format specification |
-| [phase-3-progress-migration-design.md](phase-3-progress-migration-design.md) | Progress system migration design |
-| [phase-3-pilot-splitting-plan.md](phase-3-pilot-splitting-plan.md) | Pilot module splitting plan |
+| [analysis05022026.md](analysis05022026.md) | Current portfolio analysis (May 2026) |
 
 ## See Also
 
 - [Root README](../README.md) — Quick start and project overview
 - [ROADMAP.md](../ROADMAP.md) — Implementation status and backlog
-- [ADR-01 through ADR-04](../) — Architecture Decision Records
+- [ADR-01 through ADR-03](../) — Architecture Decision Records

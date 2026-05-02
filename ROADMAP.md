@@ -14,7 +14,6 @@ This document is the single source of truth for what has been implemented and wh
 | [ADR-01](ADR-01-Standalone.md) | Standalone Zero-Installation Architecture | Accepted (partially implemented) |
 | [ADR-02](ADR-02-Platform-Architecture.md) | Platform Architecture & Navigation | Implemented |
 | [ADR-03](ADR-03-Enterprise-Curriculum.md) | Enterprise Testing Curriculum Expansion | Implemented |
-| [ADR-04](ADR-04-Assessment-Certification.md) | Assessment & Certification Layer | Partially implemented |
 
 ---
 
@@ -42,14 +41,11 @@ All 13 design audit items implemented. See [ADR-02](ADR-02-Platform-Architecture
 
 ## Workstream B: Assessment Backfill — 95% COMPLETE
 
-See [ADR-04](ADR-04-Assessment-Certification.md).
-
 | Item | Status | Notes |
 |------|--------|-------|
 | Quizzes: 30/31 modules | Done | Module 08 (Writing Tests) missing quiz |
 | Exercises: 28/31 modules | Done | Modules 01-03 intentionally conceptual |
 | Prompt templates: 29/31 modules | Done | Modules 01, 08 missing |
-| Module 21: Certification content | Done | Competency matrix, tier defs, capstone rubric |
 | Quiz gating on completion | Done | `canComplete = !lesson.quiz \|\| quizAttempted` |
 
 ### Remaining Backfill Work
@@ -70,7 +66,7 @@ See [ADR-03](ADR-03-Enterprise-Curriculum.md). All 31 modules authored.
 | Foundation (01-05) | Orientation, Mindset, What to Automate, Why Playwright, Env Setup | Done |
 | Core Skills (06-10) | Prompt Engineering, Record & Refine, Writing Tests, POM, API Testing | Done |
 | Review & Process (11-15) | Prompt Templates, Reading Results, HITL Checklist, Collab Authoring, CI/CD | Done |
-| Tier 1: Enterprise (16-21) | Auth Fixtures, Visual Regression, A11y, Flaky Tests, Test Data, Certification | Done |
+| Tier 1: Enterprise (16-20) | Auth Fixtures, Visual Regression, A11y, Flaky Tests, Test Data | Done |
 | Tier 2: Scale (22-27) | Trace Viewer, Mobile, Parallel, Multi-Browser, Tagging, GitHub Actions | Done |
 | Tier 3: Advanced (28-31) | MCP/AI Agents, Component Testing, Performance, Custom Reporters | Done |
 
@@ -109,26 +105,15 @@ See [ADR-03](ADR-03-Enterprise-Curriculum.md). All 31 modules authored.
 
 | Item | ADR | Effort | Description |
 |------|-----|--------|-------------|
-| Certification progress dashboard | ADR-04 | Medium | UI showing Bronze/Silver/Gold status, modules remaining per tier |
-| Module 08 quiz | ADR-04 | Small | Only module missing a quiz |
+| Module 08 quiz | — | Small | Only module missing a quiz |
 
 ### Medium Priority
 
 | Item | ADR | Effort | Description |
 |------|-----|--------|-------------|
 | Standalone single-file build | ADR-01 | Medium | Implement `vite-plugin-singlefile` for zero-install distribution |
-| Tier-gated progression | ADR-04 | Medium | Optional enforcement: Bronze required before Silver content |
 | File Upload practice page | ADR-03 | Small | Drag-and-drop/file input testing target (referenced in expansion plans) |
 | Platform automated tests | — | Large | Unit/integration/E2E tests for the training app itself (currently 2/10) |
-
-### Low Priority
-
-| Item | ADR | Effort | Description |
-|------|-----|--------|-------------|
-| Capstone submission workflow | ADR-04 | Large | Mechanism for learners to submit capstone work |
-| Certificate/badge generation | ADR-04 | Medium | Exportable PDF or digital badge on tier completion |
-| Tier 3 practice app targets | ADR-03 | Large | Dedicated pages for MCP, component testing, performance, reporters |
-| Playwright local file execution | ADR-01 | Small | Configure playwright.config.ts for `file://` protocol testing |
 
 ---
 
