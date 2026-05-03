@@ -433,7 +433,7 @@ const course2Modules: Module[] = [
   moduleFromLegacy(legacyLessons[11], 11, { difficulty: "intermediate" }), // 10-api-testing
   moduleFromLegacy(legacyLessons[17], 12, { difficulty: "intermediate" }), // 16-auth-fixtures
   moduleFromLegacy(legacyLessons[21], 13, { difficulty: "intermediate" }), // 20-test-data-strategies
-  moduleFromLegacy(legacyLessons[29], 14, { difficulty: "intermediate" }), // 28-mcp-ai-agents (network mocking)
+  moduleFromLegacy(legacyLessons[28], 14, { difficulty: "intermediate" }), // 28-mcp-ai-agents (network mocking)
   moduleFromLegacy(legacyLessons[20], 15, { difficulty: "intermediate" }), // 19-flaky-test-diagnosis
   moduleFromLegacy(legacyLessons[23], 16, { difficulty: "intermediate" }), // 22-trace-viewer
   moduleFromLegacy(legacyLessons[12], 17, { difficulty: "intermediate" }), // 11-prompt-templates
@@ -451,9 +451,9 @@ const course3Modules: Module[] = [
   moduleFromLegacy(legacyLessons[26], 23, { difficulty: "advanced" }), // 25-multi-browser-projects
   moduleFromLegacy(legacyLessons[27], 24, { difficulty: "advanced" }), // 26-test-tagging
   moduleFromLegacy(legacyLessons[28], 25, { difficulty: "advanced" }), // 27-github-actions
-  moduleFromLegacy(legacyLessons[30], 26, { difficulty: "advanced" }), // 29-component-testing
-  moduleFromLegacy(legacyLessons[31], 27, { difficulty: "advanced" }), // 30-performance-testing
-  moduleFromLegacy(legacyLessons[32], 28, { difficulty: "advanced" }), // 31-custom-reporters
+  moduleFromLegacy(legacyLessons[29], 26, { difficulty: "advanced" }), // 29-component-testing
+  moduleFromLegacy(legacyLessons[30], 27, { difficulty: "advanced" }), // 30-performance-testing
+  moduleFromLegacy(legacyLessons[31], 28, { difficulty: "advanced" }), // 31-custom-reporters
 ];
 
 // ---------------------------------------------------------------------------

@@ -374,6 +374,46 @@ Reference tests in `test-cases/examples/` serve as quality benchmarks. Ensure:
 - No `waitForTimeout` calls
 - Descriptive test names
 
+## Narration System
+
+The training app has two narration modes. Neither requires any setup to work — browser speech synthesis is on by default.
+
+### Two narration modes
+
+#### 1. Browser Speech Synthesis (built-in, always works)
+
+Implemented in [training-app/src/pages/lesson-detail/useNarration.ts](../../training-app/src/pages/lesson-detail/useNarration.ts).
+
+Uses the Web Speech API (`speechSynthesis`) built into every modern browser. When a lesson page loads, a speaker icon is shown in the narration bar. Clicking it reads the lesson text aloud using the browser's built-in TTS voices. No server, no configuration needed.
+
+#### 2. Local TTS Server (optional, higher quality)
+
+Implemented in [training-app/src/hooks/useNarration.ts](../../training-app/src/hooks/useNarration.ts).
+
+Connects to `http://localhost:8765` (an [edge-tts](https://github.com/rany2/edge-tts) Flask server). When the server is running, the app uses it for higher-quality Microsoft Neural voices and exposes a voice-picker UI. If no server is running the hook falls back gracefully to browser speech synthesis — learners see no error UI.
+
+### Why a console error appears
+
+> **Note:** When the training app loads, it makes a health-check request to `http://localhost:8765/health` to detect the optional TTS server. If the server is not running, the browser logs `net::ERR_CONNECTION_REFUSED`. **This is expected and harmless.** It does not affect any functionality — the app falls back to browser speech synthesis automatically.
+
+This is intentional behaviour, not a bug. You can safely ignore this message during development.
+
+### How to start the local TTS server (optional)
+
+The local TTS server scripts are not included in this repo. Browser speech synthesis works out of the box.
+
+If you want to restore a local server in the future, the server must:
+- Listen on `http://localhost:8765`
+- Respond to `GET /health` with HTTP 200
+- Respond to `GET /voices` with a JSON array of `{ name, gender, locale, styles }` objects
+- Respond to `POST /synthesize` with an audio blob given `{ text, voice, rate }`
+
+### Where narration appears
+
+Narration is rendered by the `LessonNarrationBar` component on lesson detail pages. Modules that include a `narrationScript` field in their data file (`intro`, `steps[]`, `outro`) will show the narration bar. Modules without `narrationScript` hide the bar automatically — no code change needed.
+
+---
+
 ## Commit Message Guidelines
 
 Use clear, descriptive commit messages:
