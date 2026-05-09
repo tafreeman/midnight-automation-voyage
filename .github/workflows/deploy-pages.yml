@@ -1,8 +1,11 @@
-name: Deploy Practice App
+name: Deploy to GitHub Pages
+
 on:
   push:
     branches: [main]
-    paths: ['practice-app/**']
+    paths:
+      - "practice-app/**"
+      - "docs-site/**"
   workflow_dispatch:
 
 permissions:
@@ -12,26 +15,41 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
           version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: practice-app/pnpm-lock.yaml
-      - run: cd practice-app && pnpm install --frozen-lockfile
-      - run: cd practice-app && pnpm build
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build practice app
+        run: cd practice-app && pnpm build
+
+      - name: Build docs site
+        run: cd docs-site && pnpm build
+
+      - name: Combine artifacts
+        run: |
+          mkdir -p _site
+          cp -r practice-app/dist/* _site/
+          cp -r docs-site/dist _site/docs
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: practice-app/dist
+          path: _site
 
   deploy:
     needs: build

@@ -9,8 +9,8 @@ export default defineConfig({
   description:
     "Playwright + GitHub Copilot training platform — interactive courses teaching manual testers to write automated tests.",
 
-  /* GitHub Pages requires base to match /<repo-name>/ */
-  base: "/midnight-automation-voyage/",
+  /* Relative base — works regardless of deployment path */
+  base: "./",
 
   /* Build output directory — VitePress defaults to .vitepress/dist */
   outDir: "dist",
